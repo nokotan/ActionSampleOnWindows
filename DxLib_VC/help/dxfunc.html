@@ -1,0 +1,600 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="1024"  cellspacing="0" cellpadding="0" >
+        <tr><td align="center" colspan="2">
+        <center>
+        <font size="5"><b>ＤＸライブラリ　関数リファレンスページ<br></b></font>
+        <hr></center>
+        </td></tr>
+
+        <tr><td align="left" colspan="2">
+        <font size="3"><b>
+        <br>
+        　このページではＤＸライブラリの主な関数の説明と簡単な
+        サンプルプログラムを載せています。<br><br><br>
+        </b></font>
+        </td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>使用必須関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="#R1N1">DxLib_Init</a></b></td><td>　ライブラリの初期化</td></tr>
+        <tr><td valign="top"><b><a href="#R1N2">DxLib_End</a></b></td><td>　ライブラリ使用の終了関数</td></tr>
+        <tr><td valign="top"><b><a href="#R1N3">ProcessMessage</a></b></td><td>　ウインドウズのメッセージを処理する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>３Ｄ関係関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_3d.html">一覧はこちら</a></b></td><td>　数が多いので分けました<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>図形描画関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N1">DrawLine</a></b></td><td>　線を描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N2">DrawBox</a></b></td><td>　四角を描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N3">DrawCircle</a></b></td><td>　円の描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N4">DrawOval</a></b></td><td>　楕円の描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N7">DrawTriangle</a></b></td><td>　三角形の描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N5">DrawPixel</a></b></td><td>　点を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph0.html#R2N6">GetPixel</a></b></td><td>　指定点の色を取得<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>グラフィックデータ制御関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N1">LoadGraphScreen</a></b></td><td>　画像ファイルを読みこんで画面に表示する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N2">LoadGraph</a></b></td><td>　画像ファイルのメモリへの読みこみ、及び動画ファイルのロード</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N3">LoadDivGraph</a></b></td><td>　画像ファイルのメモリへの分割読みこみ</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N6">MakeGraph</a></b></td><td>　空のグラフィックを作成する</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N25">MakeScreen</a></b></td><td>　描画対象にできるグラフィックを作成する</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N32">SetCreateDrawValidGraphMultiSample</a></b></td><td>　描画対象にできるグラフィックのマルチサンプリング設定を行う</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N33">SetCreateGraphColorBitDepth</a></b></td><td>　作成するグラフィックのビット深度を設定する</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N34">SetDrawValidFloatTypeGraphCreateFlag</a></b></td><td>　描画可能な浮動小数点型のグラフィックを作成するかどうかの設定を行う</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N35">SetCreateDrawValidGraphChannelNum</a></b></td><td>　作成する描画可能なグラフィックのチャンネル数の設定を行う</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N37">SetUsePremulAlphaConvertLoad</a></b></td><td>　読み込み時に画像を乗算済みα画像に変換するかを設定する</td></tr> 
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N7">DrawGraph</a></b></td><td>　メモリに読みこんだグラフィックの描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N8">DrawTurnGraph</a></b></td><td>　メモリに読みこんだグラフィックのＬＲ反転描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N9">DrawExtendGraph</a></b></td><td>　メモリに読みこんだグラフィックの拡大縮小描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N10">DrawRotaGraph</a></b></td><td>　メモリに読みこんだグラフィックの回転描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N19">DrawRotaGraph2</a></b></td><td>　メモリに読みこんだグラフィックの回転描画(回転中心指定あり)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N36">DrawRotaGraph3</a></b></td><td>　メモリに読みこんだグラフィックの回転描画(回転中心指定あり、縦横拡大率別指定)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N11">DrawModiGraph</a></b></td><td>　メモリに読みこんだグラフィックの自由変形描画</td></tr>
+<!--        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N22">DrawPolygon3D</a></b></td><td>　メモリに読みこんだグラフィックを使って３Ｄポリゴンを描画する</td></tr> -->
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N20">DrawRectGraph</a></b></td><td>　グラフィックの指定矩形部分のみを描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N21">DerivationGraph</a></b></td><td>　指定のグラフィックの指定部分だけを抜き出して新たなグラフィックを作成する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N12">GetDrawScreenGraph</a></b></td><td>　描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N13">GetGraphSize</a></b></td><td>　グラフィックのサイズを得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N14">InitGraph</a></b></td><td>　読みこんだグラフィックデータをすべて削除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N15">DeleteGraph</a></b></td><td>　指定のグラフィックをメモリ上から削除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N16">SetDrawMode</a></b></td><td>　描画モードをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N17">SetDrawBlendMode</a></b></td><td>　描画の際のブレンドモードをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N18">SetDrawBright</a></b></td><td>　描画輝度をセット</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R15N7">SetTransColor</a></b></td><td>　グラフィックに設定する透過色をセットする<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N23">LoadBlendGraph</a></b></td><td>　画像ファイルからブレンド画像を読み込む</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N24">DrawBlendGraph</a></b></td><td>　ブレンド画像と通常画像を合成して描画する<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N26">GraphFilter</a></b></td><td>　画像にフィルター処理を施す</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N27">GraphFilterBlt</a></b></td><td>　画像にフィルター処理を施す( 出力先画像指定版 )</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N28">GraphFilterRectBlt</a></b></td><td>　画像にフィルター処理を施す( 出力先画像、使用矩形指定版 )</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N29">GraphBlend</a></b></td><td>　二つの画像を特殊効果付きでブレンドする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N30">GraphBlendBlt</a></b></td><td>　二つの画像を特殊効果付きでブレンドする( 出力先画像指定版 )</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph1.html#R3N31">GraphBlendRectBlt</a></b></td><td>　二つの画像を特殊効果付きでブレンドする( 出力先画像、使用矩形指定版 )<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>文字描画関係関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N1">DrawString</a></b></td><td>　文字列を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N20">DrawFormatString</a></b></td><td>　書式付き文字列を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N2">GetDrawStringWidth</a></b></td><td>　DrawString で描画される文字列の幅(ドット単位)を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N21">GetDrawFormatStringWidth</a></b></td><td>　DrawFormatString 関数書式付き文字列の描画幅(ドット単位)を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N7">SetFontSize</a></b></td><td>　描画する文字列のサイズをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N8">SetFontThickness</a></b></td><td>　描画する文字列の文字の太さをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N9">ChangeFont</a></b></td><td>　描画するフォントを変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N24">ChangeFontType</a></b></td><td>　文字列描画に使用するフォントのタイプを変更する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N10">CreateFontToHandle</a></b></td><td>　新しいフォントデータを作成</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N11">DeleteFontToHandle</a></b></td><td>　フォントデータを削除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N25">SetFontCacheUsePremulAlphaFlag</a></b></td><td>　作成するフォントデータを『乗算済みα』用にするかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N12">DrawStringToHandle</a></b></td><td>　指定のフォントデータで文字列を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N22">DrawFormatStringToHandle</a></b></td><td>　指定のフォントデータで書式付き文字列を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N13">GetDrawStringWidthToHandle</a></b></td><td>　指定のフォントデータで描画する文字列の幅を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N23">GetDrawFormatStringWidthToHandle</a></b></td><td>　指定のフォントデータで書式付き文字列の描画幅を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N18">GetFontStateToHandle</a></b></td><td>　指定のフォントデータの情報を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph2.html#R17N19">InitFontToHandle</a></b></td><td>　フォントデータを全て初期化する<br><br><br></td></tr>
+
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>簡易画面出力関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R18N1">printfDx</a></b></td><td>　簡易文字列描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R18N2">clsDx</a></b></td><td>　簡易画面出力履歴をクリアする<br><br><br></td></tr>
+
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>その他画面操作系関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N1">SetGraphMode</a></b></td><td>　画面モードの変更</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N10">SetFullScreenResolutionMode</a></b></td><td>　フルスクリーンモード時の解像度モードを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N11">SetFullScreenScalingMode</a></b></td><td>　フルスクリーンモード時の画面拡大モードを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N2">GetScreenState</a></b></td><td>　現在の画面の大きさとカラービット数を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N3">SetDrawArea</a></b></td><td>　描画可能領域のセット</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N4">ClearDrawScreen</a></b></td><td>　画面に描かれたものを消去する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N9">SetBackgroundColor</a></b></td><td>　画面の背景色を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N5">GetColor</a></b></td><td>　色コードを取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N6">SetDrawScreen</a></b></td><td>　描画先グラフィック領域の指定</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N7">ScreenFlip</a></b></td><td>　フリップ関数、画面の裏ページ(普段は表示されていない)の内容を表ページ(普段表示されている)に反映する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R4N8">SetFullSceneAntiAliasingMode</a></b></td><td>　画面のフルスクリーンアンチエイリアスモードの設定をする<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>動画関係関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N1">PlayMovie</a></b></td><td>　動画ファイルの再生</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N2">PlayMovieToGraph</a></b></td><td>　ムービーグラフィックの動画の再生を開始する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N3">PauseMovieToGraph</a></b></td><td>　ムービーグラフィックの動画再生を一時停止する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N4">SeekMovieToGraph</a></b></td><td>　ムービーグラフィックの動画の再生位置を変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N6">TellMovieToGraph</a></b></td><td>　ムービーグラフィックの動画の再生位置を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph3.html#R14N5">GetMovieStateToGraph</a></b></td><td>　ムービーグラフィックの動画の再生状態を得る<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>マスク関係関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N1">CreateMaskScreen</a></b></td><td>　マスク画面を作成する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N2">DeleteMaskScreen</a></b></td><td>　マスク画面を削除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N3">LoadMask</a></b></td><td>　マスクデータを画像ファイル(BMP.JPEG.PNG)から構築する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N4">LoadDivMask</a></b></td><td>　マスクデータを画像ファイル(BMP.JPEG.PNG)から分割構築する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N5">DrawMask</a></b></td><td>　マスクデータをマスク画面に描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N6">DrawFillMask</a></b></td><td>　指定のマスク画面領域を指定のマスクデータをタイル上に並べて埋める</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N7">DeleteMask</a></b></td><td>　マスクデータを削除</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N8">InitMask</a></b></td><td>　マスクデータを初期化する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N9">FillMaskScreen</a></b></td><td>　マスク画面を指定の色で塗りつぶす</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N10">SetUseMaskScreenFlag</a></b></td><td>　マスク画面の有効の有無を変更</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N11">MakeMask</a></b></td><td>　空のマスクデータの作成</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N12">GetMaskSize</a></b></td><td>　マスクデータの大きさを得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N13">SetDataToMask</a></b></td><td>　マスクのデータをマスクデータ領域に転送する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N14">DrawMaskToDirectData</a></b></td><td>　マスクのデータをマスク画面に直接描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N15">DrawFillMaskToDirectData</a></b></td><td>　マスクのデータをタイル上に並べた形で直接マスク画面全体に描画する<br><br><br></td></tr>
+<!--        <tr><td valign="top"><b><a href="function/dxfunc_graph4.html#R16N16">SetMaskTransColor</a></b></td><td>　マスクに使う透過色のセット<br><br><br></td></tr> -->
+
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>入力関係の関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#752400"><b>　　ジョイパッド入力関連関数</b></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N3">GetJoypadNum</a></b></td><td>　ジョイパッドが接続されている数を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N4">GetJoypadInputState</a></b></td><td>　ジョイパッドの入力状態を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N24">GetJoypadAnalogInput</a></b></td><td>　ジョイパッドのアナログ的なレバー入力情報を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N34">GetJoypadDirectInputState</a></b></td><td>　ジョイパッドのDirectInputから取得できる情報を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N35">GetJoypadXInputState</a></b></td><td>　ジョイパッドのXInputから取得できる情報を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N37">SetJoypadDeadZone</a></b></td><td>　ジョイパッドの方向入力の無効範囲を設定する</td></tr>
+<!--        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N29">GetJoypadAnalogInputRight</a></b></td><td>　ジョイパッドのアナログ的なレバー入力情報を得る(ＰＳパッド右スティック用)</td></tr>-->
+<!--        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N33">SetJoypadInputToKeyInput</a></b></td><td>　ジョイパッドの入力に対応したキーボードの入力を設定する</td></tr> -->
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N30">StartJoypadVibration</a></b></td><td>　ジョイパッドの振動を開始する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N31">StopJoypadVibration</a></b></td><td>　ジョイパッドの振動を停止する<br><br></td></tr>
+    
+        <tr><td colspan="2">
+            <font size="3" color="#752400"><b>　　マウス入力関連関数</b></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N5">SetMouseDispFlag</a></b></td><td>　マウスカーソルの表示設定フラグのセット</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N6">GetMousePoint</a></b></td><td>　マウスカーソルの位置を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N7">SetMousePoint</a></b></td><td>　マウスカーソルの位置をセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N8">GetMouseInput</a></b></td><td>　マウスのボタンの状態を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N36">GetMouseInputLog</a></b></td><td>　マウスのクリック履歴を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N32">GetMouseWheelRotVol</a></b></td><td>　マウスホイールの回転量を得る<br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#752400"><b>　　キーボード入力関連関数</b></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N1">CheckHitKeyAll</a></b></td><td>　すべてのキーの押下状態を取得</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N2">CheckHitKey</a></b></td><td>　特定キーの入力状態を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N28">GetHitKeyStateAll</a></b></td><td>　キーボードのすべてのキーの押下状態を取得する<br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#752400"><b>　　半角文字入力関連関数</b></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N25">GetInputChar</a></b></td><td>　文字入力バッファに溜まった文字データから１文字取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N26">GetInputCharWait</a></b></td><td>　文字入力バッファに溜まった文字データから１文字取得する、バッファになにも文字コードがない場合はキーが押されるまで待つ</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N27">ClearInputCharBuf</a></b></td><td>　文字入力バッファをクリアする<br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#752400"><b>　　日本語入力関連関数</b></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N9">KeyInputString</a></b></td><td>　キーボードによる文字列の入力</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N10">KeyInputSingleCharString</a></b></td><td>　キーボードによる半角文字列のみの入力</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N11">KeyInputNumber</a></b></td><td>　キーボードによる数値の入力</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N12">SetKeyInputStringColor</a></b></td><td>　KeyInputString系 関数使用時の文字の各色を変更する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N13">MakeKeyInput</a></b></td><td>　新しいキー入力データの作成</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N14">DeleteKeyInput</a></b></td><td>　キー入力データの削除</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N15">InitKeyInput</a></b></td><td>　すべてのキー入力データの削除</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N16">SetActiveKeyInput</a></b></td><td>　指定のキー入力をアクティブにする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N17">CheckKeyInput</a></b></td><td>　入力が終了しているか取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N18">DrawKeyInputString</a></b></td><td>　キー入力中データの描画</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N19">DrawKeyInputModeString</a></b></td><td>　入力モード文字列を描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N20">SetKeyInputString</a></b></td><td>　キー入力データに指定の文字列をセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N21">SetKeyInputNumber</a></b></td><td>　キー入力データに指定の数値を文字に置き換えてセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N22">GetKeyInputString</a></b></td><td>　入力データの文字列を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_input.html#R5N23">GetKeyInputNumber</a></b></td><td>　入力データの文字列を数値として取得する<br><br><br></td></tr>
+                
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>音利用関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N1">PlaySoundFile</a></b></td><td>　音声ファイル(WAV.MP3.Ogg)を再生する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N2">CheckSoundFile</a></b></td><td>　音声ファイルが再生中か調べる</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N3">StopSoundFile</a></b></td><td>　音声ファイルの再生を止める</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N4">LoadSoundMem</a></b></td><td>　音声ファイル(WAV.MP3.Ogg)をメモリに読みこむ</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N5">PlaySoundMem</a></b></td><td>　メモリに読みこんだ音声データを再生する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N6">CheckSoundMem</a></b></td><td>　メモリに読みこんだ音声データが再生中か調べる</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N7">StopSoundMem</a></b></td><td>　メモリに読み込んだ音声データの再生を止める</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N8">DeleteSoundMem</a></b></td><td>　メモリに読みこんだ音声データを削除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N9">InitSoundMem</a></b></td><td>　メモリに読みこんだ音声データをすべて消去する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N10">ChangePanSoundMem</a></b></td><td>　メモリに読みこんだ音声データの再生にパンを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N11">ChangeVolumeSoundMem</a></b></td><td>　メモリに読みこんだ音声データの再生にボリュームを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N32">ChangeNextPlayPanSoundMem</a></b></td><td>　メモリに読みこんだ音声データの次の再生にのみ使用するパンを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N33">ChangeNextPlayVolumeSoundMem</a></b></td><td>　メモリに読みこんだ音声データの次の再生にのみ使用するボリュームを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N12">SetFrequencySoundMem</a></b></td><td>　メモリに読み込んだ音声データの再生周波数を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N13">SetLoopPosSoundMem</a></b></td><td>　メモリに読み込んだ音声データのループ位置を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N14">SetLoopSamplePosSoundMem</a></b></td><td>　メモリに読み込んだ音声データのループ位置を設定する(サンプル位置指定)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N15">SetCurrentPositionSoundMem</a></b></td><td>　メモリに読み込んだ音声データの再生位置をサンプル単位で変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N16">DuplicateSoundMem</a></b></td><td>　既にメモリに読み込んである音声データを使用するサウンドハンドルを新たに作成する( 非ストリームサウンドのみ )<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N17">Set3DPositionSoundMem</a></b></td><td>　メモリに読み込んだ音声データの３Ｄサウンド用の再生位置を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N18">Set3DRadiusSoundMem</a></b></td><td>　メモリに読み込んだ音声データの３Ｄサウンド用の音が聞こえる距離を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N19">Set3DVelocitySoundMem</a></b></td><td>　メモリに読み込んだ音声データの３Ｄサウンド用の移動速度を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N20">SetNextPlay3DPositionSoundMem</a></b></td><td>　メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の再生位置を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N21">SetNextPlay3DRadiusSoundMem</a></b></td><td>　メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の音が聞こえる距離を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N22">SetNextPlay3DVelocitySoundMem</a></b></td><td>　メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の移動速度を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N23">Set3DReverbParamSoundMem</a></b></td><td>　メモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N24">Set3DPresetReverbParamSoundMem</a></b></td><td>　メモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータをプリセットを使用して設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N34">Get3DPresetReverbParamSoundMem</a></b></td><td>　３Ｄサウンド用のプリセットのリバーブエフェクトパラメータを取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N25">Set3DReverbParamSoundMemAll</a></b></td><td>　全てのメモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N26">Set3DPresetReverbParamSoundMemAll</a></b></td><td>　全てのメモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータをプリセットを使用して設定する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N27">SetCreate3DSoundFlag</a></b></td><td>　次に作成するメモリに読み込む音声データを３Ｄサウンド用にするかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N35">SetEnableXAudioFlag</a></b></td><td>　サウンドの再生にXAudio2を使用するかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N28">Set3DSoundOneMetre</a></b></td><td>　３Ｄ空間の１メートルに相当する距離を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N29">Set3DSoundListenerPosAndFrontPos_UpVecY</a></b></td><td>　３Ｄサウンドのリスナーの位置とリスナーの前方位置を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N30">Set3DSoundListenerPosAndFrontPosAndUpVec</a></b></td><td>　３Ｄサウンドのリスナーの位置とリスナーの前方位置とリスナーの上方向を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R8N31">Set3DSoundListenerVelocity</a></b></td><td>　３Ｄサウンドのリスナーの移動速度を設定する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>音楽再生関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R9N1">PlayMusic</a></b></td><td>　ＭＩＤＩ又はＭＰ３ファイルを演奏(再生)する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R9N2">CheckMusic</a></b></td><td>　ＭＩＤＩ又はＭＰ３ファイルが演奏(再生)中かの情報を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R9N3">StopMusic</a></b></td><td>　ＭＩＤＩ又はＭＰ３ファイルの演奏(再生)停止</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_sound.html#R9N4">SetVolumeMusic</a></b></td><td>　ＭＩＤＩ又はＭＰ３ファイルの演奏(再生)の音量を設定する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>ウエイト関係の関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R6N1">WaitTimer</a></b></td><td>　指定の時間だけ処理をとめる</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R6N2">WaitVSync</a></b></td><td>　ＣＲＴの垂直同期信号を指定回数待つ</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R6N3">WaitKey</a></b></td><td>　キーの入力待ち<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>時間関係の関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R7N1">GetNowCount</a></b></td><td>　ミリ秒単位の精度を持つカウンタの現在値を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R7N2">GetNowHiPerformanceCount</a></b></td><td>　GetNowCountの高精度バージョン</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R7N3">GetDateTime</a></b></td><td>　現在時刻を取得する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>乱数取得関数</b><br><br></font>
+        </td></tr>
+
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R10N1">GetRand</a></b></td><td>　乱数を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R10N2">SRand</a></b></td><td>　乱数の初期値を設定する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>ウインドウモード関係</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R11N1">ChangeWindowMode</a></b></td><td>　ウインドウモード・フルスクリーンモードの変更を行う</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N13">SetMainWindowText</a></b></td><td>　ウインドウのタイトルを変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R11N2">SetWindowIconID</a></b></td><td>　ウインドウのアイコンを変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R11N3">SetWindowSizeChangeEnableFlag</a></b></td><td>　ウインドウモードの時にウインドウのサイズを自由に変更出来るようにするかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R11N4">SetWindowSizeExtendRate</a></b></td><td>　ウインドウモードの時のウインドウの大きさと描画画面の大きさの比率を設定する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>通信関係</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N1">ConnectNetWork</a></b></td><td>　他のマシンに接続する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N2">CloseNetWork</a></b></td><td>　接続を終了する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N3">PreparationListenNetWork</a></b></td><td>　接続を受け付けられる状態にする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N4">StopListenNetWork</a></b></td><td>　接続を受け付けている状態を解除する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N5">NetWorkSend</a></b></td><td>　データを送信する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N6">GetNetWorkDataLength</a></b></td><td>　受信データ一時記憶バッファに溜まっているデータの量を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N7">GetNetWorkSendDataLength</a></b></td><td>　未送信のデータの量を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N8">NetWorkRecv</a></b></td><td>　受信データ一時記憶バッファに溜まっているデータを取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N9">NetWorkRecvToPeek</a></b></td><td>　受信したデータを読み込む、読み込んだデータはバッファから削除されない</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N10">GetNewAcceptNetWork</a></b></td><td>　新たに確立した接続を示すネットワークハンドルを得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N11">GetLostNetWork</a></b></td><td>　新たに破棄された接続を示すネットワークハンドルを得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N12">GetNetWorkAcceptState</a></b></td><td>　接続状態を取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N13">GetNetWorkIP</a></b></td><td>　接続先のＩＰアドレスを得る<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N14">MakeUDPSocket</a></b></td><td>　ＵＤＰを使用して通信するためのソケットを作成する<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N15">DeleteUDPSocket</a></b></td><td>　ＵＤＰを使用して通信するためのソケットを削除する<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N16">NetWorkSendUDP</a></b></td><td>　ＵＤＰを使用して他のマシンにデータを送信する<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N17">NetWorkRecvUDP</a></b></td><td>　ＵＤＰを使用して他のマシンからのデータを受信する<br><br></td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R13N18">CheckNetWorkRecvUDP</a></b></td><td>　ＵＤＰを使用した他のマシンから受信データがあるかどうかを取得する<br><br><br></td></tr>
+            
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>ファイル読み込み関係</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N1">FileRead_open</a></b></td><td>　ファイルを開く</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N2">FileRead_size</a></b></td><td>　ファイルのサイズを得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N3">FileRead_close</a></b></td><td>　ファイルを閉じる</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N4">FileRead_tell</a></b></td><td>　ファイルポインタの位置を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N5">FileRead_seek</a></b></td><td>　ファイルポインタの位置を変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N6">FileRead_read</a></b></td><td>　ファイルからデータを読み込む</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N7">FileRead_eof</a></b></td><td>　ファイルの終端かどうかを調べる</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N8">FileRead_gets</a></b></td><td>　ファイルから一行読み出す</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N9">FileRead_getc</a></b></td><td>　ファイルから一文字読み出す</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R19N10">FileRead_scanf</a></b></td><td>　ファイルから書式付きデータを読み出す<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>ドット単位で画像にアクセスしたい関係</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N1">LoadSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの読み込み</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N2">LoadSoftImageToMem</a></b></td><td>　ＣＰＵで扱うイメージのメモリからの読み込み</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N3">MakeARGB8ColorSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの作成( RGBA8 カラー )</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N18">MakeXRGB8ColorSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの作成( XRGB8 カラー )</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N4">MakePAL8ColorSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの作成( パレット２５６色 カラー )</td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N5">DeleteSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの解放</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N19">InitSoftImage</a></b></td><td>　ＣＰＵで扱うイメージを全て解放</td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N6">GetSoftImageSize</a></b></td><td>　ＣＰＵで扱うイメージのサイズを取得する</td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N7">FillSoftImage</a></b></td><td>　ＣＰＵで扱うイメージを指定色で塗りつぶす(各色要素は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N9">SetPaletteSoftImage</a></b></td><td>　ＣＰＵで扱うイメージのパレットをセットする(各色要素は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N8">GetPaletteSoftImage</a></b></td><td>　ＣＰＵで扱うイメージのパレットを取得する(各色要素は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N10">DrawPixelPalCodeSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの指定座標にドットを描画する(パレット画像用、有効値は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N11">GetPixelPalCodeSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの指定座標の色コードを取得する(パレット画像用、戻り値は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N12">DrawPixelSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの指定座標にドットを描画する(各色要素は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N13">GetPixelSoftImage</a></b></td><td>　ＣＰＵで扱うイメージの指定座標の色を取得する(各色要素は０～２５５)</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N14">BltSoftImage</a></b></td><td>　ＣＰＵで扱うイメージを別のイメージ上に転送する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N15">DrawSoftImage</a></b></td><td>　ＣＰＵで扱うイメージを画面に描画する</td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N16">CreateGraphFromSoftImage</a></b></td><td>　ＣＰＵで扱うイメージからグラフィックハンドルを作成する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R20N17">CreateDivGraphFromSoftImage</a></b></td><td>　ＣＰＵで扱うイメージから分割グラフィックハンドルを作成する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>非同期読み込み関係</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R21N1">SetUseASyncLoadFlag</a></b></td><td>　非同期読み込みを行うかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R21N2">CheckHandleASyncLoad</a></b></td><td>　ハンドルが非同期読み込み中かどうかを取得する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R21N3">GetASyncLoadNum</a></b></td><td>　行っている非同期読み込みの数を取得する<br><br><br></td></tr>
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>マイナー関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N22">SetAlwaysRunFlag</a></b></td><td>　ウインドウがアクティブではない状態でも処理を続行するか、フラグをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N14">SetOutApplicationLogValidFlag</a></b></td><td>　ログ出力を行うか否かのセット<br><br></td></tr>
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N36">SetSysCommandOffFlag</a></b></td><td>　ALTキーやWindowsキーを無効にするかどうかを設定する</td></tr>-->
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N30">SetUseDXArchiveFlag</a></b></td><td>　ＤＸアーカイブファイルの読み込み機能を使うかどうかを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N31">SetDXArchiveExtension</a></b></td><td>　検索するＤＸアーカイブファイルの拡張子を変更する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N32">SetDXArchiveKeyString</a></b></td><td>　ＤＸアーカイブファイルの鍵文字列を設定する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N37">SetEmulation320x240</a></b></td><td>　６４０ｘ４８０の画面で３２０ｘ２４０の画面解像度にするかどうかのフラグをセットする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N1">SetUse3DFlag</a></b></td><td>　３Ｄ機能を使うか、のフラグをセット</td></tr>
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N17">GetUse3DFlag</a></b></td><td>　画面の描画に３Ｄアクセラレータを使っているか、の情報を得る</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N2">SetUseVramFlag</a></b></td><td>　グラフィックデータにＶＲＡＭを使用するか、のフラグをセットする３Ｄ機能をＯＦＦにしている時のみ有効）</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N16">SetScreenMemToVramFlag</a></b></td><td>　画面の画像データをＶＲＡＭに配置するかどうかを変更する</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N23">GetVideoMemorySize</a></b></td><td>　ビデオメモリの容量を得る</td></tr>-->
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N5">SetWaitVSyncFlag</a></b></td><td>　ScreenFlip関数実行時にＣＲＴの垂直同期信号待ちをするかのフラグセット</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N24">SetUseDivGraphFlag</a></b></td><td>　必要ならグラフィックの分割を行うか否かを設定する</td></tr>
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N10">SetGraphDataShavedMode</a></b></td><td>　グラフィック減色時の画像劣化緩和処理モードの変更</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N15">SetBasicBlendFlag</a></b></td><td>　３Ｄアクセラレータを使わない半透明描画処理を高速な簡略化された処理を使用するか否かを変更する</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N29">SetMaskReverseEffectFlag</a></b></td><td>　マスクの数値に対する効果を逆転させるかどうかを設定する</td></tr> -->
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N12">LoadPauseGraph</a></b></td><td>　フォーカスが他のソフトに移っているときにバックグラウンドに表示するグラフィックを設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N19">ScreenCopy</a></b></td><td>　裏画面の内容を表画面にコピーする</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N6">GetColorBitDepth</a></b></td><td>　画面の色ビット数を得る</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N11">SaveDrawScreen</a></b></td><td>　現在描画対象になっている画面をＢＭＰ形式で保存する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N20">EnumFontName</a></b></td><td>　使用可能なフォントの名前を列挙する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N8">DrawVString</a></b></td><td>　文字列を縦に描画する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N9">DrawVStringToHandle</a></b></td><td>　フォントハンドルを使用して文字列を縦に描画する</td></tr>
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N3">GraphLock</a></b></td><td>　グラフィックメモリ領域のロック</td></tr> -->
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N4">GraphUnLock</a></b></td><td>グラフィックメモリ領域のロック解除</td></tr> -->
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N26">CreateGraphFromMem</a></b></td><td>　メモリ上の画像ファイルイメージからグラフィックハンドルを作成する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N34">ReCreateGraphFromMem</a></b></td><td>　メモリ上の画像ファイルイメージから既存のグラフィックハンドルにデータを転送する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N35">ReloadFileGraphAll</a></b></td><td>　画像ファイルから作成したグラフィックハンドルに再度画像ファイルから画像を読み込む</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N33">SetRestoreGraphCallback</a></b></td><td>　グラフィックハンドル復元関数を登録する<br><br></td></tr>
+
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N25">SetCreateSoundDataType</a></b></td><td>　作成する音声データの再生形式を設定する</td></tr>
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N27">LoadSoundMemByMemImage</a></b></td><td>　メモリ上の音声ファイルイメージからサウンドハンドルを作成する</td></tr>
+<!--    <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N38">SetEnableXAudioFlag</a></b></td><td>　サウンドの再生にXAudioを使用するかどうかを設定する</td></tr> -->
+        <tr><td valign="top"><b><a href="function/dxfunc_other.html#R15N21">SelectMidiMode</a></b></td><td>　ＭＩＤＩの演奏形態をセットする<br><br><br><br></td></tr>
+        
+
+
+
+    </table>
+    <table align="center" width="600" cellspacing="0" cellpadding="0" >
+
+        <tr><td><hr></td></tr>
+
+        <tr><td><font size="3" color="#005500"><b>使用必須関数</b><br><br></font></td></tr>
+
+        <tr><td>
+        <table align="center" width="650" cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><a name="R1N1"><b>宣言</b></a></td><td><font color="#000088"><b>int DxLib_Init( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ライブラリの初期化<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＤＸライブラリを使用可能な状態に初期化します。<br>
+                    ＤＸライブラリを使用するソフトウェアはまずこの
+                    関数を呼び出す必要があります。<br>
+                    　この関数を使ってもし-1（エラー）が返ってきた場合は直ちに
+                    ソフトを終了しなければなりません。<br><br>
+                </td>
+            </tr>
+        </table>
+        </td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　初期化して終了するだけのプログラムです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R1N2">宣言</a></b></td><td><font color="#000088"><b>int    DxLib_End( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ライブラリ使用の終了関数<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＤＸライブラリの使用を終了する関数です。<br>
+                    ＤＸライブラリを使用しているソフトはすべてソフトを
+                    終了させる前にこの関数を呼ぶ必要があります。<br>
+                    　同時に、ＤＸライブラリはソフトのウインドウの制御も
+                    しているので、この関数を呼び出した後はなるべくすぐにプログラムを
+                    終了させなければなりません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　すぐ上のDxLib_Init関数のサンプルを参照してください
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R1N3">宣言</a></b></td><td><font color="#000088"><b>int    ProcessMessage( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ウインドウのメッセージを処理する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生・若しくはウインドウが閉じられた<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　この関数はWindows環境でのソフトプログラムに付きまとう
+                    メッセージループ処理を肩代わりしてくれる関数です。<br>
+                    　この関数がなにをしているのか、というのは特に気にする
+                    必要はありませんが、とにかく定期的にこの関数を呼び出して
+                    やる必要があります。<br>
+                    　目安としては６０分の１秒に一回程度、用はゲームのループに
+                    一回程度です。この関数を呼び出さないと結果としてシステムが
+                    異常に重くなったり不安定になったりします。<br>
+                    　あと、戻り値が-1( エラー発生・若しくはＤＸライブラリのウインドウが閉じられた
+                    )になったらなるべく早めにDxLib_Endでライブラリ使用を終了し、同時にプログラムも終了する必要があります。( そうしないとウインドウを閉じてもプロセスが残るという事態になります )<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　キーが押されるまで待つループの中にProcessMessageを入れています。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         LPSTR lpCmdLine, int nCmdShow )
+{
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 )
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // キーが押されるまでループします
+    // (因みにキーが押されるまで待つ事は『WaitKey』という
+    //  専用の関数があります)
+    while( CheckHitKeyAll() == 0 )
+    {
+        // メッセージループに代わる処理をする
+        if( ProcessMessage() == -1 )
+        {
+            break ;        // エラーが起きたらループを抜ける
+
+        }
+    }
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br><br><br><br>
+        </td></tr>
+
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3">
+                <b><a href=index.html>戻る</a></b>
+            </font>
+        </td></tr>
+    </table>
+    </body>
+</html>

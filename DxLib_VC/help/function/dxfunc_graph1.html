@@ -1,0 +1,3600 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="800" cellspacing="0" cellpadding="0" >
+
+        <tr><td><font size="3" color="#005500"><b>グラフィックデータ制御関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N1">宣言</a></b></td><td><font color="#000088"><b>int    LoadGraphScreen( int x , int y , char *GraphName , int TransFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画像ファイルを読みこんで画面に表示する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                    <td>x , y　　　:　ロードした画像を描画する矩形の左上頂点の座標<br>
+                        GraphName　:　ロードする画像パスの文字列があるポインタ<br>
+                        TransFlag　:　透過色を入れるか、のフラグ。TRUEで透過色有効になる<br>
+                        　　　　　　(逆はFALSE)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　画像ファイルをGraphNameの示すパスを元にディスクから読みこんで
+                    ( x , y )を画像の左上の頂点とした領域に描画します。<br>
+                    　TransFlagをTRUEにすると画像ファイルの限りなく黒に近い部分を
+                    透過色とし、その部分は画面上に元から画像が残ります。<br><br>
+                    <font color="#660000"><b>尚、読み込むことの出来る画像形式は BMP,JPEG,PNG,DDS,ARGB,TGA の６種類です。</b></font><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面左上を画像の左上頂点としtest1.bmpを透過色有効で表示します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // ＢＭＰ画像の表示
+    LoadGraphScreen( 0 , 0 , "test1.bmp" , TRUE ) ;
+
+    WaitKey() ;            // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N2">宣言</a></b></td><td><font color="#000088"><b>int LoadGraph( char *FileName ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画像ファイルのメモリへの読みこみ、及び動画ファイルのロード<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+            FileName :　ロードする画像、及び動画ファイルの<br>
+            　　　　　　ファイルパス文字列へのポインタ</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+                <td>－１　　　:　エラー発生<br>
+                    －１以外　:　グラフィックのハンドル<br><br></td>
+            </tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　画像ファイルをメモリにロードします。<br>
+                    　これは表示する必要が出るたびにディスクにアクセスすると
+                    画像処理の負荷が非常に高くなってしまうので、ディスクよりも
+                    高速に処理を行うことが出来るメモリ上に画像を保存して
+                    しまおう、と言う考えから来ているものです。<br>
+                    　この関数が成功するとグラフィックハンドルと言うものが
+                    返って来ます。これはメモリに保存した画像の識別番号で
+                    int 型の数値です、読みこんだ画像を描画する際に
+                    この識別番号を指定するとメモリに読みこんだ画像を
+                    描画することが出来ます。<br><br>
+
+                例　　test1.bmpをロードし、戻り値であるグラフィックハンドルを<br>
+                　　int 型変数 GrHandle に保存します<br><br>
+<pre>
+    int GrHandle ;
+
+    GrHandle = LoadGraph( "test1.bmp" ) ;
+</pre>
+                    <font color="#660000"><b>尚、読み込むことの出来る画像形式は BMP,JPEG,PNG,DDS,ARGB,TGA の６種類です。</b></font><br>
+                <br><br>
+
+                    <font color="#008800">アルファチャンネル画像の自動読み込みについて</font><br><br>
+
+                    　ＤＸライブラリでは、LoadGraph 等の画像ファイルを扱う関数全般で、
+                    指定のファイル名の末端に『_a』が付く画像ファイルが在った場合、
+                    その画像ファイルを透明情報として読み込みます。<br>
+                    　透明情報として扱われる画像の色が白に近いほど不透明に、黒に近いほど
+                    透明になります。<br>
+                    　画像中に透明な部分を付けたいとき、又は、透過させる部分とさせない部分の
+                    境界を暈したい時等に有効です。<br><br>
+
+                    例　　test6.bmp と、透明情報用の test6_a.bmp を用意して透明情報付き画像として読み込みます<br>
+<pre>
+    int GrHandle ;
+
+    GrHandle = LoadGraph( "test6.bmp" ) ;
+</pre>
+                    (前述通り test6_a.bmp 自動的に読み込まれるので特別な処理はありません)<br><br><br>
+
+
+                    <font color="#008800">動画ファイルのロードについて</font><br><br>
+
+                    　FileName に動画ファイルのファイルパスを渡すと、戻り値として只の
+                    グラフィックハンドルではなく、ムービーグラフィックハンドルが関数から
+                    返ってきます。(と言っても同じ int型ですが・・・)<br>
+                    　このハンドルは動画ファイルを普通の画像と同じように <a href="#R3N7"><b>DrawGraph</b></a> 関数や <a href="#R3N9"><b>DrawExtendGraph</b></a> 関数などで
+                    動画像を描画することが出来ます。<br>
+                    　詳しい説明は <a href="dxfunc_graph3.html#R14N2"><b>PlayMovieToGraph</b></a> 関数の
+                    解説をご参照下さい。<br><br>
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　test1.bmpを読みこみ画面左上に描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // ＢＭＰ画像のメモリへの読みこみ
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 画面左上に描画します(『DrawGraph』を使用)
+    DrawGraph( 0 , 0 , GHandle , FALSE ) ;
+
+    // キーの入力待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N3">宣言</a></b></td><td><font color="#000088"><b>
+                int LoadDivGraph( char *FileName , int AllNum ,<br>
+                　　　　　　　　　 int XNum , int YNum ,<br>
+                　　　　　　　　　 int XSize , int YSize , int *HandleBuf ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画像ファイルのメモリへの分割読みこみ<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>FileName　　　:　分割読み込みする画像ファイル文字列のポインタ<br>
+                    AllNum　　　　:　画像の分割総数<br>
+                    XNum ,YNum　　:　画像の横向きに対する分割数と縦に対する分割数<br>
+                    SizeX ,SizeY　:　分割された画像一つの大きさ<br>
+                    HandleBuf　　 :　分割読み込みして得たグラフィックハンドルを<br>
+                    　　　　　　　　保存するint型の配列へのポインタ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　一つの画像ファイルを指定されたサイズ、指定された数で分割し
+                    メモリに保存します。これはアニメーションパターンなどを一つの
+                    画像に纏めて保存した場合などを想定して作られた関数です。<br>
+                    　SizeX , SizeYを一つのグラフィックのサイズとして
+                    横XNum列YNum行分に分け、総数AllNum個で分割読み込みします。<br>
+                    　分割した分だけ作成されたグラフィックハンドルはHandleBufで指定した
+                    int型変数配列のポインタに順に格納されていきます。格納される
+                    グラフィックハンドルの順は以下のようになります<br><br>
+
+                    XNum = 4 ; YNum = 4 ; AllNum = 14 ; 
+                    <TABLE BORDER=2 CELLSPACING=5 CELLPADDING=5>
+                        <tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+                        <tr><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+                        <tr><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+                        <tr><td>13</td><td>14</td><td> </td><td> </td></tr>
+                    </table>
+
+                    <br><br>
+                    例　　test.bmpを一つのグラフィックのサイズ32×32横１０、縦３、<br>
+                    　　分割総数２４で分割読み込みし、int型の配列GrHandleに格納します。<br>
+
+<pre>
+    int GrHandle[ 24 ] ;
+    
+    LoadDivGraph( "test.bmp" , 24 , 10 , 3 , 32 , 32 , GrHandle ) ;
+</pre>
+                    <br><br>
+                    <font color="#660000"><b>尚、読み込むことの出来る画像形式は BMP,JPEG,PNG,DDS,ARGB,TGA の６種類です。</b></font><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test2.bmpを一つのグラフィックのサイズ48×56横４、縦３、分割総数
+                １０で分割読み込みし、int型の配列GHandleに格納します。<br>
+                　その後ロードしたグラフィックパターンを画面左上でアニメーション
+                させます。（画面はちらつきます）<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle[ 10 ] ;
+    int i ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // ＢＭＰ画像のメモリへの分割読み込み
+    LoadDivGraph( "test2.bmp" , 10 , 4 , 3 , 48 , 56 , GHandle ) ;
+
+    // ロードしたグラフィックのアニメーション
+    i = 0 ;
+    // キーが押されるまでループ(キー判定には『CheckHitKeyAll』を使用)
+    while( CheckHitKeyAll() == 0 )
+    {
+        // グラフィックの描画(『DrawGraph』使用)
+        DrawGraph( 0 , 0 , GHandle[ i ] , FALSE ) ;
+
+        // アニメーションパターンナンバーを変更
+        i ++ ;
+        if( i == 10 ) i = 0 ;
+
+        // 一定時間待つ(『WaitTimer』使用)
+        WaitTimer( 100 ) ;
+
+        // メッセージ処理
+        if( ProcessMessage() == -1 )
+        {
+            break ;        // エラーが起きたらループから抜ける
+        }
+    }
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+                
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N6">宣言</a></b></td><td><font color="#000088"><b>int MakeGraph( int SizeX , int SizeY ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>空のグラフィックを作成する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>SizeX , SizeY :　作成する空グラフィックのサイズ</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>
+                    －１　　　:　エラー<BR>
+                    －１以外　:　新しいグラフィックハンドル</td>
+            </tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　何も描かれていないグラフィックを作成し、
+                    そのグラフィックハンドルを得ます。こうして作られたグラフィックハンドルには
+                    <a href="#R3N12"><b>GetDrawScreenGraph</b></a> 関数等で利用します。<br><br>
+                    <font color="#660000"><b>
+                    &lt;&lt;注意&gt;&gt;<br>
+                    　この関数で作成れたグラフィックハンドルはフルスクリーン画面からタスク切り替え等で一時的にデスクトップ画面に戻った場合、
+                    再度フルスクリーン画面になった時に画像は自動的に復元されません。<br>
+                    　この場合 SetRestoreGraphCallback 関数で登録できる画像復元関数で画像を再度読み込む必要があります。</b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="#R3N12"><b>GetDrawScreenGraph</b></a> のサンプルを参考にして下さい。
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N25">宣言</a></b></td><td><font color="#000088"><b>int MakeScreen( int SizeX, int SizeY, int UseAlphaChannel ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画対象にできるグラフィックを作成する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>SizeX , SizeY　:　作成するグラフィックのサイズ<br>
+                    UseAlphaChannel　:　作成するグラフィックにアルファチャンネルを付けるかどうか<br>
+                    　　　　　　　　　　　　(TRUE:つける　FALSE:つけない)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>
+                    －１　　　:　エラー<BR>
+                    －１以外　:　新しいグラフィックハンドル</td>
+            </tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　関数 <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> の引数として渡し、描画対象とすることができるグラフィックを作成し、そのグラフィックハンドルを得ます。<br>
+                    MakeGraph で作成できるグラフィックハンドルとの違いは、SetDrawScreen の引数として渡せるか渡せないか、です。<br>
+                    第三引数の UseAlphaChannel を TRUE にするとアルファチャンネル付きのグラフィックハンドルが作成できます。<br><br>
+
+                    　この関数の価値は SetDrawScreen の引数として渡して描画対象にできるということに尽きます、
+                    描画結果を変形させて描画したり、関数 <a href="#R3N26"><b>GraphFilter</b></a> や 関数 <a href="#R3N29"><b>GraphBlend</b></a> を使用して描画結果に画像補正処理や効果を施したりしたい場合に有効です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　縦横20ピクセルの描画可能グラフィックハンドルを作成して、そこに「あ」の文字を描画した後、<br>
+            作成した描画可能グラフィックハンドルを画面いっぱいに拡大して描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int handle;
+
+    // ウインドウモードで起動
+    ChangeWindowMode( TRUE );
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 ) return -1;
+
+    // 20x20サイズのアルファチャンネルなしの描画可能画像を作成する
+    handle = MakeScreen( 20, 20, FALSE ) ;
+
+    // 作成した画像を描画対象にする
+    SetDrawScreen( handle ) ;
+
+    // 画像に対して「あ」という文字を描画する
+    DrawString( 0, 0, "あ", GetColor( 255, 255, 255 ) ) ;
+
+    // 描画対象を表画面にする
+    SetDrawScreen( DX_SCREEN_FRONT ) ;
+
+    // 描画対象画像を画面いっぱいに拡大して描画する
+    DrawExtendGraph( 0, 0, 640, 480, handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey();
+
+    // ＤＸライブラリの後始末
+    DxLib_End();
+
+    // ソフトの終了
+    return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N32">宣言</a></b></td><td><font color="#000088"><b>int SetCreateDrawValidGraphMultiSample( int Samples, int Quality ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画対象にできるグラフィックのマルチサンプリング設定を行う<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int Samples ： マルチサンプルレベル<br>
+                int Quality ： マルチサンプルクオリティ<br>
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　関数 <a href="#R3N25"><b>MakeScreen</b></a> で作成する <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> で描画対象にすることができるグラフィックのマルチサンプリング( アンチエイリアス )設定を行います。<br>
+                    　画面に対する描画の際のアンチエイリアス設定は関数 <a href="dxfunc_graph3.html#R4N8"><b>SetFullSceneAntiAliasingMode</b></a> で行いますが、この関数は「描画対象にできるグラフィック」のアンチエイリアス設定を行います。<br>
+                    　尚、この関数は MakeScreen を実行する前に呼びます。この関数でアンチエイリアス設定をしたうえで MakeScreen を実行すると、作成される「描画対象にできるグラフィック」に SetCreateDrawValidGraphMultiSample の設定が反映されるというわけです。<br><br>
+
+                    　アンチエイリアスに関する注意や引数 Samples, Quality については <a href="dxfunc_graph3.html#R4N8"><b>SetFullSceneAntiAliasingMode</b></a> の解説を参照してください。
+                    ( SetFullSceneAntiAliasingMode の解説にある注意点については２の「グラフィックスデバイスが対応していないとこの関数は機能しない」のみこの関数にも当てはります )<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　640x480 のアンチエイリアス効果のある描画可能なグラフィックを作成して、<br>
+            　そのグラフィックに DxChara.x を描画した後、裏画面に描画可能なグラフィックを描画します。<br>
+            　　SetFullSceneAntiAliasingMode で画面自体の設定を変更してアンチエイリアス効果を得るという処理を、<br>
+            　MakeScreen と SetCreateDrawValidGraphMultiSample を使った場合はこうなります、というサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int ModelHandle ;
+    int Screen ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+    {
+        // エラーが発生したら直ちに終了
+        return -1 ;
+    }
+
+    // 描画可能なグラフィックのアンチエイリアス設定を行う
+    SetCreateDrawValidGraphMultiSample( 4, 2 ) ;
+
+    // 描画可能なグラフィックの作成
+    Screen = MakeScreen( 640, 480, FALSE ) ;
+
+    // ３Ｄモデルの読み込み
+    ModelHandle = MV1LoadModel( "DxChara.x" ) ;
+
+    // 画面に映る位置に３Ｄモデルを移動
+    MV1SetPosition( ModelHandle, VGet( 320.0f, -300.0f, 600.0f ) ) ;
+
+    // 描画先を描画可能がグラフィックに設定
+    SetDrawScreen( Screen ) ;
+
+    // 画面を初期化
+    ClearDrawScreen() ;
+
+    // ３Ｄモデルの描画
+    MV1DrawModel( ModelHandle ) ;
+
+    // 描画先を裏画面に変更
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // 描画可能なグラフィックを描画
+    DrawGraph( 0, 0, Screen, FALSE ) ;
+
+    // 裏画面の内容を表画面に反映
+    ScreenFlip() ;
+
+    // キーの入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N33">宣言</a></b></td><td><font color="#000088"><b>int SetCreateGraphColorBitDepth( int BitDepth ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>作成するグラフィックのビット深度を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int BitDepth ： ビット深度（ 16 又は 32 ）
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　関数 <a href="#R3N2"><b>LoadGraph</b></a> や <a href="#R3N25"><b>MakeScreen</b></a> などの関数で作成するグラフィックハンドルが持つ画像の１ピクセル辺りのビット数を設定する関数です。<br>
+                    　ビット数が多いほど色の階調が増えて綺麗になりますが、その分ＶＲＡＭを多く消費します。<br>
+                    　例えば縦横２５６ピクセルの画像を読み込んだ場合、色ビット数が32の場合に消費するＶＲＡＭの容量は<br><br>
+
+                    　　　２５６×２５６×３２＝２０９７１５２<br><br>
+                    
+                    　２０９７１５２ビットになります。（単位をバイトにすると１バイトは８ビットなので、2097152 / 8 = 262144バイト、
+                    単位をキロバイトにすると１キロバイトは１０２４バイトなので、262144 / 1024 = 256キロバイト）<br>
+                    　色ビット数を16にすると、画質が悪くなる代わりに丁度半分の１０４８５７６ビット（１２８キロバイト）に抑えることができます。<br><br>
+
+                    　使い方は LoadGraph や LoadDivGraph、MakeScreen などの画像を作成する関数を呼ぶ前に SetCreateGraphColorBitDepth でビット数を設定すると、
+                    その後に作成されるグラフィックハンドルにその値が適用されます。<br>
+                    　作成した後のグラフィックハンドルのビット数を変更することはできません。<br><br>
+
+                    ＜例＞<br><br>
+
+                    // ビット深度３２の設定で Test1.bmp を読み込む<br>
+                    SetCreateGraphColorBitDepth( 32 ) ; <br>
+                    GraphHandle = LoadGraph( "Test1.bmp" ) ;<br><br>
+
+                    // ビット深度１６の設定で縦横５１２ピクセルの描画可能画像を作成する<br>
+                    SetCreateGraphColorBitDepth( 16 ) ;<br>
+                    ScreenHandle = MakeScreen( 512, 512 ) ;<br><br><br>
+
+
+                    <font color="#008800"><b>＜浮動小数点型画像の場合＞</b></font><br><br>
+
+                    　<a href="#R3N34"><b>SetDrawValidFloatTypeGraphCreateFlag</b></a> で浮動小数点型の画像を持つグラフィックハンドルを作成するように設定している場合は
+                    SetCreateGraphColorBitDepth で設定する値は「１ピクセル辺りのビット数」ではなく「１ピクセル内の１チャンネル辺りのビット数」になります。<br>
+                    　つまり設定が１６の時にＲＧＢＡの４チャンネルを持った画像を作成すると１ピクセル辺りのサイズは１６×４＝６４ビットになります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N34">宣言</a></b></td><td><font color="#000088"><b>int SetDrawValidFloatTypeGraphCreateFlag( int Flag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画可能な浮動小数点型のグラフィックを作成するかどうかの設定を行う<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int Flag ： 浮動小数点型のハンドルを作成するかどうか<br>
+                　　　　　　　( TRUE：浮動小数点型　FALSE：整数型（デフォルト） )
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　関数 <a href="#R3N25"><b>MakeScreen</b></a> で作成する <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> で描画対象にすることができるグラフィックの各ピクセルの情報形態を浮動小数点型にするかどうかの設定を行います。<br>
+                    　普段画像がどのような数値形態で保存されているかは気にすることはありませんが、
+                    ＨＤＲ（ High Dynamic Range ）などの整数型０～２５５の数値表現ではできない画像表現をしたい場合は浮動小数点型の画像を使用したりします。<br><br>
+
+                    　使い方は <a href="#R3N25"><b>MakeScreen</b></a> で描画可能な画像を作成する関数を呼ぶ前に SetDrawValidFloatTypeGraphCreateFlag で浮動小数点型にするかどうかを設定すると、
+                    その後に作成されるグラフィックハンドルにその設定が適用されます。<br>
+                    　作成した後のグラフィックハンドルの数値型を変更することはできません。<br><br>
+
+                    ＜例＞<br><br>
+
+                    // 浮動小数点型の描画可能画像を作成する<br>
+                    SetDrawValidFloatTypeGraphCreateFlag( TRUE ) ; <br>
+                    ScreenHandle1 = MakeScreen( 512, 512, TRUE ) ;<br><br>
+
+                    // 整数型の描画可能画像を作成する<br>
+                    SetDrawValidFloatTypeGraphCreateFlag( FALSE ) ;<br>
+                    ScreenHandle2 = MakeScreen( 1024, 1024, FALSE ) ;<br><br><br>
+
+                    　主にピクセルシェーダーで色々処理をする際に必要となるもので、
+                    今のところＤＸライブラリの標準的な描画関数を使用する限りでは描画可能画像を浮動小数点型にする意味はありません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N35">宣言</a></b></td><td><font color="#000088"><b>int SetCreateDrawValidGraphChannelNum( int ChannelNum ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>作成する描画可能なグラフィックのチャンネル数の設定を行う<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int ChannelNum ： 作成する描画可能なグラフィックのチャンネル数（１、２、又は４）
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　関数 <a href="#R3N25"><b>MakeScreen</b></a> で作成する <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> で描画対象にすることができるグラフィックの各ピクセルのチャンネル数の設定を行います。<br>
+                    　通常ピクセルは Alpha, Red, Gree, Blue の色と透明度を表現するための４チャンネルを持っていますが、
+                    ピクセルシェーダーを用いてグラフィックに情報を描画する場合には必ずしも色を書き込むとは限らず、
+                    時には数値一つだけ書き込めれば良い場合などもあります。<br>
+                    　そのような場合に４チャンネルのグラフィックを使ってしまうとＶＲＡＭ容量も無駄に消費してしまいますし、
+                    描画負荷も上がってしまって良いことが無いのでこの関数でチャンネル数を必要な分に設定します。<br><br>
+
+                    　使い方は <a href="#R3N25"><b>MakeScreen</b></a> で描画可能な画像を作成する関数を呼ぶ前に SetCreateDrawValidGraphChannelNum でチャンネル数を設定すると、
+                    その後に作成されるグラフィックハンドルにその設定が適用されます。<br>
+                    　作成した後のグラフィックハンドルが持つ画像のチャンネル数を変更することはできません。<br><br>
+
+                    ＜例＞<br><br>
+
+                    // １チャンネルの描画可能画像を作成する<br>
+                    SetCreateDrawValidGraphChannelNum( 1 ) ; <br>
+                    ScreenHandle1 = MakeScreen( 512, 512, TRUE ) ;<br><br>
+
+                    // ２チャンネルの描画可能画像を作成する<br>
+                    SetCreateDrawValidGraphChannelNum( 2 ) ;<br>
+                    ScreenHandle2 = MakeScreen( 1024, 1024, FALSE ) ;<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N37">宣言</a></b></td><td><font color="#000088"><b>int SetUsePremulAlphaConvertLoad( int UseFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>読み込み時に画像を乗算済みα画像に変換するかを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int UseFlag ： 読み込み時に乗算済みα画像に変換するかどうか<br>
+		　　　　　　　　( TRUE:変換する　FALSE:変換しない( デフォルト ) )
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a>の解説にある『乗算済みα』用のグラフィックハンドルを作成するかどうかを設定する関数です。<br><br>
+		UseFlag を TRUE にして呼び出すと、画像の読み込み時に全てのピクセルに対して以下の処理が行われます。<br><br>
+
+		変換後のピクセルの赤成分 = 変換前のピクセルの赤成分 * ピクセルのα成分 / 255 ;<br>
+		変換後のピクセルの緑成分 = 変換前のピクセルの緑成分 * ピクセルのα成分 / 255 ;<br>
+		変換後のピクセルの青成分 = 変換前のピクセルの青成分 * ピクセルのα成分 / 255 ;<br><br>
+
+		詳しい解説は<a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a>をご覧ください。
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a>のサンプルプログラムをご覧ください。
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N7">宣言</a></b></td><td><font color="#000088"><b>int    DrawGraph( int x, int y, int GrHandle, int TransFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                x , y　　　: グラフィックを描画する領域の左上頂点の座標<br>
+                GrHandle　 : 描画するグラフィックのハンドル<br>
+                TransFlag　: 透過色を有効にするか、のフラグ(TRUEで有効、FALSEで無効）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを( x , y )を描画する画像の左上頂点として描画します。<br>
+                    　TransFlagをTRUEにすると描画するグラフィックの限りなく黒に近い
+                    部分を透過色とし、その部分は画面上に元から画像が残ります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmpをメモリに読み込み、画面左上に透過色有効で描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを画面左上に描画
+    DrawGraph( 0 , 0 , GHandle , TRUE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N8">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawTurnGraph( int x, int y,<br>
+                　　　　　　　　　 int GrHandle, int TransFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックのＬＲ反転描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                x , y　　　: 描画する反転した画像の左上頂点の座標<br>
+                GrHandle　 : 描画するグラフィックのハンドル<br>
+                TransFlag　: 透過色が有効か、フラグ（TRUEで有効FALSEで無効）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを( x , y )を描画する画像の左上頂点として左右反転
+                    描画します。<br>
+                    　TransFlagをTRUEにすると描画するグラフィックの限りなく黒に近い
+                    部分を透過色とし、その部分は画面上に元から画像が残ります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmpをメモリに読み込み、座標( 100 , 0 )に透過色無効で反転描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+    
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを反転描画
+    DrawTurnGraph( 100 , 0 , GHandle , FALSE ) ;
+
+    WaitKey() ;            // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N9">宣言</a></b></td><td><font color="#000088"><b>
+                int    DrawExtendGraph( int x1, int y1, int x2, int y2,<br>
+                　　　　　　　　　　 int GrHandle , int TransFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの拡大縮小描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    x1 , y1　　: グラフィックを描画する矩形の左上頂点の座標<br>
+                    x2 , y2　　: グラフィックを描画する矩形の右下頂点＋１の座標<br>
+                    GrHandle　 :  描画するグラフィックのハンドル<br>
+                    TransFlag　: 透過色が有効か、フラグ（TRUEで有効FALSEで無効）</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを左上頂点を( x1 , y1 )右下頂点を( x2 - 1, y2 - 1 )とした
+                    矩形領域に描画します。グラフィックの大きさが矩形領域よりも
+                    小さい時は拡大描画され、矩形領域よりも大きかった時は縮小描画
+                    されます。<br>
+                    　TransFlagをTRUEにすると描画するグラフィックの限りなく黒に近い
+                    部分を透過色とし、その部分は画面上に元から画像が残ります。<br><br>
+                    <font color="#800000"><b>
+                    注…『なんで右下の頂点は「-1」してるの？』と思われた方は<a href="#R2N2">DrawBox</a>の解説を読んでみて下さい。
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmp(サイズ130×480)をメモリに読み込み、座標( 100 , 0 )に
+                横幅２倍のサイズで透過色有効で描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを拡大描画
+    DrawExtendGraph( 100 , 0 , 100 + 130 * 2 , 0 + 480 , GHandle , TRUE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N10">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawRotaGraph( int x, int y,<br>
+                　　　　　　　　　　double ExtRate, double Angle,<br>
+                　　　　　　　　　　int GrHandle , int TransFlag , int TurnFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの回転描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    x , y　　　: グラフィックを描画する領域の中心座標<br>
+                    ExtRate　　: 拡大率（１.０で等倍）<br>
+                    Angle　　　: 描画角度（ラジアン指定）<br>
+                    GrHandle　 : 描画するグラフィックの識別番号（グラフィックハンドル）<br>
+                    TransFlag　: 透過色が有効か、フラグ（TRUEで有効FALSEで無効）<br>
+                    TurnFlag : 画像の左右反転を行うか、のフラグ(FALSEで普通に描画 TRUEで反転)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを回転、拡大処理を施して描画します。<br>
+                    　まず ExtRate は拡大率です。１．０を等倍とし２．０なら２倍
+                    に拡大されます。Angle は描画角度です、角度の指定単位はラジアンで
+                    π（3.14159～）で１８０度回転します。１度分だけ回転させたい
+                    場合は π ÷ １８０ × １ とすれば１度分だけグラフィックが
+                    右回り方向に回転して描画されます。<br>
+                    　こうして拡大、回転を施されたグラフィックは( x , y )の示す
+                    座標を描画先画面上の画像の中心座標として描画されます。<br>
+                    　TransFlagをTRUEにすると描画するグラフィックの限りなく黒に近い
+                    部分を透過色とし、その部分は画面上に元から画像が残ります。<br>
+                    　TurnFlag をTRUE(1)にすると画像は左右反転した状態で描画され、
+                    FALSE(0) を指定すると普通に描画されます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面中心に test1.bmp を１．５倍に拡大し９０度回転させて描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+#define PI    3.1415926535897932384626433832795f
+    
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを回転描画
+    DrawRotaGraph( 320 , 240 , 1.5f , PI / 2 , GHandle , TRUE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N19">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawRotaGraph2( int x, int y,<br>
+                　　　　　　　　　　int cx, int cy,<br>
+                　　　　　　　　　　double ExtRate, double Angle,<br>
+                　　　　　　　　　　int GrHandle, int TransFlag, int TurnFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの回転描画(回転中心指定あり)<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    x , y　　　: 画像を回転描画する画面上の中心座標<br>
+                    cx , cy　　: 画像を回転描画する画像上の中心座標<br>
+                    ExtRate　　: 拡大率（１.０で等倍）<br>
+                    Angle　　　: 描画角度（ラジアン指定）<br>
+                    GrHandle　 : 描画するグラフィックの識別番号（グラフィックハンドル）<br>
+                    TransFlag　: 透過色が有効か、フラグ（TRUEで有効FALSEで無効）<br>
+                    TurnFlag : 画像の左右反転を行うか、のフラグ(FALSEで普通に描画 TRUEで反転)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>DrawRotaGraph</b></a>では常に画像の中心が
+                    回転の中心となっていますが、この関数では引数 cx, cy が示す画像
+                    中の座標を回転中心として描画を行います。<br>
+                    　それ以外の引数に関する解説は<a href="#R3N3"><b>DrawRotaGraph</b></a>
+                    の解説をご参照ください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面中心に test1.bmp を１．５倍に拡大し画像の左上端を基点に９０度回転させて描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+#define PI    3.1415926535897932384626433832795f
+    
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを回転描画
+    DrawRotaGraph2( 320, 240, 0, 0, 1.5f, PI / 2, GHandle, TRUE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N36">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawRotaGraph3(<br>
+                　　 int x, int y,<br>
+                　　 int cx, int cy,<br>
+                　　 double ExtRateX, double ExtRateY,<br>
+                　　 double Angle, int GrHandle,<br>
+                　　 int TransFlag, int TurnFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの回転描画(回転中心指定あり)<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    x , y　　　: 画像を回転描画する画面上の中心座標<br>
+                    cx , cy　　: 画像を回転描画する画像上の中心座標<br>
+                    ExtRateX 　: 横方向の拡大率（１.０で等倍）<br>
+                    ExtRateY 　: 縦方向の拡大率（１.０で等倍）<br>
+                    Angle　　　: 描画角度（ラジアン指定）<br>
+                    GrHandle　 : 描画するグラフィックの識別番号（グラフィックハンドル）<br>
+                    TransFlag　: 透過色が有効か、フラグ（TRUEで有効FALSEで無効）<br>
+                    TurnFlag : 画像の左右反転を行うか、のフラグ(FALSEで普通に描画 TRUEで反転)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N19"><b>DrawRotaGraph2</b></a>では画像の拡大率を縦方向と横方向で別けることができませんが、
+                    この関数では縦方向と横方向で別々の拡大率を指定することができます。<br>
+                    　それ以外の引数に関する解説は<a href="#R3N3"><b>DrawRotaGraph</b></a> 及び <a href="#R3N19"><b>DrawRotaGraph2</b></a>
+                    の解説をご参照ください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面中心に test1.bmp を横に２倍、縦に１．５倍に拡大し画像の左上端を基点に９０度回転させて描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+#define PI    3.1415926535897932384626433832795f
+    
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを回転描画
+    DrawRotaGraph3( 320, 240, 0, 0, 2.0f, 1.5f, PI / 2, GHandle, TRUE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N11">宣言</a></b></td><td><font color="#000088"><b>
+                int    DrawModiGraph( int x1, int y1, int x2, int y2,<br>
+                　　　　　　　　　　int x3, int y3, int x4, int y4,<br>
+                　　　　　　　　　  int GrHandle , int TransFlag );</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックの自由変形描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                x1 , y1 , x2 , y2<br>
+                x3 , y3 , x4 , y4 :　x1から順に描画する画像の左上、右上、<br>
+                　　　　　　　　　　右下、左下の頂点の座標<br>
+                GrHandle　　　　　:　描画するグラフィックのハンドル<br>
+                TransFlag　　　　 :　透過色が有効か、フラグ（TRUEで有効FALSEで無効）</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを( x1 , y1 )を左上頂点、( x2 - 1, y2 ) を右上頂点、
+                    ( x3 - 1, y3 - 1 ) を右下頂点、( x4, y4 - 1 ) を左下頂点とした四角形
+                    に画像を変形し描画します。<br>
+                    　ですが、画像変形後の画像内の各点が一次変換で求まらない場合は
+                    画像結果がおかしくなります。要は、完全に自由な変形は出来ないと
+                    言うことになります。<br>
+                    　TransFlagをTRUEにすると描画するグラフィックの限りなく黒に近い
+                    部分を透過色とし、その部分は画面上に元から画像が残ります。<br><br>
+
+                    <font color="#800000"><b>
+                    注…『なんで右側、下側の座標は「-1」してるの？』と思われた方は<a href="#R2N2">DrawBox</a>の解説を読んでみて下さい。
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmp(サイズ130×480)をメモリに読み込み、( 0 , 0 )( 145 , 62 )
+                ( 12 , 56 )( 168 , 121 )をそれぞれ描画する画像の左上、右上、右下、
+                左下として透過色有効で描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを自由変形描画
+    DrawModiGraph( 0 , 0 , 145 , 62 , 168 , 121 , 12 , 56 , GHandle , TRUE ) ;
+                
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+<!--
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N22">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawPolygon3D(<br>
+                　　　VERTEX_3D *Vertex,<br>
+                　　　int PolygonNum,<br>
+                　　　int GrHandle,<br>
+                　　　int TransFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだグラフィックを使って３Ｄポリゴンを描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                Vertex : ポリゴンの頂点データへのアドレス<br>
+                PolygonNum : ポリゴンの数<br>
+                GrHandle :　描画するグラフィックのハンドル<br>
+                TransFlag :　透過色が有効か、フラグ（TRUEで有効FALSEで無効）</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　Vertex で指定される頂点情報を元に<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックを貼り付けたポリゴンを描画します。<br><br>
+
+                    <使い方><br>
+                    　描画したいポリゴンの数×３個分 VERTEX_3D 構造体の    配列を用意して(この関数で描画できるポリゴンは三角形ポリゴンなので、必ずポリゴンの数×３個になります)、
+                    VERTEX_3D 構造体にポリゴンの頂点情報を格納した後、
+                    この関数の第一引数に VERTEX_3D 構造体の配列の先頭アドレス、
+                    第二引数にポリゴンの数、
+                    第三引数にポリゴンに貼り付けるグラフィックのハンドル、
+                    第４引数に透過色を使用するかどうかのフラグを渡します。<br><br>
+
+                    <制限><br>
+                    　ポリゴンに貼り付ける GrHandle が持つグラフィックの幅、
+                    高さはそれぞれ２のｎ乗(２、４、８、１６、３２、６４、１２８、
+                    ２５６、５１２、１０２４、２０４８等)である必要があります。
+                    (幅と高さが同じ(つまり正方形)である必要はありません)<br>
+                    　また、LoadDivGraph 関数等の分割読み込みしたグラフィックハンドルや DerivationGraph
+                    関数で抜き出して作成したグラフィックハンドルも正常に描画することが出来ません。<br><br>
+
+
+                    <頂点データ構造体の解説><br>
+                    　ポリゴンの頂点定義に使用する VERTEX_3D 構造体は次のように定義されています。<br><br>
+
+                    struct VERTEX_3D<br>
+                    {<br>
+                    　　VECTOR pos ;<br>
+                    　　unsigned char b, g, r, a ;<br>
+                    　　float u, v ;<br>
+                    } ;<br><br>
+
+                    　まず pos は VECTOR 構造体で、この中にポリゴンの頂点の座標を代入します。<br>
+                    　VECTOR 構造体の中身は次のように float 型の x, y, z が存在します。<br><br>
+
+                    struct VECTOR<br>
+                    {<br>
+                    　　float x, y, z ;<br>
+                    } ;<br><br>
+
+                    　ここで指定する座標はスクリーン座標と殆ど同じですが。座標値に z
+                    があるということと、y の上下が逆になっているという点が違います。<br>
+                    　z が０の時は普段のスクリーン座標と同じ位置に配置されますが、<br>
+                    z の値が大きければ大きいほどポリゴンは小さく、z の値が０より小さいと<br>
+                    ポリゴンは大きく描画されることになります。(ある程度のところで見えなくなります)<br>
+                    　y の上下が逆というのはそのままの意味で、y座標０が時に画面の一番下を示し、
+                    値が大きいほど画面上部の座標を示すことになります。<br><br>
+
+                    　次に b, g, r には描画するグラフィックの輝度を代入します。<br>
+                    　bが青成分、gが緑成分、rが赤成分で、代入できる値は０(0%)から
+                    ２５５(100%)となります。(残念ながら100%以上の輝度で描画することは
+                    出来ません、つまり、暗くすることは出来ても元の色以上に明るくすることは出来ない
+                    ということです・・・)<br>
+
+                    　a は <a href="#R3N17"><b>SetDrawBlendMode</b></a> の第二引数
+                    と同じ意味を持ちます。この関数が呼ばれた時に SetDrawBlendMode で
+                    設定されているブレンドモードによって意味が変わってきますので、
+                    詳細は SetDrawBlendMode 関数の解説をご参照ください。<br><br>
+
+                    　u, v は頂点に対応する画像の位置を指定します。u が x、v が
+                    y だと考えて問題ありません。代入できる値は 0.0f～1.0f(『f』は『float型』という意味) で、
+                    0.0f で 座標0 を指定したことと同じになり、1.0f で画像のサイズ
+                    と同じ値をしていたことと同じになります。<br><br>
+
+                    例：256x128 のテクスチャを使用した場合<br><br>
+
+                    u:0.0f　v:0.0f = x:0　y:0<br>
+                    u:1.0f　v:0.0f = x:256　y:0<br>
+                    u:1.0f　v:1.0f = x:256　y:128<br>
+                    u:0.5f　v:0.2f = x:128　y:25.6<br><br>
+
+                    例：64x1024 のテクスチャを使用した場合<br><br>
+
+                    u:0.0f　v:0.0f = x:0　y:0<br>
+                    u:1.0f　v:0.0f = x:64　y:0<br>
+                    u:1.0f　v:1.0f = x:64　y:1024<br>
+                    u:0.5f　v:0.2f = x:32　y:204.8<br><br>
+
+
+                    　何故ドット数による指定ではなく、0.0f～1.0fの値を使うのかと言いますと、
+                    ２Ｄではドットの数がすなわち見た目の大きさになっていたのに対し、
+                    ３Ｄではドットの数が多いかどうかは純粋にテクスチャのきめ細かさに変化があるだけなので、
+                    0.0f～1.0fの値で画像内の位置を指定するようにしておくと解像度の違うテクスチャに
+                    差し替えてもプログラムを変更する必要が無く、何かと都合が良いからです。(多分)<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　TestTex1.jpg(サイズ256x256)をメモリに読み込み、２枚のポリゴンを
+                画面に近づけたり遠ざけたりしながら描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GrHandle ;
+    float Z, ZAdd ; 
+    VERTEX_3D Vertex[6] ;    // ポリゴン２枚なので、頂点は６個
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 )    
+         return -1 ;    // エラーが起きたら直ちに終了
+
+    // 描画先を裏画面にする
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // テクスチャの読み込み
+    GrHandle = LoadGraph( "TestTex1.jpg" ) ;
+
+    // Ｚ値の初期化
+    Z = 0.0F ;
+
+    // Ｚ値の加算値を初期化(最初は近づける)
+    ZAdd = -1.0F ;
+
+    // 何かキーが押されるまでループ
+    while( CheckHitKeyAll() == 0 )
+    {
+        // メッセージ処理
+        if( ProcessMessage() != 0 ) break ;
+
+        // 画面の初期化
+        ClearDrawScreen() ;
+
+        // Ｚ値の処理
+        Z += ZAdd ;
+
+        // 一定のラインを越えていたら進行方向を反転する
+        if( Z < -300.0F || Z > 300.0F ) ZAdd = -ZAdd ;
+
+        // 頂点情報のセット
+        {
+            // 画面の中央に幅・高さ100で描画
+            Vertex[0].pos.x = 320.0F - 50.0F ;    Vertex[0].pos.y = 240.0F + 50.0F ;    Vertex[0].pos.z = Z ;
+            Vertex[0].u = 0.0F ;
+            Vertex[0].v = 0.0F ;
+
+            Vertex[1].pos.x = 320.0F + 50.0F ;    Vertex[1].pos.y = 240.0F + 50.0F ;    Vertex[1].pos.z = Z ;
+            Vertex[1].u = 1.0F ;
+            Vertex[1].v = 0.0F ;
+    
+            Vertex[2].pos.x = 320.0F - 50.0F ;    Vertex[2].pos.y = 240.0F - 50.0F ;    Vertex[2].pos.z = Z ;
+            Vertex[2].u = 0.0F ;
+            Vertex[2].v = 1.0F ;
+
+            Vertex[3].pos.x = 320.0F + 50.0F ;    Vertex[3].pos.y = 240.0F - 50.0F ;    Vertex[3].pos.z = Z ;
+            Vertex[3].u = 1.0F ;
+            Vertex[3].v = 1.0F ;
+
+            Vertex[4].pos.x = 320.0F - 50.0F ;    Vertex[4].pos.y = 240.0F - 50.0F ;    Vertex[4].pos.z = Z ;
+            Vertex[4].u = 0.0F ;
+            Vertex[4].v = 1.0F ;
+
+            Vertex[5].pos.x = 320.0F + 50.0F ;    Vertex[5].pos.y = 240.0F + 50.0F ;    Vertex[5].pos.z = Z ;
+            Vertex[5].u = 1.0F ;
+            Vertex[5].v = 0.0F ;
+
+            // 輝度は全要素100%
+            Vertex[0].r = Vertex[0].g = Vertex[0].b = 255 ;
+            Vertex[1].r = Vertex[1].g = Vertex[1].b = 255 ;
+            Vertex[2].r = Vertex[2].g = Vertex[2].b = 255 ;
+            Vertex[3].r = Vertex[3].g = Vertex[3].b = 255 ;
+            Vertex[4].r = Vertex[4].g = Vertex[4].b = 255 ;
+            Vertex[5].r = Vertex[5].g = Vertex[5].b = 255 ;
+
+            // a も最大値
+            Vertex[0].a = 255 ;
+            Vertex[1].a = 255 ;
+            Vertex[2].a = 255 ;
+            Vertex[3].a = 255 ;
+            Vertex[4].a = 255 ;
+            Vertex[5].a = 255 ;
+        }
+
+        // ポリゴンを透過色無しで２枚描画
+        DrawPolygon3D( Vertex, 2, GrHandle, FALSE ) ;
+
+        // 裏画面の内容を表画面に反映
+        ScreenFlip() ;
+    }
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+-->
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N20">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawRectGraph( int DestX, int DestY,<br>
+                　　　　　　　　　 int SrcX, int SrcY, int Width, int Height,<br>
+                　　　　　　　　　 int GraphHandle, int TransFlag, int TurnFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　グラフィックの指定矩形部分のみを描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    int DestX, int DestY　: グラフィックを描画する座標<br>
+                    int SrcX, int SrcY　: 描画するグラフィック上の描画したい矩形の左上座標<br>
+                    int Width, int Height　: 描画するグラフィックのサイズ<br>
+                    int GraphHandle　: 描画するグラフィックのハンドル<br>
+                    int TransFlag　: 透過色処理の有無(TRUEで有効FALSEで無効)<br>
+                    int TurnFlag　: 画像反転処理の有無(TRUEで有効FALSEで無効)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）<br>
+                    グラフィックの指定座標に囲まれた部分<br><br>
+                    
+                    　( SrcX, SrcY )-( SrcX + Width, SrcY + Height )<br><br>
+
+                    だけを描画します。<br>
+                    　沢山のグラフィックを一つの画像にまとめた時などに使います。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　グラフィック testDiv.bmp を読み込み、グラフィック中の (32,32)-(64,64) の部分
+                だけを画面座標 (100,100) に描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain 関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int Graph ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return -1 ;
+
+    // グラフィックのロード
+    Graph = LoadGraph( "testDiv.bmp" ) ;
+
+    // グラフィック中の(32,32)-(64,64)の部分を画面座標(100,100)に
+    // 透過色処理あり、反転処理なしで描画
+    DrawRectGraph( 100, 100, 32, 32, 32, 32, Graph, TRUE, FALSE ) ;
+
+    // キーの入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N21">宣言</a></b></td><td><font color="#000088"><b>
+                int DerivationGraph( int SrcX, int SrcY,<br>
+                　　　　　　 int Width, int Height, int SrcGraphHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　指定のグラフィックの指定部分だけを抜き出して新たなグラフィックを作成する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    int SrcX, int SrcY : グラフィック中の抜き出したい矩形の左上座標<br>
+                    int Width, int Height : 抜き出すグラフィックのサイズ<br>
+                    int SrcGraphHandle : 抜き出したいグラフィックのハンドル</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１：エラー発生</td></tr>
+            <tr><td width="100">　</td><td>－１以外：新しいグラフィックのハンドル<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックの一部分を抜き出し、新しいグラフィックのハンドルを
+                    作成します。<br>
+                    　主に一つの画像ファイルに複数のグラフィックが詰まっている場合、
+                    それらを個々のグラフィックとして扱いたい場合などに使用します。<br><br>
+
+                    <font color="#880000">《注意！》</font><br>
+                    　この関数によって作成されたグラフィックは抜き出し元となる
+                    SrcGraphHandle が示しているグラフィックと共有しますので、
+                    DerivationGraph 関数によって作成したグラフィックハンドルを
+                    使用して <a href="#R3N12"><b>GetDrawScreenGraph</b></a> 関数を
+                    使用した場合は SrcGraphHandle 上のグラフィック情報にも影響が
+                    出ますので注意してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　testDiv.bmp をロードし、作成したグラフィックから、(0,32)-(32,64)
+                の部分を抜き出し新たなグラフィックハンドルを作成します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain 関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int Graph, Graph2 ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return -1 ;
+
+    // グラフィックのロード
+    Graph = LoadGraph( "testDiv.bmp" ) ;
+
+    // Graph 中の (0,32)-(32,64) の部分を抜き出し、新たな
+    // グラフィックハンドルを作成
+    Graph2 = DerivationGraph( 0, 32, 32, 32, Graph ) ;
+
+    // 新たに作成したグラフィックハンドルで描画
+    DrawGraph( 100, 100, Graph2, TRUE ) ;
+
+    // キーの入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N12">宣言</a></b></td><td><font color="#000088"><b>
+                int    GetDrawScreenGraph( int x1 , int y1 ,<br>
+                　　　　　　　　　　　　　int x2, int y2, int GrHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+                    x1 , y1　 :　　取得するグラフィック領域（矩形）の左上頂点の座標<br>
+                    x2 , y2　 :　　取得するグラフィック領域の右下頂点＋１の座標<br>
+                    GrHandle　:　　取り込んだグラフィックを保存出来るサイズの<br>
+                    　　　　　　グラフィックを持つハンドル</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックに、描画先となっているグラフィック領域（デフォルト
+                    では表示されている画面）から( x1 , y1 )( x2 - 1, y2 - 1 )をそれぞれ矩形の
+                    左上頂点、右下頂点とした領域からGrHandleがもっているグラフィック
+                    に画像データを取りこみます。<br>
+                    　この際取りこむ画像のサイズと、取り込んだ画像を保存する
+                    グラフィックのサイズは同じでなければなりません<br><br>
+                    <font color="#800000"><b>
+                    注１…この関数で取り込んだ画像は、透過色の機能が正常に動作しませんのでご注意ください。<br>
+                    注２…『なんで右下の頂点は「-1」してるの？』と思われた方は<a href="#R2N2">DrawBox</a>の解説を読んでみて下さい。<br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面にでたらめに１０００個の点を描き、その画面を取りこむ<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+    int i ;
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // １０００個の点を描く
+    for( i = 0 ; i &lt; 1000 ; i ++ )
+    {
+        // ランダムな位置に点を描く（『GetRand』を使用） 
+        DrawPixel( GetRand( 639 ) , GetRand( 479 ) , Cr ) ;
+    }
+
+    // 画面のサイズと同じサイズのグラフィックを作成
+    GHandle = MakeGraph( 640 , 480 ) ;
+
+    // 画面データの取りこみ
+    GetDrawScreenGraph( 0 , 0 , 640 , 480 , GHandle ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N13">宣言</a></b></td><td><font color="#000088"><b>
+                int    GetGraphSize( int GrHandle ,<br>
+                　　　　　　　　　 int *SizeXBuf , int *SizeYBuf ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>グラフィックのサイズを得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>    GrHandle　:　サイズを調べるグラフィックのハンドル<br>
+                    SizeXBuf　:　グラフィックの幅を保存するint型変数のポインタ<br>
+                    SizeYBuf　:　グラフィックの高さを保存するint型変数のポインタ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　GrHandleで指定したハンドルが持つグラフィックのサイズを
+                    取得する関数です。サイズはそれぞれSizeXBufとSizeYBufが示す
+                    int型変数に保存されます。<br><br>
+
+                    <b>例</b>　　test1.bmpを読みこんでそのビットマップのサイズをint型変数<br>
+                    　　SizeX,SizeYに格納します<br><br>
+<pre>
+    int SizeX , SizeY , GrHandle ;
+
+    GrHandle = LoadGraph( "test1.bmp" ) ;
+    GetGraphSize( GrHandle , &amp;SizeX , &amp;SizeY ) ;
+</pre>
+                    <br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmpをメモリに読み込み、そのサイズを取得する、上記の例を
+                無意味にもソフトプログラム化したものです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+    int GSizeX , GSizeY ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックのサイズを得る
+    GetGraphSize( GHandle , &amp;GSizeX , &amp;GSizeY ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N14">宣言</a></b></td><td><font color="#000088"><b>int InitGraph( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>読みこんだグラフィックデータをすべて削除する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N3"><b>LoadDivGraph</b></a>、<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeGraph</b></a>等で読みこんだ（作成した）
+                    グラフィックをすべて削除し、初期化します。これによって占有
+                    されていたメモリ領域を開放することができます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ＢＭＰをロードして表示したり作成したりした後これらのグラフィックを
+                削除する。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle , GHandle2 ;
+    int i ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 適当な座標に１０回描画
+    for( i = 0 ; i &lt; 10 ; i ++ )
+    {
+        // 画像をランダムな座標に描画する(『GetRand』使用)
+        DrawGraph( GetRand( 639 ), GetRand( 479 ), GHandle, TRUE ) ;
+    }
+
+    // 空のグラフィックを作成
+    GHandle2 = MakeGraph( 128 , 128 ) ;
+
+    // 適当な領域を取りこむ
+    GetDrawScreenGraph( 156 , 24 , 156 + 128 , 24 + 128 , GHandle2 ) ;
+                
+    // 取り込んだ画像で１０回描画 
+    for( i = 0 ; i &lt; 10 ; i ++ )
+    {
+        // 画像をランダムな座標に描画する(『GetRand』使用)
+        DrawGraph( GetRand( 639 ), GetRand( 479 ), GHandle2, TRUE ) ;
+    }
+
+    // 全グラフィックを初期化
+    InitGraph() ;
+                
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N15">宣言</a></b></td><td><font color="#000088"><b>int DeleteGraph( int GrHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のグラフィックをメモリ上から削除する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>GrHandle : メモリ上から削除したいグラフィックのハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　GrHandleで指定されたハンドルのグラフィックをメモリ上から削除します。
+		    これによって使えるメモリの量を増やす事が出来ます。<br>
+                    　当然ですが削除したグラフィックは再度ロード等しない限り使用できなくなります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmpをメモリに読み込み、画面左上に透過色有効で描画した後
+                メモリ上から削除する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 読みこんだグラフィックを画面左上に描画
+    DrawGraph( 0 , 0 , GHandle , TRUE ) ;
+
+    // 描画が終ったのでグラフィックをメモリ上から削除する
+    DeleteGraph( GHandle ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N16">宣言</a></b></td><td><font color="#000088"><b>int    SetDrawMode( int DrawMode ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画モードをセットする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>DrawMode :    描画モードを指定する引数です<br>
+                    　　　　　　　DX_DRAWMODE_NEAREST　: ネアレストネイバー法で描画する<br>
+                    　　　　　　　　　　　　　　　　　　　(標準)<br>
+                    　　　　　　　DX_DRAWMODE_BILINEAR : バイリニア法で描画する<br></td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　描画モードとは主に拡大描画をしたときに影響がでます。<br>
+                    　それぞれ長所と短所があります。デフォルトとなっている
+                    ネアレストネイバー法は拡大描画をしたときにドットが粗くなって
+                    しまっているのが一目瞭然になります。<br>
+                    　逆にバイリニア法は拡大した時のドットとドット間の境目を
+                    滑らかに描画してくれるのでネアレストネイバー法で描画した
+                    時よりも綺麗に描画する事が出来るのですが、普通（等倍）でに
+                    描画した時は逆にぼやけた感じになってしまう事があります。
+                    （グラフィックボードによります）<br>
+                    　ので、無難な線を取って標準ではネアレストネイバー法で
+                    描画するようになっています。用途によって変更してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmp(サイズ130×480)を読み込みネアレストネイバー法と
+                バイリニア法で描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 描画モードをネアレストネイバー法にする
+    SetDrawMode( DX_DRAWMODE_NEAREST ) ;
+
+    // 読みこんだグラフィックを画面左上に拡大描画
+    DrawExtendGraph( 0 , 0 , 130 * 2 , 480 * 2 , GHandle , FALSE ) ;
+
+    // 描画モードをバイリニア法にする
+    SetDrawMode( DX_DRAWMODE_BILINEAR ) ;
+
+    // 読みこんだグラフィックを先ほどの隣に描画
+    DrawExtendGraph( 260 , 0 , 260 + 130 * 2 , 480 * 2 , GHandle , FALSE ) ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N17">宣言</a></b></td><td><font color="#000088"><b>int SetDrawBlendMode( int BlendMode , int Pal ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画の際のブレンドモードをセットする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>BlendMode : 描画ブレンドモードを指定する引数です<br>
+		　　　　　　　　DX_BLENDMODE_NOBLEND　:　ノーブレンド（デフォルト）<br>
+		　　　　　　　　DX_BLENDMODE_ALPHA　　:　αブレンド<br>
+		　　　　　　　　DX_BLENDMODE_ADD　　　:　加算ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_SUB　　　:　減算ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_MULA　　　:　乗算ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_INVSRC　　:　反転ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_PMA_ALPHA　: 乗算済みα用のαブレンド<br>
+		　　　　　　　　DX_BLENDMODE_PMA_ADD　　: 乗算済みα用の加算ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_PMA_SUB　　: 乗算済みα用の減算ブレンド<br>
+		　　　　　　　　DX_BLENDMODE_PMA_INVSRC : 乗算済みα用の反転ブレンド<br><br>
+
+                    Pal          : 描画ブレンドモードのパラメータ（０～２５５）</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N7"><b>DrawGraph</b></a>、<a href="#R3N9"><b>DrawExtendGraph</b></a>、
+                    <a href="#R3N10"><b>DrawRotaGraph</b></a>、<a href="#R3N11"><b>DrawModiGraph</b></a>、<a href="#R3N8"><b>DrawTurnGraph</b></a>、
+                    <a href="#R2N1"><b>DrawLine</b></a>、<a href="#R2N2"><b>DrawBox</b></a>、
+                    <a href="#R2N3"><b>DrawCircle</b></a>,<a href="#R2N4"><b>DrawPixel</b></a>
+                    <a href="dxfunc_graph2.html#R17N1"><b>DrawString</b></a> を使用したときの描画先に
+                    元からある画像とのブレンドを行うか等の設定を行います。<br><br>
+
+                    　DX_BLENDMODE_NOBLEND <br>
+                    　を指定するとブレンド処理は行われず描画しようとしているグラフィックがそのまま描画される事となります（これがデフォルトです）。<br>
+                    　このモードの場合Palの値は意味を持ちません<br><br>
+
+                    　DX_BLENDMODE_ALPHA<br>
+                    　を指定すると描画先に元から描かれていた画像と描画しようとしている画像とでアルファブレンディングします。<br>
+                    　Palの値が２５５に近いほど描画しようとしているグラフィックの方が濃く表示されます。<br><br>
+
+                    　DX_BLENDMODE_ADD<br>
+                    　を指定すると描画先に元から描かれていた画像に描画しようとしている画像の各ドットの明るさを加算します。<br>
+                    　加算される割合はPalの値が２５５に近いほど強くなります。<br><br>
+
+                    　DX_BLENDMODE_SUB<br>
+                    　を指定すると描画先に元から描かれている画像から描画しようとしている画像の各ドットの明るさを引きます。<br>
+                    　元の画像が明るいものほど、描画先の輝度を奪います。<br>
+                    　ダーク系の表現に有用です。<br>
+                    (注意！DX_BLENDMODE_SUB は表画面に描画する際に使用すると表示が一瞬おかしくなります。
+                    このブレンドモードを使用する際は必ず <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> 関数で DX_SCREEN_BACK を指定し、
+                    裏画面に描画するようにしてください。)<br><br>
+
+                    　DX_BLENDMODE_MULA<br>
+                    　を指定すると、描画先に元から描かれている画像の色と、描画しようとしている画像の色とで乗算します。<br>
+                    　『色の乗算って何？』と思われるかもしれませんので、
+                    『明るさ同士の掛け算』と言った方が分かりやすいかもしれません。<br>
+                    　ただ、明るさ同志の掛け算と言うと描画先の画像に元からある色を元の何倍も明るい色にしてしまったり出来そうなイメージがありますが、
+                    実際は描画先に元からある色を元の色以上に明るくすることは出来ず、
+                    描画しようとしている画像の色が真っ白だったら元の画像はそのまま、
+                    少しでも暗ければその分暗く、という具合になります。<br>
+                    　用途としては、黒い煙を表現したい時や、自分の回り以外真っ暗で見えない、
+                    等の表現をしたい時などがあります。<br><br>
+
+                    　DX_BLENDMODE_INVSRC<br>
+                    　描画元の色を反転して描画します。<br>
+                    　反転ということはつまり、描画元の画像の明るいところほど暗く、
+                    暗いところほど明るく描画されます。<br>
+                    　シューティングゲームの敵がダメージを受けた場合や、
+                    『ガーン』とショックを受けたときの表現に使えるかも？<br><br>
+
+		　DX_BLENDMODE_PMA_ALPHA<br>
+		　DX_BLENDMODE_PMA_ADD<br>
+		　DX_BLENDMODE_PMA_SUB<br>
+		　DX_BLENDMODE_PMA_INVSRC<br>
+		　それぞれ『乗算済みα』用のブレンドモードで、 _PMA が付かない同名のモードと( 乗算済みαチャンネル付き画像を使用した場合の )効果は同じです。
+		　『乗算済みα』についてはこちらの解説をご参照ください。<br>
+		　<a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a><br><br><br><br>
+
+                    　それぞれエフェクト等を行う用途によって変更してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　back.bmpとtest1.bmpを読み込みそれぞれノーブレンドと
+                アルファブレンドと加算ブレンドと減算ブレンドと乗算ブレンドで描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int TestHandle , BackHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    TestHandle = LoadGraph( "test1.bmp" ) ;
+
+    // back.bmpの読み込み
+    BackHandle = LoadGraph( "back.bmp" ) ;
+
+
+    // 描画ブレンドモードをノーブレンドにする
+    SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 0 ) ;
+
+    // 背景を描画
+    DrawGraph( 0 , 0 , BackHandle , FALSE ) ;
+
+    // 上に載せるグラフィックを描画
+    DrawGraph( 255 , 0 , TestHandle , TRUE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+
+    // 背景を描画
+    DrawGraph( 0 , 0 , BackHandle , FALSE ) ;
+
+    // 描画ブレンドモードをアルファブレンド（５０％）にする
+    SetDrawBlendMode( DX_BLENDMODE_ALPHA , 128 ) ;
+
+    // 上に載せるグラフィックを描画
+    DrawGraph( 255 , 0 , TestHandle , TRUE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+
+    // 描画ブレンドモードをノーブレンドにする
+    SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 0 ) ;
+
+    // 背景を描画
+    DrawGraph( 0 , 0 , BackHandle , FALSE ) ;
+
+    // 描画ブレンドモードを加算ブレンド（１００％）にする
+    SetDrawBlendMode( DX_BLENDMODE_ADD , 255 ) ;
+
+    // 上に載せるグラフィックを描画
+    DrawGraph( 255 , 0 , TestHandle , TRUE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+
+
+    // 描画ブレンドモードをノーブレンドにする
+    SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 0 ) ;
+
+    // 背景を描画
+    DrawGraph( 0 , 0 , BackHandle , FALSE ) ;
+
+    // 描画ブレンドモードを減算ブレンド（８０％）にする
+    SetDrawBlendMode( DX_BLENDMODE_SUB , 204 ) ;
+
+    // 上に載せるグラフィックを描画
+    DrawGraph( 255 , 0 , TestHandle , TRUE ) ;
+
+    // キー待ち((7-3)『WaitKey』を使用)
+    WaitKey() ;
+
+
+
+    // 描画ブレンドモードをノーブレンドにする
+    SetDrawBlendMode( DX_BLENDMODE_NOBLEND , 0 ) ;
+
+    // 背景を描画
+    DrawGraph( 0 , 0 , BackHandle , FALSE ) ;
+
+    // 描画ブレンドモードを乗算ブレンドにする
+    SetDrawBlendMode( DX_BLENDMODE_MUL , 0 ) ;
+
+    // 上に載せるグラフィックを描画
+    DrawGraph( 255 , 0 , TestHandle , TRUE ) ;
+
+    // キー待ち((7-3)『WaitKey』を使用)
+    WaitKey() ;
+
+
+    DxLib_End() ;    // ＤＸライブラリ使用の終了処理
+
+    return 0 ;    // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N18">宣言</a></b></td><td><font color="#000088"><b>
+                int    SetDrawBright( int RedBright ,<br>
+                　　　　　　　　　　int GreenBright ,<br>
+                　　　　　　　　　　int BlueBright ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画輝度をセット<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>RedBright<br>
+                    GreenBirght<br>
+                    BlueBright　:　それぞれ赤、緑、青の描画輝度です( 0=0% : 255=100% )<br>
+                    　　　　　　　　(デフォルトでは１００％になっています)</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N7"><b>DrawGraph</b></a>、<a href="#R3N9"><b>DrawExtendGraph</b></a>、<a href="#R3N10"><b>DrawRotaGraph</b></a>、<a href="#R3N11"><b>DrawModiGraph</b></a>、<a href="#R3N8"><b>DrawTurnGraph関数</b></a>を
+                    使用してグラフィックを描画する際の描画輝度を指定します。<br>
+                    　要はグラフィックを青色要素だけで描画したり暗く描画したり
+                    する事が出来るわけです。RedBirght、GreenBright、BlueBrigth
+                    はそれぞれ赤、緑、青の輝度に対応していて上限値は２５５で
+                    明るさ１００％となります。(デフォルトは１００％です)<br>
+                    　因みに１００％以上の明るさにはすることが出来ません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test1.bmpを読み込み赤の色要素のみで描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test1.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // 描画輝度を赤のみにセット
+    SetDrawBright( 255 , 0 , 0 ) ;
+
+    // グラフィックの描画
+    DrawGraph( 0 , 0 , GHandle , FALSE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R15N7">宣言</a></b></td><td><font color="#000088"><b>int SetTransColor( int Red , int Green , int Blue ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　グラフィックに設定する透過色をセットする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int Red , Green , Blue : 透過色に設定する色の各原色値</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　　<a href="#R3N7"><b>DrawGraph</b></a>, <a href="#R3N9"><b>DrawExtendGraph</b></a>等のグラフィック描画関数で使用する<br>
+                    透過色をセットします、この関数の使用後 <a href="#R3N2"><b>LoadGraph</b></a> , <a href="#R3N6"><b>MakeGraph</b></a><br>
+                    等で新たに作成したグラフィックに設定した透過色が適用されます。<br>
+                    　デフォルトでは Red = 0, Green = 0, Blue = 0 の真っ黒が透過色に設定されています。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　R:255 G:0 B:255 の色を透過色にしてtest4.bmpを画面に描画する<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // 透過色を変更
+    SetTransColor( 255 , 0 , 255 ) ;
+
+    // ＢＭＰ画像のメモリへの読みこみ
+    GHandle = LoadGraph( "test4.bmp" ) ;
+
+    // 画面左上に描画します((3-7)『DrawGraph』を使用)
+    DrawGraph( 0 , 0 , GHandle , TRUE ) ;
+
+    // キーの入力待ち((6-3)『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+        <hr>
+        <br><br>
+        </td></tr>
+
+        
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N23">宣言</a></b></td><td><font color="#000088"><b>int LoadBlendGraph( char *FileName ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　画像ファイルからブレンド画像を読み込む<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>char *FileName : 読み込むブレンド用画像のパス<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：ブレンド画像ハンドル</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R3N24">DrawBlendGraph関数</a></b> で使用するブレンド画像ハンドルをファイルから読み込みます。<br>
+                　ブレンド画像を使った合成描画は主にシーンの切り替えに使える機能です。<br>
+                どんなものかはサンプルをご覧になって頂ければ一目瞭然、だと思います。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　Scene1.jpg から Scene2.jpg への画面の切り替えを、ブレンド画像機能を使って行う(ブレンド画像に BlendGraph.bmp を使用)<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int BlendGraph, GrHandle1, GrHandle2 ;
+    int i ;
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 ) return -1 ;
+
+    // 裏画面を使用
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // ブレンド画像を読み込む
+    BlendGraph = LoadBlendGraph( "BlendGraph.bmp" ) ;
+
+    // 二つの画像の読み込み
+    GrHandle1 = LoadGraph( "Scene1.jpg" ) ;
+    GrHandle2 = LoadGraph( "Scene2.jpg" ) ;
+
+    // 256 フレーム掛けて切り替え
+    for( i = 0 ; i &lt; 256 ; i ++ )
+    {
+        // メッセージ処理
+        if( ProcessMessage() != 0 ) break ;
+
+        // Scene2.jpg を描画
+        DrawGraph( 0, 0, GrHandle2, FALSE ) ;
+
+        // Scene1.jpg と BlendGraph.bmp を合成して描画
+        // (境界幅は 64)
+        DrawBlendGraph( 0, 0, GrHandle1, FALSE, BlendGraph, i, 64 ) ;
+
+        // 裏画面の内容を表画面に反映
+        ScreenFlip() ;
+    }
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+        <hr>
+        <br><br>
+        </td></tr>
+        
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N24">宣言</a></b></td><td><font color="#000088"><b>int DrawBlendGraph( int x, int y, int GrHandle, int TransFlag, int BlendGraph, int BorderParam, int BorderRange ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　ブレンド画像と通常画像を合成して描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x, y : 画像を描画する領域の左上端座標<br>
+                int GrHandle : グラフィックハンドル<br>
+                int TransFlag : 透過色処理の有無(TRUEで有効FALSEで無効)<br>
+                int BlendGraph : ブレンド画像ハンドル<br>
+                int BorderParam : 境界位置(０～２５５)<br>
+                int BorderRange : 境界幅(指定できる値は１、６４、１２８、２５５の４つ)<br><br>
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R3N2">LoadGraph関数</a></b> 等で読み込んだグラフィックハンドルの画像と、<b><a href="#R3N23">LoadBlendGraph関数</a></b> で読み込んだブレンド画像を合成して描画します。<br><br>
+                　ブレンド画像を使った合成描画は主にシーンの切り替えに使える機能です。<br>
+                　どんなものかはサンプルをご覧になって頂ければ一目瞭然、だと思います。<br><br>
+
+                　BorderParam ：ブレンド画像の効果の大きさを指定します。指定できる値は０から２５５です。<br><br>
+                　BorderRange ：ブレンド画像の境界の幅を指定します。指定できる値は１，６４，１２８，２５５の４つで、
+                値が大きいほどぼやけた合成になります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　<a href="#R3N23">LoadBlendGraph関数</a> のサンプルを参照してください。
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N26">宣言</a></b></td><td><font color="#000088"><b>int GraphFilter( int GrHandle, int FilterType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画像にフィルター処理を施す<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int GrHandle : フィルター処理を施すグラフィックハンドル<br>
+                    int FilterType : 施すフィルターのタイプ<br>
+                    　　　　　<a href="#R3N26S0">DX_GRAPH_FILTER_MONO　　　　 　　：モノトーンフィルタ</a><br>
+                    　　　　　<a href="#R3N26S1">DX_GRAPH_FILTER_GAUSS　　　　　　：ガウスフィルタ</a><br>
+                    　　　　　<a href="#R3N26S2">DX_GRAPH_FILTER_DOWN_SCALE　　：縮小フィルタ</a><br>
+                    　　　　　<a href="#R3N26S3">DX_GRAPH_FILTER_BRIGHT_CLIP　　：明るさクリップフィルタ</a><br>
+                    　　　　　<a href="#R3N26S4">DX_GRAPH_FILTER_HSB　　　　　　　　：色相・彩度・明度フィルタ</a><br>
+                    　　　　　<a href="#R3N26S5">DX_GRAPH_FILTER_INVERT　　　　　　：階調の反転フィルタ</a><br>
+                    　　　　　<a href="#R3N26S6">DX_GRAPH_FILTER_LEVEL　　　　　 　：レベル補正フィルタ</a><br>
+                    　　　　　<a href="#R3N26S7">DX_GRAPH_FILTER_TWO_COLOR　　　：２階調化フィルタ</a><br>
+                    　　　　　<a href="#R3N26S8">DX_GRAPH_FILTER_GRADIENT_MAP　：グラデーションマップフィルタ</a><br>
+                    ... : 各フィルタに付随する引数
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成したグラフィックハンドル GrHandle に対して、
+                    画像編集ソフトで見られるようなレベル補正や２階調化などのフィルター処理を施します。<br>
+                    　FilterType によって引数が違いますので、各フィルターについての解説は下の方に載せています。<br><br>
+
+                    <font color="#802000"><b>&lt;&lt;注意&gt;&gt;</b><br>
+                    　この関数は <b>DrawGraph などの描画関数とは比べ物にならないほど低速</b>ですが、
+                    <b>シェーダーモデル２．０</b>が使用できるグラフィックスデバイスが備わった環境では、( フィルターによって負荷は違いますが ) DrawGraph を数回実行した程度の負荷で実行することができます。<br><br>
+                    　<b>大まかに 2007年～2008年以降に発売されたノートパソコン、デスクトップパソコン</b>ではシェーダーモデル２．０が使用できるグラフィックスデバイスを備えています、
+                    また、<b>現在数千円くらいから購入できるグラフィックカードでは必ずシェーダーモデル２．０が使用できます</b>。<br><br>
+                    
+                    　尚、シェーダーモデル２．０が使用できる環境の場合、
+                    GrHandle に渡すグラフィックハンドルは<a href="#R3N2"><b>LoadGraph</b></a>や<a href="#R3N25"><b>MakeGraph</b></a>
+                    などで作成された<b>「<a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> の引数として渡せない( 描画対象にできない )グラフィックハンドル」</b>より、
+                    <a href="#R3N6"><b>MakeScreen</b></a> で作成された<b>「<a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> の引数として渡せる( 描画対象にできる )グラフィックハンドル」</b>の方が <b>GraphFilter の処理時間が短くなります</b>。
+                    </font><br><br>
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <font color="#208000"><b>&lt;&lt;各フィルターの説明&gt;&gt;</b></font><br><br>
+
+            　<font color="#008080"><b><a name="R3N26S0">DX_GRAPH_FILTER_MONO：モノトーンフィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int Cb : 青色差( -255 ～ 255 )<br>
+            　　　int Cr : 赤色差( -255 ～ 255 )<br><br>
+
+            　　解説<br>
+            　　　　画像をモノトーン調に変化させることができるフィルターです。<br>
+            　　　　各ピクセルの色をＲＧＢ形式からYCbCr形式に変換して、その上ですべてのピクセルの輝度以外の成分を<br>
+            　　　引数の Cb Cr の値を置き換えた後、再びＲＧＢ形式に戻します。<br>
+            　　　　値の調整が難しいですが、似たような効果を得ることができる DX_GRAPH_FILTER_HSB より負荷は低いです。<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp をモノトーンフィルタを使用してセピア調の画像に変換してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // モノトーンフィルターでセピア調の画像に変換
+    GraphFilter( Handle, DX_GRAPH_FILTER_MONO, -60, 7 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter00.jpg" hspace="0" vspace="0" alt="モノトーンフィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S1">DX_GRAPH_FILTER_GAUSS：ガウスフィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int PixelWidth : 使用ピクセル幅( 8 , 16 , 32 の何れか )<br>
+            　　　int Param : ぼかしパラメータ( 100 で約1ピクセル分の幅 )<br><br>
+
+            　　解説<br>
+            　　　　画像にガウス関数を使用したぼかし効果を与えることができるフィルターです。<br>
+            　　　　Param の値の大きさでぼかしの強さが変化しますが、ぼかせる度合いには限界があります。<br>
+            　　　ぼかしの限界は PixelWidth の値の大きさで決まり、PixelWidth の値が大きいほどぼかしの強さの限界が大きくなり、<br>
+            　　　それとともに処理負荷も大きくなります。<br>
+            　　　　このフィルタは非常に負荷が大きいので、強いぼかしをかけたい場合は PixelWidth の値を 32 にして強いぼかしを<br>
+            　　　掛けるより、縮小フィルタ( DX_GRAPH_FILTER_DOWN_SCALE )で画像を縮小した後弱いぼかしを掛け、<br>
+            　　　その後 DrawExtendGraph で元の大きさで描画する、という方法を採ったほうが処理負荷を小さく抑えることができます。<br><br>
+
+                <font color="#800000"><b>
+                ＜＜注意＞＞<br>
+                　サイズが 2 の n乗のドット数( 1,2,4,8,16,32,64,128,256,512,1024 )ぴったりではない画像に対してガウスフィルタを掛けると、
+                画像の端に、画像には無い色が滲み出たりすることがあります。<br>
+                　こちらは今のところ仕様となりますので、この現象を回避する場合はガウスフィルタを掛ける画像は2のｎ乗サイズにするか、
+                若しくは画像のサイズを少し必要なサイズより大きめにして滲んだ部分を使わないという方法で対処してください。<br><br>
+                </b></font>
+
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp をガウスフィルタを使用してぼかした画像に変換してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // 画面モードを32bitカラーにする
+    SetGraphMode( 640, 480, 32 ) ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // ガウスフィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_GAUSS, 16, 1400 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter01.jpg" hspace="0" vspace="0" alt="ガウスフィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S2">DX_GRAPH_FILTER_DOWN_SCALE：縮小フィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int DivNum : 元のサイズの何分の１か、という値( 2 , 4 , 8 の何れか )<br><br>
+
+            　　解説<br>
+            　　　　画像を綺麗に縮小するためのフィルターです。<br>
+            　　　　DrawExtendGraph でも縮小描画することができますが、それよりも綺麗に縮小した画像を得ることができます。<br>
+            　　　　主にガウスフィルタ( DX_GRAPH_FILTER_GAUSS )の処理負荷を下げる目的で使用されることを想定しています。<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp を４分の１のサイズに縮小してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // ガウスフィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_DOWN_SCALE, 4 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像<br>
+<img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像"><br><br>
+
+変換後( 左 )と DrawExtendGraph の縮小結果( 右 )<br>
+ <img width="256" height="256" src="../Image/Filter/Filter02.png" hspace="0" vspace="0" alt="ガウスフィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S3">DX_GRAPH_FILTER_BRIGHT_CLIP：明るさクリップフィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int CmpType : クリップタイプ<br>
+            　　　　　　　　　　　DX_CMP_LESS　　　　 CmpParamより小さい場合クリップ<br>
+            　　　　　　　　　　　DX_CMP_GREATER　　CmpParamより大きい場合クリップ<br>
+            　　　int CmpParam : クリップパラメータ( 0 ～ 255 )<br>
+            　　　int ClipFillFlag : クリップしたピクセルを塗りつぶすかどうか<br>
+            　　　　　　　　　　　　　　　( TRUE:塗りつぶす  FALSE:塗りつぶさない )<br>
+            　　　int ClipFillColor : クリップしたピクセルに塗る色値( <a href="dxfunc_graph3.html#R4N5"><b>GetColor</b></a> で取得できる値 )<br>
+            　　　　　　　　　　　　　　　( ClipFillFlag が FALSE の場合は使用されません )<br>
+            　　　int ClipFillAlpha : クリップしたピクセルに塗るアルファ値( 0 ～ 255 )<br>
+            　　　　　　　　　　　　　　　( ClipFillFlag が FALSE の場合は使用されません )<br><br>
+
+            　　解説<br>
+            　　　　画像の各ピクセルを輝度に応じて引数で渡す色で塗りつぶすフィルターです。<br>
+            　　　　まず各ピクセルの色から輝度を算出して、その値が CmpType が DX_CMP_LESS の場合は<br>
+            　　　CmpParam より小さかったら、CmpType が DX_CMP_GRATER の場合は CmpParam より大きかったら<br>
+            　　　クリップ処理が行われます。<br>
+            　　　　クリップ処理は ClipFillFlag が TRUE かどうかで処理が別れます。<br>
+            　　　　FALSE の場合は単純に出力先の画像にそのピクセルが書き込まれません。ただ、GraphFilter 関数は<br>
+            　　　入力元と出力先が同じなので、何も変化しないことになります。なので、ClipFillFlag を FALSE にする<br>
+            　　　意味があるのは入力元と出力先を別にできる関数 <a href="#R3N27"><b>GraphFilterBlt</b></a> や <a href="#R3N28"><b>GraphFilterRectBlt</b></a> を<br>
+            　　　使用した場合のみとなります。<br>
+            　　　　ClipFillFlag が TRUE の場合は、クリップ処理としてクリップ判定されたピクセルに元画像の<br>
+            　　　ピクセルの色の代わりに ClipFillColor で指定した色が、出力先画像にアルファチャンネルが<br>
+            　　　ある場合は元画像のピクセルのアルファ値の代わりに ClipFillAlpha が出力先に書き込まれます。<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp の輝度５０％以下の部分を緑色にしてから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // 明るさクリップフィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_BRIGHT_CLIP, DX_CMP_LESS, 128, TRUE, GetColor( 0, 255, 0 ), 255 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter03.jpg" hspace="0" vspace="0" alt="輝度クリップフィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S4">DX_GRAPH_FILTER_HSB：色相・彩度・明度フィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int HueType 　: Hue の意味( 0:相対値  1:絶対値 )<br>
+            　　　int Hue 　　　　: 色相<br>
+            　　　　　　　　　　　　　( HueType が 0 の場合はピクセルの色相に対する相対値( -180 ～ 180 )<br>
+            　　　　　　　　　　　　　　HueType が 1 の場合は色相の絶対値( 0 ～ 360 ) )<br>
+            　　　int Saturation : 彩度( -255 ～ )<br>
+            　　　int Bright 　　　: 輝度( -255 ～ 255 )<br><br>
+
+            　　解説<br>
+            　　　　画像の各ピクセルのＲＧＢの値から色相・彩度・輝度の値を算出して、それに対して引数の<br>
+            　　　Hue、Saturation、Bright を加えることで画像の色相や彩度、輝度を補正するフィルターです。<br>
+            　　　　まず HueType を 0 にするか 1 にするかで結果が大きく変化します。<br>
+            　　　0 にした場合は元の色相の値に対して Hue の値を加算するのに対して、1 にした場合は元の色相の値を<br>
+            　　　無視して Hue の値に置き換えるのですべてのピクセルが同じ色相となり、結果としてモノトーン調の<br>
+            　　　出力結果になります。<br>
+            　　　　Hue の値は色相です、色相は青、赤、緑の色合い 0 ～ 360 の数値で表したもので、0 は赤、<br>
+            　　　120が緑、240が青、360が再び赤、というようになっています。この値に変化を加えることで<br>
+            　　　色合いを変えることができます。HueType が 0 か 1 かによって指定できる値の範囲と意味が変化して、<br>
+            　　　HueType が 0 の場合は元の色相に対する相対値となるので指定できる値は -180 から 180 になります。<br>
+            　　　HueType が 1 の場合は、元の色相を無視した絶対値となるので指定できる値は 0 から 360 となります。<br>
+            　　　　Saturation は彩度です、彩度は高ければ高いほど鮮やかな色に近づき、低ければ低いほどグレーに近くなります。<br>
+            　　　Saturation は必ず元の彩度に対する相対値の指定になりますので、特に彩度を変更したくない場合は<br>
+            　　　0 を指定します。<br>
+            　　　　Bright は輝度です、この値を 0 以下にすると出力結果が黒に近くなり、0 以上にすると出力結果が<br>
+            　　　白に近くなります。0 を指定すれば元画像と同じ輝度で出力されます。<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp の水面の色を紫色に変化させ、彩度を上げて輝度を下げてから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // 色相・彩度・輝度フィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_HSB, 0, 100, 90, -60 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter04.jpg" hspace="0" vspace="0" alt="色相・彩度・輝度フィルタの結果"><br><br>
+色相を固定した場合としない場合の違い<br>
+固定した場合<img width="256" height="256" src="../Image/Filter/Filter04_0.jpg" hspace="0" vspace="0" alt="色相・彩度・輝度フィルタの色相を固定した場合">
+　　　固定しない場合<img width="256" height="256" src="../Image/Filter/Filter04_1.jpg" hspace="0" vspace="0" alt="色相・彩度・輝度フィルタの色相を固定しない場合"><br>
+( 固定した場合はすべてのピクセルの色相が同じになり、固定しない場合は各ピクセル色相が独立します )
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S5">DX_GRAPH_FILTER_INVERT：階調の反転フィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　なし<br><br>
+
+            　　解説<br>
+            　　　　画像の各ピクセルのＲＧＢの値を反転するフィルタです。<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp の色を反転してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // 階調反転フィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_INVERT ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter05.jpg" hspace="0" vspace="0" alt="階調反転フィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S6">DX_GRAPH_FILTER_LEVEL：レベル補正フィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int Min : 変換元の下限値( 0 ～ 255 )<br>
+            　　　int Max : 変換元の上限値( 0 ～ 255 )<br>
+            　　　int Gamma : ガンマ値( 100 で 1.0 を表し、ガンマ補正無し、1 より小さい値は不可 )<br>
+            　　　int AfterMin : 変換後の最低値( 0 ～ 255 )<br>
+            　　　int AfterMax : 変換後の最大値( 0 ～ 255 )<br><br>
+
+            　　解説<br>
+            　　　　画像にレベル補正を行うフィルタです、輝度分布が偏っていて締まりの無い画像のコントラストを上げたりできます。<br>
+            　　　　Min の値を 0 以上にすると全体的に画像が暗い方向に傾き、白っぽくなってしまっている画像を引き締めます。<br>
+            　　　　Max の値を 255 以下にすると全体的に画像が明るい方向に傾き、暗くなってしまっている画像を明るくします。<br>
+            　　　　Gamma の値を 100 以上にすると画像が明るくなります。( Max の値を下げるのとは違う変化です )<br>
+            　　　　Gamma の値を 100 以下にすると画像が暗くなります。( Min の値を上げるのとは違う変化です )<br>
+            　　　　AfterMin の値を 0 以上にすると、画像が全体的に白っぽくなります。<br>
+            　　　　AfterMax の値を 255 以下にすると、画像が全体的に黒に近くなります。<br><br>
+            
+            <br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp をレベル補正フィルタを使用してコントラストと鮮やかさを上げてから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // レベル補正フィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_LEVEL, 60, 210, 120, 0, 255 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter06.jpg" hspace="0" vspace="0" alt="レベル補正フィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S7">DX_GRAPH_FILTER_TWO_COLOR：２階調化フィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int Threshold : 閾値( 0 ～ 255 )<br>
+            　　　int LowColor : 閾値より値が低かったピクセルの変換後の色値( <a href="dxfunc_graph3.html#R4N5"><b>GetColor</b></a> で取得できる値 )<br>
+            　　　int LowAlpha : 閾値より値が低かったピクセルの変換後のアルファ値( 0 ～ 255 )<br>
+            　　　int HighColor : 閾値より値が高かったピクセルの変換後の色値( GetColor で取得する )<br>
+            　　　int HighAlpha : 閾値より値が高かったピクセルの変換後のアルファ値( 0 ～ 255 )<br><br>
+
+            　　解説<br>
+            　　　　画像を２階調化するフィルターです。<br>
+            　　　　画像の各ピクセルの色から 0 ～ 255 の輝度値を算出し、その値が Threshold で指定した値以上かどうかで<br>
+            　　　変換後の色が LowColor, LowAlpha になるか、 HighColor, HighAlpha になるかが決まります。<br>
+            　　　　引数の説明以上に引数について解説できることはアルファチャンネルを持たない画像に対しては LowAlpha と<br>
+            　　　HighAlpha の引数は特に使われないということくらいです。<br><br>
+            
+            <br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp を２階調化フィルタで輝度が50%以下の部分を暗い青に、<br>
+            　　　50%以上の部分を黄色にしてから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // ２階調化フィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_TWO_COLOR, 128, GetColor( 0, 0, 128 ), 255, GetColor( 255, 255, 0 ), 255 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter07.jpg" hspace="0" vspace="0" alt="２階調化フィルタの結果">
+            <hr>
+            <br><br>
+
+
+            　<font color="#008080"><b><a name="R3N26S8">DX_GRAPH_FILTER_GRADIENT_MAP：グラデーションマップフィルタ</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int MapGrHandle : グラデーションマップとして使用するグラフィックハンドル、普通に LoadGraph などで作成したハンドル<br>
+            　　　　　　　　　　　　( <font color="#802000"><b>横幅は 256pixelである必要があります、縦幅は何でも( 1pixel でも 100pixel でも )大丈夫です</b></font> )<br>
+            　　　int Reverse : グラデーションマップを左右反転して使用するかどうか<br>
+            　　　　　　　　　　　　( TRUE : 左右反転して使用する  FALSE : 左右反転しない )<br><br>
+
+            　　解説<br>
+            　　　　画像の各ピクセルの輝度からグラデーションマップのＸ座標を算出して、その座標の色に変換するフィルターです。<br>
+            　　　　輝度が０の場合はグラデーションマップの一番左上のピクセルの色が( x:0 y:0 座標のピクセル )、<br>
+            　　　輝度が２５５( 最大 )だったらグラデーションマップの一番右上のピクセルの色が( x:255 y:0 座標のピクセル )<br>
+            　　　出力結果の色となります。<br>
+            　　　　変換元画像のピクセルの輝度によってグラデーションマップ中のＸ座標を決定しますが、Ｙ座標は常に０ですので、<br>
+            　　　グラデーションマップ画像は縦幅１ピクセルでも問題ありません。<br><br>
+
+            　　　　Reverse を TRUE にすると輝度からグラデーションマップのＸ座標を算出する結果を反転します。<br>
+            　　　つまり輝度が最大のときにグラデーションマップ中の一番左上のピクセルが使用され、輝度が最低のときに一番右上の<br>
+            　　　ピクセルが使用されるようになります。<br><br>
+            
+            <br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp を GMap.bmp をグラデーションマップとして使用してグラデーションマップフィルタを適用した後、<br>
+            　　　画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+    int GradHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // グラデーションマップにする画像を読み込む
+    GradHandle = LoadGraph( "GMap.bmp" ) ;
+
+    // グラデーションマップフィルターを施す
+    GraphFilter( Handle, DX_GRAPH_FILTER_GRADIENT_MAP, GradHandle, FALSE ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter08.jpg" hspace="0" vspace="0" alt="グラデーションマップフィルタの結果"><br><br>
+
+グラデーションマップとして使用した画像<br>
+<img width="256" height="256" src="../Image/Filter/GMap.jpg" hspace="0" vspace="0" alt="グラデーションマップ画像"><br>
+元画像の暗いところほど白く、元画像の明るいところほど青色になります。<br>
+
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N27">宣言</a></b></td><td><font color="#000088"><b>int GraphFilterBlt( int SrcGrHandle, int DestGrHandle, int FilterType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　画像にフィルター処理を施す( 出力先画像指定版 )<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SrcGrHandle : フィルター処理を施すグラフィックハンドル<br>
+                    int DestGrHandle : フィルター処理を施した結果を出力するグラフィックハンドル<br>
+                    int FilterType : 施すフィルターのタイプ<br>
+                    　　　　　<a href="#R3N26S0">DX_GRAPH_FILTER_MONO　　　　 　　：モノトーンフィルタ</a><br>
+                    　　　　　<a href="#R3N26S1">DX_GRAPH_FILTER_GAUSS　　　　　　：ガウスフィルタ</a><br>
+                    　　　　　<a href="#R3N26S2">DX_GRAPH_FILTER_DOWN_SCALE　　：縮小フィルタ</a><br>
+                    　　　　　<a href="#R3N26S3">DX_GRAPH_FILTER_BRIGHT_CLIP　　：明るさクリップフィルタ</a><br>
+                    　　　　　<a href="#R3N26S4">DX_GRAPH_FILTER_HSB　　　　　　　　：色相・彩度・明度フィルタ</a><br>
+                    　　　　　<a href="#R3N26S5">DX_GRAPH_FILTER_INVERT　　　　　　：階調の反転フィルタ</a><br>
+                    　　　　　<a href="#R3N26S6">DX_GRAPH_FILTER_LEVEL　　　　　 　：レベル補正フィルタ</a><br>
+                    　　　　　<a href="#R3N26S7">DX_GRAPH_FILTER_TWO_COLOR　　　：２階調化フィルタ</a><br>
+                    　　　　　<a href="#R3N26S8">DX_GRAPH_FILTER_GRADIENT_MAP　：グラデーションマップフィルタ</a><br>
+                    ... : 各フィルタに付随する引数
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成したグラフィックハンドル SrcGrHandle に対して、
+                    画像編集ソフトで見られるようなレベル補正や２階調化などのフィルター処理を施した結果をグラフィックハンドル DestGrHandle に出力します。<br><br>
+
+                    　この関数は出力先のグラフィックハンドルを指定できるという以外は関数 <a href="#R3N26"><b>GraphFilter</b></a> と同じなので、
+                    各フィルターについては GraphFilter の解説をご覧ください。<br><br>
+
+                    　尚、出力先のグラフィックハンドルは関数 <a href="#R3N6"><b>MakeScreen</b></a> で作成できる
+                    「<font color="#802000"><b>SetDrawScreen で描画対象にできるグラフィックハンドル</b></font>」を使った方が高速に動作します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　　　画像 Src1.bmp をモノトーンフィルタを使用してセピア調の画像に変換してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int SrcHandle ;
+    int DestHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    SrcHandle = LoadGraph( "Src1.bmp" ) ;
+
+    // 出力先に使用するグラフィックハンドルを作成
+    DestHandle = MakeScreen( 256, 256, FALSE ) ;
+
+    // モノトーンフィルターでセピア調の画像に変換
+    GraphFilterBlt( SrcHandle, DestHandle, DX_GRAPH_FILTER_MONO, -60, 7 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, DestHandle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像 <img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像">　　変換後 <img width="256" height="256" src="../Image/Filter/Filter00.jpg" hspace="0" vspace="0" alt="モノトーンフィルタの結果">
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N28">宣言</a></b></td><td><font color="#000088"><b>int GraphFilterRectBlt( int SrcGrHandle, int DestGrHandle, int SrcX1, int SrcY1, int SrcX2, int SrcY2, int DestX, int DestY, int FilterType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　画像にフィルター処理を施す( 出力先画像、使用矩形指定版 )<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SrcGrHandle : フィルター処理を施すグラフィックハンドル<br>
+                    int DestGrHandle : フィルター処理を施した結果を出力するグラフィックハンドル<br>
+                    int SrcX1, SrcY1 : フィルター処理を施す SrcGrHandle 内の矩形の左上座標<br>
+                    int SrcX2, SrcY2 : フィルター処理を施す SrcGrHandle 内の矩形の右下座標<br>
+                    int DestX, DestY : フィルター処理を施した結果を出力する<br>
+                    　　　　　　　　　　　　　DestGrHandle 内の矩形の左上座標<br>
+                    int FilterType : 施すフィルターのタイプ<br>
+                    　　　　　<a href="#R3N26S0">DX_GRAPH_FILTER_MONO　　　　 　　：モノトーンフィルタ</a><br>
+                    　　　　　<a href="#R3N26S1">DX_GRAPH_FILTER_GAUSS　　　　　　：ガウスフィルタ</a><br>
+                    　　　　　<a href="#R3N26S2">DX_GRAPH_FILTER_DOWN_SCALE　　：縮小フィルタ</a><br>
+                    　　　　　<a href="#R3N26S3">DX_GRAPH_FILTER_BRIGHT_CLIP　　：明るさクリップフィルタ</a><br>
+                    　　　　　<a href="#R3N26S4">DX_GRAPH_FILTER_HSB　　　　　　　　：色相・彩度・明度フィルタ</a><br>
+                    　　　　　<a href="#R3N26S5">DX_GRAPH_FILTER_INVERT　　　　　　：階調の反転フィルタ</a><br>
+                    　　　　　<a href="#R3N26S6">DX_GRAPH_FILTER_LEVEL　　　　　 　：レベル補正フィルタ</a><br>
+                    　　　　　<a href="#R3N26S7">DX_GRAPH_FILTER_TWO_COLOR　　　：２階調化フィルタ</a><br>
+                    　　　　　<a href="#R3N26S8">DX_GRAPH_FILTER_GRADIENT_MAP　：グラデーションマップフィルタ</a><br>
+                    ... : 各フィルタに付随する引数
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成したグラフィックハンドル SrcGrHandle に対して、
+                    画像編集ソフトで見られるようなレベル補正や２階調化などのフィルター処理を施した結果をグラフィックハンドル DestGrHandle に出力します。<br><br>
+
+                    　この関数は画像中のどの部分にフィルターを施し、その結果を出力先のどの座標に出力するかを指定できるという以外は関数 <a href="#R3N26"><b>GraphFilter</b></a> と同じなので、
+                    各フィルターについては GraphFilter の解説をご覧ください。<br><br>
+
+                    　尚、出力先のグラフィックハンドルは関数 <a href="#R3N6"><b>MakeScreen</b></a> で作成できる
+                    「<font color="#802000"><b>SetDrawScreen で描画対象にできるグラフィックハンドル</b></font>」を使った方が高速に動作します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　　　画像 Src1.bmp の右下部分だけをモノトーンフィルタを使用してセピア調の画像に変換してから画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int SrcHandle ;
+    int DestHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    SrcHandle = LoadGraph( "Src1.bmp" ) ;
+
+    // 出力先に使用するグラフィックハンドルを作成
+    // ( 右下部分だけで良いので縦横サイズは半分 )
+    DestHandle = MakeScreen( 128, 128, FALSE ) ;
+
+    // 画像の右下部分だけをモノトーンフィルターでセピア調の画像に変換
+    GraphFilterRectBlt( SrcHandle, DestHandle, 128, 128, 256, 256, 0, 0, DX_GRAPH_FILTER_MONO, -60, 7 ) ;
+
+    // 画像を画面に描画
+    DrawGraph( 0, 0, DestHandle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N29">宣言</a></b></td><td><font color="#000088"><b>int GraphBlend( int GrHandle, int BlendGrHandle, int BlendRatio, int BlendType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　二つの画像を特殊効果付きでブレンドする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int GrHandle : BlendGrHandle と合成するグラフィックハンドル<br>
+                    int BlendGrHandle : GrHandle に合成するグラフィックハンドル<br>
+                    int BlendRatio : ブレンド効果の影響度( 0:０％  255:１００％ )<br>
+                    int BlendType : ブレンド効果タイプ<br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_NORMAL 　　　　　　　: ごく普通の合成</a><br>
+                    　　　　　<a href="#R3N29S0">DX_GRAPH_BLEND_RGBA_SELECT_MIX　: RGBAの要素を選択して合成</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_MULTIPLE 　　　　　　: 乗算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DIFFERENCE　　　　　: 減算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_ADD 　　　　　　　　　　: 加算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SCREEN　　　　　　　　: スクリーン</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_OVERLAY　　 　　　　　: オーバーレイ</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DODGE　　　　　　　　　: 覆い焼き</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_BURN　　　　　　　　　　: 焼き込み</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DARKEN 　　　　　　　　: 比較(暗)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_LIGHTEN 　　　　　　　　: 比較(明)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SOFTLIGHT 　　　　　　: ソフトライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_HARDLIGHT 　　　　　　: ハードライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_EXCLUSION 　　　　　　: 除外</a><br>
+                    ... : 各効果タイプに付随する引数
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成した二つのグラフィックハンドルを、
+                    画像編集ソフトのレイヤー合成のような効果付きで合成します。( DX_GRAPH_BLEND_RGBA_SELECT_MIX だけは画像編集ソフトには無いかもしれません・・・ )<br><br>
+                    　GrHandle と BlendGrHandle を特殊効果付きで合成して、その結果を GrHandle に出力します。<br>
+                    　BlendRatio はブレンド結果と GrHandle の元の画像との合成比率で、
+                    255 を指定すると合成後の結果がそのまま GrHandle の画像となりますが、
+                    例えば 128 を指定すると合成後の結果と GrHandle の元の画像とが半々で合成され、それが GrHandle の以後の画像となります。
+                    ( そして 0 を指定すると GrHandle には元の画像のまま何も変化しません )<br>
+                    　BlendType によって引数が違いますので、各ブレンド効果についての解説は下の方に載せています。<br><br>
+
+                    <font color="#802000"><b>&lt;&lt;注意&gt;&gt;</b><br>
+                    　この関数は <b>DrawGraph などの描画関数とは比べ物にならないほど低速</b>ですが、
+                    <b>シェーダーモデル２．０</b>が使用できるグラフィックスデバイスが備わった環境では、( ブレンド効果によって負荷は違いますが ) DrawGraph を数回実行した程度の負荷で実行することができます。<br><br>
+                    　<b>大まかに 2007年～2008年以降に発売されたノートパソコン、デスクトップパソコン</b>ではシェーダーモデル２．０が使用できるグラフィックスデバイスを備えています、
+                    また、<b>現在数千円くらいから購入できるグラフィックカードでは必ずシェーダーモデル２．０が使用できます</b>。<br><br>
+                    
+                    　尚、シェーダーモデル２．０が使用できる環境の場合、
+                    GrHandle に渡すグラフィックハンドルは<a href="#R3N2"><b>LoadGraph</b></a>や<a href="#R3N25"><b>MakeGraph</b></a>
+                    などで作成された<b>「<a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> の引数として渡せない( 描画対象にできない )グラフィックハンドル」</b>より、
+                    <a href="#R3N6"><b>MakeScreen</b></a> で作成された<b>「<a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> の引数として渡せる( 描画対象にできる )グラフィックハンドル」</b>の方が <b>GraphFilter の処理時間が短くなります</b>。
+                    </font><br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <font color="#208000"><b>&lt;&lt;各ブレンド効果説明&gt;&gt;</b></font><br><br>
+
+            　<font color="#008080"><b><a name="R3N29S0">DX_GRAPH_BLEND_RGBA_SELECT_MIX：RGBAの要素を選択して合成</a></b></font><br><br>
+
+            　　引数<br>
+            　　　int SelectR : 出力の赤値となる要素<br>
+            　　　　　　　　DX_RGBA_SELECT_SRC_R 　: GrHandle 画像の赤値<br>
+            　　　　　　　　DX_RGBA_SELECT_SRC_G 　: GrHandle 画像の緑値<br>
+            　　　　　　　　DX_RGBA_SELECT_SRC_B 　: GrHandle 画像の青値<br>
+            　　　　　　　　DX_RGBA_SELECT_SRC_A 　: GrHandle 画像のアルファ値<br>
+            　　　　　　　　DX_RGBA_SELECT_BLEND_R : BlendGrHandle 画像の赤値<br>
+            　　　　　　　　DX_RGBA_SELECT_BLEND_G : BlendGrHandle 画像の緑値<br>
+            　　　　　　　　DX_RGBA_SELECT_BLEND_B : BlendGrHandle 画像の青値<br>
+            　　　　　　　　DX_RGBA_SELECT_BLEND_A : BlendGrHandle 画像のアルファ値<br>
+            　　　int SelectG : 出力の緑値となる要素( 渡せる値の種類は SelectR と同じです )<br>
+            　　　int SelectB : 出力の青値となる要素( 渡せる値の種類は SelectR と同じです )<br>
+            　　　int SelectA : 出力のアルファ値となる要素( 渡せる値の種類は SelectR と同じです )<br><br>
+
+            　　解説<br>
+            　　　　合成後の画像として赤・緑・青・アルファの各成分を GrHandle の画像、BlendGrHandle の画像のどちらのどの要素から<br>
+            　　　取ってくるかを指定します。<br>
+            　　　　例えば、SelectR に DX_RGBA_SELECT_BLEND_G を指定した場合は、合成後の画像の赤成分は、BlendGrHandle<br>
+            　　　の緑成分になります。<br><br>
+
+            　　　<font color="#802000"><b>&lt;&lt;注意&gt;&gt;<br>
+            　　　　尚、このブレンド効果だけは BlendRatio の値が無視され、必ず BlendRatio 255 が指定されたのと同じ<br>
+            　　　結果になります。<br>
+            　　　　また、GrHandle にアルファチャンネルが含まれていない場合は SelectA の値は無視されます。<br>
+            　　　( GrHandle にアルファチャンネルが無いということはアルファ値を格納する領域が無いということなので )</b></font><br><br>
+
+            　　　　このブレンド効果の主な利用法としてはマスク機能を想定しています。<br>
+            　　　　赤・緑・青のどの成分も合成後の画像のアルファ値とすることができるので、普通の画像や描画結果をマスク画像として<br>
+            　　　使用することができ、マスク部分の半透明描画も可能なので、既存の DrawMask や DrawFillMask などのマスク関数より<br>
+            　　　柔軟なマスク機能を実現することができます。<br>
+            　　　( ただ、シェーダーモデル２．０が使用できない環境では処理負荷が高くリアルタイム処理には利用できませんが・・・ )<br><br>
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp と Src2.tga を合成してから画面に描画します。<br>
+            　　　　Src1.bmp にはアルファチャンネルが無いのでアルファチャンネル付きの描画可能画像のグラフィックハンドルを作成して、<br>
+            　　　そこに Src1.bmp を描画してから合成しています、合成後の画像は、赤を Src1.bmp の緑成分から、緑を Src1.bmp の<br>
+            　　　赤成分から、青を Src1.bmp の青成分から( つまり変化なし )、アルファ成分を Src2.tga の赤成分から取ってきています。<br>
+            　　　( Src2.tga の緑成分・青成分・アルファ成分はこのサンプルでは使用していません )<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+    int BlendHandle ;
+    int AlphaHandle ;
+
+    // 画面モードを32bitカラーにする
+    SetGraphMode( 640, 480, 32 ) ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // ブレンドする画像を読み込む
+    BlendHandle = LoadGraph( "Src2.tga" ) ;
+
+    // アルファチャンネル付きの描画可能画像のグラフィックハンドルを作成する
+    AlphaHandle = MakeScreen( 256, 256, TRUE ) ;
+
+    // 描画先を作成したアルファチャンネル付きの描画可能画像にする
+    SetDrawScreen( AlphaHandle ) ;
+
+    // 読み込んだ画像を描画する
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // 描画先を表画面に戻す
+    SetDrawScreen( DX_SCREEN_FRONT ) ;
+
+    // 描画可能画像とブレンドする画像を合成する
+    GraphBlend( AlphaHandle, BlendHandle, 255, DX_GRAPH_BLEND_RGBA_SELECT_MIX,
+        DX_RGBA_SELECT_SRC_G,    // 出力結果の赤成分は AlphaHandle の緑成分
+        DX_RGBA_SELECT_SRC_R,    // 出力結果の緑成分は AlphaHandle の赤成分
+        DX_RGBA_SELECT_SRC_B,    // 出力結果の青成分は AlphaHandle の青成分
+        DX_RGBA_SELECT_BLEND_R    // 出力結果のアルファ成分は BlendHandle の赤成分
+    ) ;
+
+    // アルファ成分で半透明になることを確かめるために画面全体にグレーの矩形を描画する
+    DrawBox( 0, 0, 640, 480, GetColor( 128, 128, 128 ), TRUE ) ;
+
+    // 描画可能画像を画面に描画
+    DrawGraph( 0, 0, AlphaHandle, TRUE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像<br>
+<img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像"><br><br>
+
+ブレンド画像( 格子の部分は透明を表しています )<br>
+<img width="256" height="256" src="../Image/Filter/Src2.jpg" hspace="0" vspace="0" alt="ブレンド画像"><br><br>
+
+合成結果<br>
+<img width="256" height="256" src="../Image/Filter/Blend01.jpg" hspace="0" vspace="0" alt="合成結果画像">
+            <hr>
+            <br>
+
+            <font color="#008080"><b><br>
+            　<a name="R3N29S1">DX_GRAPH_BLEND_NORMAL : 通常</a><br>
+            　DX_GRAPH_BLEND_MULTIPLE : 乗算<br>
+            　DX_GRAPH_BLEND_DIFFERENCE : 減算<br>
+            　DX_GRAPH_BLEND_ADD : 加算<br>
+            　DX_GRAPH_BLEND_SCREEN : スクリーン<br>
+            　DX_GRAPH_BLEND_OVERLAY : オーバーレイ<br>
+            　DX_GRAPH_BLEND_DODGE : 覆い焼き<br>
+            　DX_GRAPH_BLEND_BURN : 焼き込み<br>
+            　DX_GRAPH_BLEND_DARKEN : 比較(暗)<br>
+            　DX_GRAPH_BLEND_LIGHTEN : 比較(明)<br>
+            　DX_GRAPH_BLEND_SOFTLIGHT : ソフトライト<br>
+            　DX_GRAPH_BLEND_HARDLIGHT : ハードライト<br>
+            　DX_GRAPH_BLEND_EXCLUSION : 除外</b></font><br><br>
+
+            　　引数<br>
+            　　　なし<br><br>
+
+            　　解説<br>
+            　　　　上記の合成タイプは引数が無いので解説を一括します。<br>
+            　　　　( サンプルプログラムはこの解説の一番下にあります )<br>
+            　　　　解説で使用する画像は GrHandle がこの画像<br><br>
+
+            　　　　<img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="ブレンドされる側の画像"><br><br>
+
+            　　　　BlendGrHandle がこの画像となります。( 格子の部分は透明な部分です )<br><br>
+
+            　　　　<img width="256" height="256" src="../Image/Filter/Src2.jpg" hspace="0" vspace="0" alt="ブレンド画像"><br><br>
+
+            　　　　各タイプの説明の合成結果画像は BlendRatio に 255 を指定した場合の結果です。<br><br>
+
+            　　　　＜各タイプの説明にある擬似プログラムについて＞<br>
+            　　　　　・色の値を 0.0 ～ 1.0 としたプログラムです。<br>
+            　　　　　・計算結果は 0.0 ～ 1.0 にクランプされます。<br>
+            　　　　　・赤・緑・青成分個々に対して同じ処理が実行されます。<br>
+            　　　　　・擬似プログラムの後に共通して以下の処理が行われています<br>
+            　　　　　　　最終結果の色 = GrHandleの色 * ( 1.0 - BlendGrHandleのアルファ値 * BlendRatio ) +<br>
+            　　　　　　　　　　　　　　　　　 結果の色 　　 * ( 　　　 BlendGrHandleのアルファ値 * BlendRatio );<br>
+            　　　　　　　( BlendRatio は 0.0 ～ 1.0 となります )<br><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_NORMAL : 通常</b></font><br><br>
+
+            　　　　　合成に特に特殊効果はありません、BlendRatio が 255 に近いほど BlendGrHandle の画像の不透明度が高くなります。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = BlendGrHandleの色;<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend00.jpg" hspace="0" vspace="0" alt="通常"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_MULTIPLE : 乗算</b></font><br><br>
+
+            　　　　　二つの画像の色を乗算します、乗算といっても各成分を ０．０ ～ １．０ の値に見立てて乗算を行うので、<br>
+            　　　　元の色より暗くなることはあっても明るくなることはありません。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = GrHandleの色 * BlendGrHandleの色;<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend02.jpg" hspace="0" vspace="0" alt="乗算"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_DIFFERENCE : 減算</b></font><br><br>
+
+            　　　　　GrHandle の色から BlendGrHandle の色を引きます。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = GrHandleの色 - BlendGrHandleの色;<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend03.jpg" hspace="0" vspace="0" alt="減算"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_ADD : 加算</b></font><br><br>
+
+            　　　　　GrHandle の色に BlendGrHandle の色を足します。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = GrHandleの色 + BlendGrHandleの色;<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend04.jpg" hspace="0" vspace="0" alt="加算"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_SCREEN : スクリーン</b></font><br><br>
+
+            　　　　　加算と同じで明るくなりますが、加算ほど明るくなりません。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = 1.0f - ( ( 1.0f - GrHandleの色 ) * ( 1.0f - BlendGrHandleの色 ) );<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend05.jpg" hspace="0" vspace="0" alt="スクリーン"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_OVERLAY : オーバーレイ</b></font><br><br>
+
+            　　　　　GrHandle の色の値が 0.5 以下の部分は暗く、0.5 以上の部分は明るくなる合成です。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( GrHandleの色 &lt; 0.5 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = GrHandleの色 * BlendGrHandleの色 * 2.0;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = 2.0 * ( GrHandleの色 + BlendGrHandleの色 - GrHandleの色 * BlendGrHandleの色 ) - 1.0;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend06.jpg" hspace="0" vspace="0" alt="オーバーレイ"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_DODGE : 覆い焼き</b></font><br><br>
+
+            　　　　　計算は複雑ですが加算と同様に合成後の画像は明るくなります。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &lt; 1.0 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = GrHandleの色 / ( 1.0 - BlendGrHandleの色 );<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = 1.0;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend07.jpg" hspace="0" vspace="0" alt="覆い焼き"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_BURN : 焼き込み</b></font><br><br>
+
+            　　　　　計算は複雑ですが乗算と同様に合成後の画像は暗くなります。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &gt; 0 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = 1.0 - ( 1.0 - GrHandleの色 ) / BlendGrHandleの色 ;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = 0.0;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend08.jpg" hspace="0" vspace="0" alt="焼き込み"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_DARKEN : 比較(暗)</b></font><br><br>
+
+            　　　　　GrHandle と BlendGrHandle で色の暗い方を合成後の色とします。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &gt; GrHandleの色 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = GrHandleの色 ;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = BlendGrHandleの色 ;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend09.jpg" hspace="0" vspace="0" alt="比較(暗)"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_LIGHTEN : 比較(明)</b></font><br><br>
+
+            　　　　　GrHandle と BlendGrHandle で色の明るい方を合成後の色とします。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &gt; GrHandleの色 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = BlendGrHandleの色 ;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = GrHandleの色 ;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend10.jpg" hspace="0" vspace="0" alt="比較(明)"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_SOFTLIGHT : ソフトライト</b></font><br><br>
+
+            　　　　　オーバーレイより少し暗い感じです。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &lt; 0.5 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = pow( GrHandleの色, ( 1.0f - BlendGrHandleの色 ) * 2.0 ) ;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = pow( GrHandleの色, 0.5 / BlendGrHandleの色 );<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend11.jpg" hspace="0" vspace="0" alt="ソフトライト"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_HARDLIGHT : ハードライト</b></font><br><br>
+
+            　　　　　オーバーレイは GrHandle の値が 0.5 以上かどうかを判断していましたが、<br>
+            　　　　　ハードライトでは BlendGrHandle の値を 0.5 以上かどうかを判断に使用しています。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　if( BlendGrHandleの色 &lt; 0.5 )<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = GrHandleの色 * BlendGrHandleの色 * 2.0;<br>
+            　　　　　　}<br>
+            　　　　　　else<br>
+            　　　　　　{<br>
+            　　　　　　　　　結果の色 = 2.0 * ( GrHandleの色 + BlendGrHandleの色 - GrHandleの色 * BlendGrHandleの色 ) - 1.0;<br>
+            　　　　　　}<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend12.jpg" hspace="0" vspace="0" alt="ハードライト"><br><br>
+
+
+            　　　　<font color="#008080"><b>DX_GRAPH_BLEND_EXCLUSION : 除外</b></font><br><br>
+
+            　　　　　減算に若干似ています。<br><br>
+
+            　　　　　&lt;&lt;結果算出の擬似プログラム&gt;&gt;<br>
+            　　　　　　結果の色 = GrHandleの色 + BlendGrHandleの色 - 2.0 * GrHandleの色 * BlendGrHandleの色;<br><br>
+
+            　　　　　<img width="256" height="256" src="../Image/Filter/Blend13.jpg" hspace="0" vspace="0" alt="除外"><br><br>
+
+
+
+            　　サンプル<br><br>
+
+            　　　　画像 Src1.bmp と Src2.tga をオーバーレイ合成してから画面に描画します。<br>
+            　　　　この一括解説で扱われた合成タイプはすべて引数がありませんので、このサンプルの<br>
+            　　　DX_GRAPH_BLEND_OVERLAY の部分を他の合成タイプに置き換えればそのままその合成タイプの<br>
+            　　　サンプルとして見立てることができます。
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int Handle ;
+    int BlendHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    Handle = LoadGraph( "Src1.bmp" ) ;
+
+    // ブレンドする画像を読み込む
+    BlendHandle = LoadGraph( "Src2.tga" ) ;
+
+    // Handle と BlendHandle でオーバーレイ合成を行う
+    GraphBlend( Handle, BlendHandle, 255, DX_GRAPH_BLEND_OVERLAY ) ;
+
+    // 合成後の画像を画面に描画
+    DrawGraph( 0, 0, Handle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N30">宣言</a></b></td><td><font color="#000088"><b>int GraphBlendBlt( int SrcGrHandle, int BlendGrHandle, int DestGrHandle, int BlendRatio, int BlendType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　二つの画像を特殊効果付きでブレンドする( 出力先画像指定版 )<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SrcGrHandle : BlendGrHandle と合成するグラフィックハンドル<br>
+                    int BlendGrHandle : SrcGrHandle に合成するグラフィックハンドル<br>
+                    int DestGrHandle : 合成した結果を出力するグラフィックハンドル<br>
+                    int BlendRatio : ブレンド効果の影響度( 0:０％  255:１００％ )<br>
+                    int BlendType : ブレンド効果タイプ<br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_NORMAL 　　　　　　　: ごく普通の合成</a><br>
+                    　　　　　<a href="#R3N29S0">DX_GRAPH_BLEND_RGBA_SELECT_MIX　: RGBAの要素を選択して合成</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_MULTIPLE 　　　　　　: 乗算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DIFFERENCE　　　　　: 減算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_ADD 　　　　　　　　　　: 加算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SCREEN　　　　　　　　: スクリーン</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_OVERLAY　　 　　　　　: オーバーレイ</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DODGE　　　　　　　　　: 覆い焼き</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_BURN　　　　　　　　　　: 焼き込み</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DARKEN 　　　　　　　　: 比較(暗)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_LIGHTEN 　　　　　　　　: 比較(明)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SOFTLIGHT 　　　　　　: ソフトライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_HARDLIGHT 　　　　　　: ハードライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_EXCLUSION 　　　　　　: 除外</a><br>
+                    ... : 各効果タイプに付随する引数
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成した二つのグラフィックハンドル( SrcGrHandle と BlendGrHandle )を、
+                    画像編集ソフトのレイヤー合成のような効果付きで合成して、その結果を DestGrHandle に出力します。<br><br>
+
+                    　この関数は出力先のグラフィックハンドルを指定できるという以外は関数 <a href="#R3N29"><b>GraphBlend</b></a> と同じなので、
+                    各ブレンドタイプについては GraphBlend の解説をご覧ください。<br><br>
+
+                    　尚、出力先のグラフィックハンドルは関数 <a href="#R3N6"><b>MakeScreen</b></a> で作成できる
+                    「<font color="#802000"><b>SetDrawScreen で描画対象にできるグラフィックハンドル</b></font>」を使った方が高速に動作します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　　　画像 Src1.bmp と Src2.tga を覆い焼き合成してから画面に描画します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int SrcHandle ;
+    int DestHandle ;
+    int BlendHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    SrcHandle = LoadGraph( "Src1.bmp" ) ;
+
+    // ブレンドする画像を読み込む
+    BlendHandle = LoadGraph( "Src2.tga" ) ;
+
+    // 出力先のグラフィックハンドルを作成する
+    DestHandle = MakeScreen( 256, 256, FALSE ) ;
+
+    // Handle と BlendHandle で覆い焼き合成を行う
+    GraphBlendBlt( SrcHandle, BlendHandle, DestHandle, 255, DX_GRAPH_BLEND_DODGE ) ;
+
+    // 合成後の画像を画面に描画
+    DrawGraph( 0, 0, DestHandle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+元画像<br>
+<img width="256" height="256" src="../Image/Filter/Src1.jpg" hspace="0" vspace="0" alt="元画像"><br><br>
+
+ブレンド画像<br>
+<img width="256" height="256" src="../Image/Filter/Src2.jpg" hspace="0" vspace="0" alt="ブレンド画像"><br><br>
+
+合成後<br>
+<img width="256" height="256" src="../Image/Filter/Blend07.jpg" hspace="0" vspace="0" alt="覆い焼き">
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R3N31">宣言</a></b></td><td><font color="#000088"><b>int GraphBlendRectBlt( int SrcGrHandle, int BlendGrHandle, int DestGrHandle, int SrcX1, int SrcY1, int SrcX2, int SrcY2, int BlendX, int BlendY, int DestX, int DestY, int BlendRatio, int BlendType, ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　二つの画像を特殊効果付きでブレンドする( 出力先画像、使用矩形指定版 )<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SrcGrHandle : BlendGrHandle と合成するグラフィックハンドル<br>
+                    int BlendGrHandle : SrcGrHandle に合成するグラフィックハンドル<br>
+                    int DestGrHandle : 合成した結果を出力するグラフィックハンドル<br>
+                    int SrcX1, SrcY1 : 合成処理を行う SrcGrHandle 内の矩形の左上座標<br>
+                    int SrcX2, SrcY2 : 合成処理を行う SrcGrHandle 内の矩形の右下座標<br>
+                    int BlendX, BlendY : 合成処理を行う BlendGrHandle 内の矩形の左上座標<br>
+                    int DestX, DestY : 合成処理を行った結果を出力する<br>
+                    　　　　　　　　　　　　　DestGrHandle 内の矩形の左上座標<br>
+                    int BlendRatio : ブレンド効果の影響度( 0:０％  255:１００％ )<br>
+                    int BlendType : ブレンド効果タイプ<br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_NORMAL 　　　　　　　: ごく普通の合成</a><br>
+                    　　　　　<a href="#R3N29S0">DX_GRAPH_BLEND_RGBA_SELECT_MIX　: RGBAの要素を選択して合成</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_MULTIPLE 　　　　　　: 乗算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DIFFERENCE　　　　　: 減算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_ADD 　　　　　　　　　　: 加算</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SCREEN　　　　　　　　: スクリーン</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_OVERLAY　　 　　　　　: オーバーレイ</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DODGE　　　　　　　　　: 覆い焼き</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_BURN　　　　　　　　　　: 焼き込み</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_DARKEN 　　　　　　　　: 比較(暗)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_LIGHTEN 　　　　　　　　: 比較(明)</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_SOFTLIGHT 　　　　　　: ソフトライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_HARDLIGHT 　　　　　　: ハードライト</a><br>
+                    　　　　　<a href="#R3N29S1">DX_GRAPH_BLEND_EXCLUSION 　　　　　　: 除外</a><br>
+                    ... : 各効果タイプに付随する引数
+             </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：正常終了</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R3N2"><b>LoadGraph</b></a>、<a href="#R3N6"><b>MakeScreen</b></a>等で作成した二つのグラフィックハンドル( SrcGrHandle と BlendGrHandle )を、
+                    画像編集ソフトのレイヤー合成のような効果付きで合成して、その結果を DestGrHandle に出力します。<br><br>
+
+                    　この関数は画像中のどの部分を合成処理に使用し、その結果を出力先のどの座標に出力するかを指定できるという以外は関数 <a href="#R3N29"><b>GraphBlend</b></a> と同じなので、
+                    各ブレンドタイプについては GraphBlend の解説をご覧ください。<br><br>
+
+                    　尚、出力先のグラフィックハンドルは関数 <a href="#R3N6"><b>MakeScreen</b></a> で作成できる
+                    「<font color="#802000"><b>SetDrawScreen で描画対象にできるグラフィックハンドル</b></font>」を使った方が高速に動作します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　　　　画像 Src1.bmp の右下部分と Src2.tga の中心部分を覆い焼き合成してから画面に描画します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int SrcHandle ;
+    int DestHandle ;
+    int BlendHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+        return -1 ;
+
+    // 画像を読み込む
+    SrcHandle = LoadGraph( "Src1.bmp" ) ;
+
+    // ブレンドする画像を読み込む
+    BlendHandle = LoadGraph( "Src2.tga" ) ;
+
+    // 出力先のグラフィックハンドルを作成する
+    DestHandle = MakeScreen( 128, 128, FALSE ) ;
+
+    // Handle と BlendHandle で覆い焼き合成を行う
+    GraphBlendRectBlt( SrcHandle, BlendHandle, DestHandle, 128, 128, 256, 256, 64, 64, 0, 0, 255, DX_GRAPH_BLEND_DODGE ) ;
+
+    // 合成後の画像を画面に描画
+    DrawGraph( 0, 0, DestHandle, FALSE ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br><br><br><br><br>
+        </td></tr>
+
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

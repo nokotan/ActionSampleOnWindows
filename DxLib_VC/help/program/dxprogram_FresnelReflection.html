@@ -1,0 +1,51 @@
+<TITLE>ＤＸライブラリ置き場　フレネル反射基本</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　フレネル反射基本　( 要プログラマブルシェーダー２．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/FresnelReflection0.jpg" HSPACE="0" VSPACE="0" ALT="フレネル反射基本">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　<A HREF="dxprogram_Mirror_Shader.html"><B>鏡面効果基本（ シェーダー使用版 ）</B></A> の反射の方式をフレネル反射に変更したサンプルプログラムです。<BR>
+			　フレネル反射とは、簡単に説明すると水面のように垂直に近い角度から見ると反射率は落ちて、鉛直に近い角度から見ると反射率が上がる反射のことを言います。<BR><BR>
+
+			↓こちらのスクリーンショットはキャラクターの腰の辺りにある平面にフレネル反射を施しています。<BR>
+			　カメラ( 視点 )に近い部分ほど反射率が低くなっているのは、手前の部分ほどカメラ( 視点 )から平面への角度が垂直に近くなるからです。<BR>
+			<IMG SRC="../Image/FresnelReflection0.jpg" HSPACE="0" VSPACE="0" ALT="フレネル反射基本"><BR><BR>
+
+			　なので↑のスクリーンショットではキャラクターが立っているあたりの平面はほぼ反射率１００％となり平面の下側の床が殆ど見えませんが、<BR>
+			キャラクターにカメラが近づくとキャラクターの周囲の平面がカメラ( 視点 )から垂直に近い角度になるので↓のスクリーンショットのように<BR>
+			キャラクターの腰から下も見えるようになります。<BR>
+			<IMG SRC="../Image/FresnelReflection1.jpg" HSPACE="0" VSPACE="0" ALT="フレネル反射基本"><BR><BR>
+
+			　水面の反射はこのフレネル反射なので、リアルな水面表現をしたい場合に有効です。<BR><BR>
+
+
+			　尚、このサンプルではフレネル反射の計算処理に「マルペケつくろーどっとコム」様のフレネル反射解説にあるピクセルシェーダープログラムを<BR>
+			使用させていただいております。m(_ _)m<BR><BR>
+
+			＜マルペケつくろーどっとコム＞<BR>
+			<A HREF="http://marupeke296.com/index.html"><B>http://marupeke296.com/index.html</B></A><BR><BR><BR>
+
+
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/FresnelReflection.zip"><B>こちら</B></A>にあります。<BR><BR><BR>
+
+
+			<A HREF="FresnelReflection/FresnelReflection.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR>
+
+			<A HREF="FresnelReflection/FresnelReflectionVS.fx"><B>フレネル反射処理の頂点シェーダープログラム</B></A><BR><BR>
+			<A HREF="FresnelReflection/FresnelReflectionPS.fx"><B>フレネル反射処理のピクセルシェーダープログラム</B></A><BR><BR>
+
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

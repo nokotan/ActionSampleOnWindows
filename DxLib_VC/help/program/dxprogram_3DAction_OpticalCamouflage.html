@@ -1,0 +1,43 @@
+<TITLE>ＤＸライブラリ置き場　３Ｄアクション基本＋光学迷彩風モデル描画</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　３Ｄアクション基本＋光学迷彩風モデル描画　( 要プログラマブルシェーダー２．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/3DAction_OpticalCamouflage.jpg" HSPACE="0" VSPACE="0" ALT="３Ｄアクション基本＋光学迷彩風モデル描画">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　「６．３Ｄアクション基本＋プレイヤー以外のキャラクター」のモデル描画をプログラマブルシェーダーを用いて光学迷彩風にしたものです。<BR><BR>
+
+			　手順としてはまず背景だけを裏画面とは別の画面に描画して、その後普通に裏画面にもステージモデルを描画した後、キャラクターモデルを<BR>
+			光学迷彩風描画要の頂点シェーダーとピクセルシェーダーを使用して描画します。<BR>
+
+			　頂点シェーダーでは射影座標とビュー法線を出力して、ピクセルシェーダーでは射影座標から事前に描画しておいたステージモデルだけを<BR>
+			描画した画像の中での位置を割り出し、その座標をビュー法線方向に少し移動させた座標でステージも出るだけを描画した画像から色を取得します。<BR><BR>
+
+			　するとキャラクターの形に少し歪んだステージモデルの画像が描画されるので、結果的に光学迷彩風になります。<BR><BR>
+			<BR>
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/3DAction_OpticalCamouflage.zip"><B>こちら</B></A>にあります。<BR><BR><BR>
+
+
+			<A HREF="3DAction_OpticalCamouflage/3DAction_OpticalCamouflage.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR>
+
+			　「６．３Ｄアクション基本＋プレイヤー以外のキャラクター」から加えた変数群は「TempDrawScreen」で検索すると見つかります。<BR>
+			　光学迷彩風描画の処理は関数「Render_Process」の中身を書き換えて行っています。<BR><BR><BR>
+
+
+			<A HREF="3DAction_OpticalCamouflage/SkinMesh4_OpticalCamouflageVS.fx"><B>頂点シェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_OpticalCamouflage/SkinMesh4_OpticalCamouflagePS.fx"><B>ピクセルシェーダーのプログラム</B></A><BR><BR>
+
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

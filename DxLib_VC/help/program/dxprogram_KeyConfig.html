@@ -1,0 +1,40 @@
+<TITLE>ＤＸライブラリ置き場　キーコンフィグ</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　キーコンフィグ
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/KeyConfigSample.png" HSPACE="0" VSPACE="0" ALT="キーコンフィグ">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR><BR>
+			　ゲーム中の各入力にキーボードやゲームパッドのどのボタン( 又はキー )を割り当てるかを設定するキーコンフィグ画面と、<BR>
+			キーコンフィグ画面で行った設定に沿った入力を取得する処理のサンプルプログラムです。<BR><BR><BR>
+
+
+			　キーコンフィグ処理を行うプログラム　<A HREF="KeyConfig/KeyConfig.cpp"><B>KeyConfig.cpp</B></A>, <A HREF="KeyConfig/KeyConfig.h"><B>KeyConfig.h</B></A><BR><BR>
+
+			　キーコンフィグ画面のプログラム　<A HREF="KeyConfig/KeyConfigScreen.cpp"><B>KeyConfigScreen.cpp</B></A><BR><BR>
+
+			　キーコンフィグ設定のテストを行うプログラム　<A HREF="KeyConfig/KeyConfigTest.cpp"><B>KeyConfigTest.cpp</B></A><BR><BR>
+
+			　実行ファイルは<A HREF="http://dxlib.o.oo7.jp/file/KeyConfig.zip"><B>こちら</B></A><BR><BR><BR>
+
+
+			　キーコンフィグ処理を纏めた KeyConfig.cpp, KeyConfig.h は設定をファイルに保存する機能もあるので、<BR>
+			そのまま実際のゲームに流用することも可能です。<BR><BR>
+
+			　尚、このサンプルではゲームパッドの入力に  <A HREF="../function/dxfunc_input.html#R5N34"><B>GetJoypadDirectInputState</B></A> を使用しています。<BR>
+			GetJoypadDirectInputState は  <A HREF="../function/dxfunc_input.html#R5N4"><B>GetJoypadInputState</B></A> よりも取得できる情報が多く、主にゲームパッドによって扱いが異なる<BR>
+			右スティックの入力を取得するために使用します。<BR><BR>
+
+			<HR>
+			<A HREF="../dxprogram.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

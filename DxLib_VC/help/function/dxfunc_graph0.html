@@ -1,0 +1,431 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="800" cellspacing="0" cellpadding="0" >
+
+        <tr><td><font size="3" color="#005500"><b>図形描画関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="800" cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N1">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawLine( int x1 , int y1 , int x2 , int y2 ,<br>
+                　　　　　　　 int Color ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>線を描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x1 , y1　:　描画する線の起点座標<br>
+                    x2 , y2　:　描画する線の終点座標<br>
+                    Color　　:　描く線の色<br></td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　画面上に点( x1 , y1 )と点( x2 , y2 )を結ぶ線をColorで
+                    指定した色で描きます。(終端座標は描かれないので、実際には描き切り
+                    たい座標＋１の値を指定する必要があります。)<br>
+                    　パソコン画面は一般に画面左上が座標( 0 , 0 )で、画面左から右に
+                    向かう方向が x のプラス方向の 画面上から下に向かう方向が y の
+                    プラス方向となります。そして標準では画面の右端の x 座標値は 639
+                    画面最下の y 座標は 479 となります。この最大値は関数<a href="dxfunc_graph3.html#R4N1"><b>『SetGraphMode』</b></a>
+                    によって変更する事が出来ます。<br>
+                    　Colorの値は画面の色の表現できる色の数によってかわってきます。
+                    この色の値はライブラリの関数<a href="dxfunc_graph3.html#R4N5"><b>『GetColor』</b></a>を使って取得する事を
+                    お勧めします。<br>
+
+                    (注) … 　なおこの関数は±１ドットの単位で描画位置に誤差が<br>
+                    　　　　生じます、その誤差はグラフィックボードの機種、描く<br>
+                    　　　　線の方向、長さによって様々なのでライブラリ側での<br>
+                    　　　　補正は行っていませんのでご了承下さい。<br>
+                    　　　（３Ｄ機能を使っていない場合は正しく描画されます<br>
+                    　　　 (３Ｄ機能を使わない方法については<br>
+                    　　　<a href="dxfunc_other.html#R15N1"><b>『SetUse3DFlag』関数</b></a>を参照して下さい)）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面左上から右下にかけて真っ白の線を描きます<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    Cr = GetColor( 255 , 255 , 255 ) ;    // 白色の値を取得
+
+    DrawLine( 0 , 0 , 640 , 480 , Cr ) ;    // 線を描画
+
+    WaitKey() ;            // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N2">宣言</a></b></td><td><font color="#000088"><b>
+                int DrawBox( int x1 , int y1 , int x2 , int y2 ,<br>
+                　　　　　　　int Color , int FillFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>四角形を描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x1 , y1　:　描画する四角形の左上の頂点座標<br>
+                    x2 , y2　:　描画する四角形の右下＋１の頂点座標<br>
+                    Color　　:　描画する四角形の色<br>
+                    FillFlag :　四角の中身を塗りつぶすか、のフラグ。TRUEで塗り<br>
+                    　　　　　つぶし、FALSEで塗りつぶさない</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x1, y1 )を四角形左上の頂点、( x2 - 1, y2 - 1 )を右下の頂点と
+                    する四角形をColorで指定された色で描画します。<br>
+                    （パソコン画面の座標の持ち方、色の指定のし方についての説明は
+                    すぐ上の<a href="#R2N1"><b>DrawLine関数</b></a>の解説を参照してください。）<br>
+                    　FillFlagをTRUEにすると四角形の中身もColorで指定した色で塗り
+                    つぶし、FALSEを指定すると輪郭のみを描画します。（TRUEと言う
+                    のは#defineマクロで定義された定数で1と同義です。FALSEについて
+                    は0と同義です）<br><br>
+
+                    <font color="#800000"><b>
+                    ＜＜注意＞＞<br>
+                    　…何故四角形の右下の頂点が( x2 - 1, y2 - 1 )なのかと申しますと、
+                    単純に ( x2, y2 ) が右下の頂点だと、ちょっと面倒なことになるからです。<br>
+                    　例えば、( x2, y2 ) が右下の頂点だとしたときに、縦横３２ドットの大きさを持つ
+                    四角形を描こうとしたら<br><br>
+
+                    　　DrawBox( 0, 0, 32, 32, GetColor( 255,255,255 ), TRUE ) ; <br><br>
+
+                    　ではなく<br><br>
+
+                    　　DrawBox( 0, 0, 31, 31, GetColor( 255,255,255 ), TRUE ) ; <br><br>
+
+                    　と書かなければいけません。つまり、ある地点から任意のサイズの
+                    四角形を指定したい時に常に「－１」してやる必要があるのです。<br>
+                    　どちらの方が直感的か、と言われると難しいところですが、慣れてきたときの
+                    扱いやすさは( x2 - 1, y2 - 1 )の方が上ですし、他のライブラリも
+                    右下の頂点を( x2 - 1, y2 - 1 )としていることが多いので、
+                    ＤＸライブラリもそれに習って右下の頂点は( x2 - 1, y2 - 1 )と
+                    しているわけです。<br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面中心に青い四角を描き、四角形の中も塗りつぶします<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )            // ＤＸライブラリ初期化処理
+    {
+         return -1;            // エラーが起きたら直ちに終了
+    }
+
+    Cr = GetColor(   0 ,   0 , 255 ) ;        // 青色の値を取得
+
+    DrawBox( 0 , 0 , 640 , 480 , Cr , TRUE) ;    // 四角形を描画
+
+    WaitKey() ;                // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;                // ＤＸライブラリ使用の終了処理
+
+    return 0 ;                // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N3">宣言</a></b></td><td><font color="#000088"><b>int    DrawCircle( int x , int y , int r , int Color, int FillFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>円の描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x , y　:　描く円の中心座標<br>
+                    r　　　:　描く円の半径<br>
+                    Color　:　円の色<br>
+                    FillFlag : TRUE(1の意)で円の中身も塗りつぶし、FALSE(0の意)で輪郭のみ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x , y )を円の中心座標とした半径 r の円を描きます。<br>
+                    円はColorで指定した色で描かれ、FillFlag にTRUEを指定した場合は中身を塗り
+                    つぶし、FALSE を指定した場合は輪郭のみ描かれます。<br>
+                    （パソコン画面上での座標の取り方、色の指定のし方は <a href="#R2N1"><b>DrawLine</b></a>
+                    の解説を参照してください。）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面中心に半径150の青い円を描きます、中身は塗りつぶしません。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    Cr = GetColor(   0 ,   0 , 255 ) ;    // 青色の値を取得
+
+    // 円を描画
+    DrawCircle( 320 , 240 , 150 , Cr , FALSE ) ;
+
+    WaitKey() ;            // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N4">宣言</a></b></td><td><font color="#000088"><b>int DrawOval( int x , int y , int rx , int ry , int Color , int FillFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>楕円を描く<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x , y : 描く楕円の中心座標<br>
+                    rx,ry : 描く楕円のＸ軸に対する半径とＹ軸に対する半径<br>
+                    Color : 楕円の色<br>
+                    FillFlag : TRUE(1の意)で楕円の中身も塗りつぶし、FALSE(0の意)で輪郭のみ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x , y )を楕円の中心座標とした半径 rx , ry の楕円を描きます。<br>
+                    楕円はColorで指定した色で描かれ、FillFlag にTRUEを指定した場合は中身を塗り
+                    つぶし、FALSE を指定した場合は輪郭のみ描かれます。<br>
+                    （パソコン画面上での座標の取り方、色の指定のし方は <a href="#R2N1"><b>DrawLine</b></a>
+                    の解説を参照してください。）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面中心に半径 (150,100) の青い楕円を描きます。中身も青色で塗りつぶします<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                 LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )                // ＤＸライブラリ初期化処理
+    {
+         return -1;                // エラーが起きたら直ちに終了
+    }
+
+    Cr = GetColor(   0 ,   0 , 255 ) ;            // 青色の値を取得
+
+    // 楕円を描画
+    DrawOval( 320 , 240 , 150 , 100 ,  Cr , TRUE ) ;
+
+    WaitKey() ;                    // キーの入力待ち((7-3)『WaitKey』を使用)
+
+    DxLib_End() ;                    // ＤＸライブラリ使用の終了処理
+
+    return 0 ;                    // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N7">宣言</a></b></td><td><font color="#000088">
+            <b>int DrawTriangle( int x1, int y1, int x2, int y2,<br>
+            　　　　　　　　　　　　　 int x3, int y3, int Color , int FillFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>三角形の描画<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x1, y1, x2, y2, x3, y3 : 三角形を描く３つの座標<br>
+                    int Color : 描画に使う色<br>
+                    int FillFlag : 三角形の中身を塗りつぶすかフラグ<br>
+                    　　　　　　　　　　(TRUE:塗りつぶす FALSE:塗りつぶさない)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x1, y1 ), ( x2, y2 ), ( x3, y3 )の座標を３点とした三角形を
+                    Color で指定した色で描画します。<br>
+                    　なお FillFlag が TRUE の場合は三角形の中身を塗りつぶし、FALSE
+                    の場合は三角形の輪郭のみを描画します。<br>
+                    （パソコン画面上での座標の取り方、色の指定のし方は<a href="#R2N1"><b>DrawLine</b></a>
+                    の解説を参照してください。）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面中心に黄色の三角形を描画し、中身を塗りつぶします
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    // ＤＸライブラリ初期化
+    if( DxLib_Init() == -1 ) return -1;
+
+    // 黄色の値を取得
+    Cr = GetColor( 255 , 255 , 0 ) ;
+
+    // 三角形を描画
+    DrawTriangle( 320, 100, 160, 420, 480, 420, Cr, TRUE ) ;
+
+    // キーの入力待ち((7-3)『WaitKey』を使用)
+    WaitKey() ;
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N5">宣言</a></b></td><td><font color="#000088"><b>int DrawPixel( int x , int y , int Color ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>点を描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x , y :　点を描画する座標<br>
+                    Color :　描画する点の色</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　座標( x , y )にColorで指定した色で点を描画します。<br>
+                    （パソコン画面上での座標のとり方、色の指定方法は<a href="#R2N1"><b>『DrawLine』</b></a>
+                    の解説を参照してください）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+            　画面中心に緑の点を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )        // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    Cr = GetColor(   0 , 255 , 0 ) ;    // 緑色の値を取得
+
+    // 点を描画
+    DrawPixel( 320 , 240 , Cr ) ;
+
+    WaitKey() ;            // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;            // ＤＸライブラリ使用の終了処理
+
+    return 0 ;            // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R2N6">宣言</a></b></td><td><font color="#000088"><b>int GetPixel( int x , int y ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定点の色を取得<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>x , y :　色を取得する点の座標</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>指定点の色コード<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　描画先になっている画面の指定の座標( x , y )の点の色コードを得ます。
+                    この関数はとても処理に時間がかかるので多用は禁物です。<br><br><br>
+
+                <b>使用例</b><br>
+
+                　　座標( 120 , 80 )にある点の色コードを得てint型変数 Cr に保存する<br>
+
+<pre>
+    int Cr ;
+    Cr = GetPixel( 120 , 80 ) ;
+</pre>
+                    <br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　なし<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

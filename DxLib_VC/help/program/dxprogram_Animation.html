@@ -1,0 +1,106 @@
+<TITLE>ＤＸライブラリ置き場　アニメーション</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　アニメーション
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/Animation.png" HSPACE="0" VSPACE="0" ALT="アニメーション">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR><BR>
+			　キャラクターモデルをアニメーションさせたいときは、<A HREF="../function/dxfunc_3d.html#R4N1">MV1AttachAnim</A> と <A HREF="../function/dxfunc_3d.html#R4N3">MV1SetAttachAnimTime</A> を使用します。<BR>
+			　ＤＸライブラリにはアニメーションの再生時間を自動で進める仕組みが無いので、MV1SetAttachAnimTime の<BR>
+			引数で指定する再生時間を少しづつ進めることでアニメーションを実現します。<BR><BR>
+
+			　アニメーションをループする場合は、アニメーションの再生時間が <A HREF="../function/dxfunc_3d.html#R4N5">MV1GetAttachAnimTotalTime</A> で取得できる<BR>
+			アニメーションの総時間を超えたらアニメーション時間を最初に戻します。<BR><BR>
+
+			　( プログラムの実行に必要なファイルは<A HREF="http://dxlib.o.oo7.jp/file/Animation.zip"><B>こちら</B></A> )<BR><BR><BR>
+
+<PRE>
+// 走るアニメーションのループ再生
+
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int    ModelHandle ;
+	float  AnimTotalTime ;
+	float  AnimNowTime ;
+	int    AnimAttachIndex ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1 ;
+
+	// ３Ｄモデルの読み込み
+	ModelHandle = MV1LoadModel( "DxChara.x" ) ;
+
+	// 走りアニメーションをアタッチ
+	AnimAttachIndex = MV1AttachAnim( ModelHandle, 1 ) ;
+
+	// 走りアニメーションの総時間を取得しておく
+	AnimTotalTime = MV1GetAttachAnimTotalTime( ModelHandle, AnimAttachIndex ) ;
+
+	// アニメーション再生時間を初期化
+	AnimNowTime = 0.0f ;
+	MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK ) ;
+
+	// カメラの位置と向きを設定
+	SetCameraPositionAndTarget_UpVecY( VGet( 1340.0f, 600.0f, -420.0f ), VGet( 0.0f, 400.0f, -420.0f ) );
+
+	// カメラのクリッピング距離を設定
+	SetCameraNearFar( 16.0f, 3800.0f );
+
+	// 背景の色を灰色にする
+	SetBackgroundColor( 128, 128, 128 ) ;
+
+	// メインループ(何かキーが押されたらループを抜ける)
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen() ;
+
+		// アニメーション再生時間を進める
+		AnimNowTime += 100.0f ;
+
+		// アニメーション再生時間がアニメーションの総時間を越えていたらループさせる
+		if( AnimNowTime >= AnimTotalTime )
+		{
+			// 新しいアニメーション再生時間は、アニメーション再生時間からアニメーション総時間を引いたもの
+			AnimNowTime -= AnimTotalTime ;
+		}
+
+		// 新しいアニメーション再生時間をセット
+		MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+		// ３Ｄモデルの描画
+		MV1DrawModel( ModelHandle ) ;
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+</PRE>
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

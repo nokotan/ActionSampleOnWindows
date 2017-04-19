@@ -1,0 +1,2989 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="1024" cellspacing="0" cellpadding="0" >
+
+        <tr><td><font size="3" color="#005500"><b>音利用関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="1024"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N1">宣言</a></b></td><td><font color="#000088"><b>int    PlaySoundFile( char *FileName , int PlayType ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>音声ファイル(WAV.MP3.Ogg)を再生する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>FileName　:　再生する音声ファイル文字列へのポインタ<br>
+                    PlayType　:　再生形式</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　FileNameで指定した音声ファイルを鳴らします。<br>
+                    再生できる音声ファイル形式は WAV, MP3, Ogg の３種類で、
+                    再生のタイプには以下の３種類がありこの内のどれかを選びます。<br><br>
+
+                    <table align="center" cellspacing="0" cellpadding="0">
+                        <tr><td>DX_PLAYTYPE_NORMAL</td><td>　:　ノーマル再生</td></tr>
+                        <tr><td>DX_PLAYTYPE_BACK</td><td>　:　バックグラウンド再生</td></tr>
+                        <tr><td>DX_PLAYTYPE_LOOP</td><td>　:　ループ再生</td></tr>
+                    </table>
+
+                    <br>
+                    　ノーマル再生は音声ファイルの再生が終るまで処理を止め、
+                    バックグラウンド再生は鳴らし始めるとすぐ次の処理に移ります
+                    （音を鳴らしながら何かをするときに使います）<br>
+                    　ループ再生はバックグラウンド再生＋ループ再生で、音楽の再生が
+                    終るとすぐ最初から再生が始まります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをノーマル再生します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのノーマル再生
+    PlaySoundFile( "test.wav" , DX_PLAYTYPE_NORMAL ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N2">宣言</a></b></td><td><font color="#000088"><b>int    CheckSoundFile( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>音声ファイルが再生中か調べる<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+                <td>０：なっていない<br>
+                    １：鳴っている<br>
+                    －１：エラー発生<br><br></td>
+            </tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N1"><b>PlaySoundFile 関数</b></a>で鳴らした（ている）音が鳴り終わっているか
+                    調べます。<br>
+                    　１の場合はまだ鳴っていて、０の場合は再生は終っています。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをバックグラウンド再生し、なり終わるまで待つ<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのバックグラウンド再生
+    PlaySoundFile( "test.wav" , DX_PLAYTYPE_BACK ) ;
+
+    // なり終わるまでここでループ
+    while( CheckSoundFile() == 1 )
+    {
+        // メッセージ処理
+        if( ProcessMessage() == -1 )
+        {
+            break ;    // エラーが起きたらループを抜ける
+        }
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N3">宣言</a></b></td><td><font color="#000088"><b>int    StopSoundFile( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>音声ファイルの再生を止める<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N1"><b>PlaySoundFile関数</b></a> での再生を停止します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをループ再生し、５秒経ったら止めます<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのループ再生
+    PlaySoundFile( "test.wav" , DX_PLAYTYPE_LOOP ) ;
+
+    // ５秒待つ『WaitTimer』使用
+    WaitTimer( 5000 ) ;
+
+    // 再生を止めます
+    StopSoundFile() ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N4">宣言</a></b></td><td><font color="#000088"><b>int    LoadSoundMem( char *FileName ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>音声ファイル(WAV.MP3.Ogg)をメモリに読みこむ<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>FileName :　メモリに読みこむ音声ファイルのファイル名<br>
+                    　　　　　　　文字列のポインタ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１：エラー</TD></tr>
+            <tr><td width="100">　</td><td>－１以外：サウンドハンドル<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　音を再生する際<a href="#R8N1"><b>PlaySound関数</b></a>を使用すると同時に１つの音しか
+                    鳴らすことが出来ません。それに<a href="#R8N1"><b>PlaySoundFile関数</b></a>は再生の際にその
+                    つどディスク等からファイルを読みこむのでゲームなどの高速な
+                    連続再生などには向いていません。<br>
+                    　ので何度も再生するような音はディスクから読みこんで取っておき
+                    いつでもすぐに再生できる状態にして置く必要があります。そのため
+                    の関数が LoadSoundMem関数 です。この関数で戻り値として返ってくる
+                    サウンドハンドルとは読みこんだ音の識別番号です(int型の値です）。<br>
+                    　音を再生する際にこの関数で得た識別番号を指定してやることで
+                    読みこんだ音を再生することが出来ます。<br>
+                    (メモリに読みこんだ音の再生には<a href="#R8N5"><b>『PlaySoundMem』</b></a>を使います)<br><br>
+
+                <b>例</b>　　test.wavをメモリに読みこんでサウンドハンドルを int型変数<br>
+                　　SHandleに保存します<br><br>
+
+<pre>
+    int SHandle ;
+
+    SHandle = LoadSoundMem( "test.wav" ) ;
+</pre>
+                    <br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをメモリに読み込みそのサウンドハンドルを int型変数 Shandle
+                に保存しその後再生します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // 読みこんだ音をノーマル再生します(『PlaySoundMem』関数使用)
+    PlaySoundMem( SHandle , DX_PLAYTYPE_NORMAL ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N5">宣言</a></b></td><td><font color="#000088"><b>int    PlaySoundMem( int SoundHandle , int PlayType , int TopPositionFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データを再生する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>SoundHanle　： 再生する音の識別番号（サウンドハンドル）<br>
+                    PlayType　　： 再生形式<br>
+                    　　　　　　　　　DX_PLAYTYPE_NORMAL　:　ノーマル再生<br>
+                    　　　　　　　　　DX_PLAYTYPE_BACK　　:　バックグラウンド再生<br>
+                    　　　　　　　　　DX_PLAYTYPE_LOOP　　:　ループ再生<br>
+                    TopPositionFlag ： 再生位置を音データの先頭に移動するかどうか<br>
+                    　　　　　　　　　　　( TRUE：移動する（デフォルト）　FALSE：移動しない )</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　LoadSoundMem関数 でメモリに読みこんだ音を読み込み時に取得した
+                    サウンドハンドルで再生します。<br>
+                    　PlaySoundFile関数との違いは、再生にサウンドハンドルを使用するということと、第三の引数<br>
+                    TopPositionFlag があることです。<br><br>
+                    　TopPositionFlag はサウンドデータを再生する前に再生開始位置を先頭に戻すかどうかを指定します。<br>
+                    TRUE を渡すと先頭から再生され、FALSE を渡すと最後に StopSoundMem をした位置か、<br>
+                    SetSoundCurrentTime で指定した位置から再生されます。<br>
+                    　尚、TopPositionFlag は省略可能で、省略した場合は TRUE を指定したことになります。<br><br>
+
+                    　再生にサウンドハンドルを使用する、TopPositionFlag がある、ということ以外は<a href="#R8N1"><b>PlaySoundFile関数</b></a>
+                    と違いはありません。(再生形式の詳しい説明は<a href="#R8N1"><b>『PlaySoundFile』</b></a>を
+                    参照してください。)<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　上記<a href="#R8N4"><b>『LoadSoundMem』関数</b></a>を参照してください    
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N6">宣言</a></b></td><td><font color="#000088"><b>int    CheckSoundMem( int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データが再生中か調べる<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>SoundHandle : 再生状態を調べる音の識別番号（サウンドハンドル）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>１：再生中</td></tr>
+            <tr><td width="100">　</td><td>０：再生されていない<br>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N5"><b>PlaySoundMem関数</b></a>で再生した SoundHandle が示す音が再生中か
+                    どうかを調べます。調べる形式がサウンドハンドルを通して調べる
+                    ということ以外<a href="#R8N2"><b>CheckSound関数</b></a>と違いはありません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをメモリに読み込みバックグラウンド再生し、なり終わる
+                まで待つ<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // 読みこんだ音をバックグラウンド再生します(『PlaySoundMem』関数使用)
+    PlaySoundMem( SHandle , DX_PLAYTYPE_NORMAL ) ;
+
+    // なり終わるまでここでループ
+    while( CheckSoundMem( SHandle ) == 1 )
+    {
+        // メッセージ処理
+        if( ProcessMessage() == -1 )
+        {
+            break ;    // エラーが起きたらループを抜ける
+        }
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N7">宣言</a></b></td><td><font color="#000088"><b>int    StopSoundMem( int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの再生を止める<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>SoundHandle : 再生を止める音の識別番号（サウンドハンドル）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N5"><b>PlaySoundMem関数</b></a>で再生中の SoundHandle が示す音を停止します。
+                    停止の対象がサウンドハンドルを通して行われるという以外<a href="#R8N2"><b>StopSound関数</b></a>
+                    と機能的な違いはありません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをループ再生し、５秒経ったら止めます<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // 読みこんだ音をループ再生します(『PlaySoundMem』関数使用)
+    PlaySoundMem( SHandle , DX_PLAYTYPE_LOOP ) ;
+
+    // ５秒待つ『WaitTimer』使用
+    WaitTimer( 5000 ) ;
+
+    // 再生を止めます
+    StopSoundMem( SHandle ) ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N8">宣言</a></b></td><td><font color="#000088"><b>int DeleteSoundMem( int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだサウンドデータを削除する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>SoundHandle : 削除する音の識別番号（サウンドハンドル）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N4"><b>LoadSoundMem関数</b></a>でメモリに読みこんだサウンドデータをメモリから削除します。これにより貴重なメモリ資源を増やす事が出来ます。<br>
+                    　削除したサウンドは再読み込みするまで使うことは出来なくなるのでいらなくなったサウンドデータを削除するのに使う関数です。<br>
+                    （音の再生中に削除した場合は再生を止めてから削除します）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavをループ再生し、５秒経ったら止め、その後そのサウンド
+                データを削除し終了します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // 読みこんだ音をループ再生します(『PlaySoundMem』関数使用)
+    PlaySoundMem( SHandle , DX_PLAYTYPE_LOOP ) ;
+
+    // ５秒待つ『WaitTimer』使用
+    WaitTimer( 5000 ) ;
+
+    // いらなくなったので音を削除します
+    DeleteSoundMem( SHandle ) ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N9">宣言</a></b></td><td><font color="#000088"><b>int    InitSoundMem( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データをすべて消去する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N4"><b>LoadSoundMem関数</b></a>でメモリに読みこんだすべてのサウンドデータをメモリ上から削除します。これによってロードした音はすべて削除され初期化されます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavを５回ロードし、０．１秒ごとに１回づつ再生した後音をすべて削除します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle[ 5 ] ;
+    int i ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    for( i = 0 ; i &lt; 5 ; i ++ )
+    {
+        SHandle[ i ] = LoadSoundMem( "test.wav" ) ;
+    }
+
+    // 読みこんだ音を０．１秒おきにバックグラウンド再生します(『PlaySoundMem』関数使用)
+    for( i = 0 ; i &lt; 10 ; i ++ )
+    {
+        // 音の再生
+        PlaySoundMem( SHandle[ i ] , DX_PLAYTYPE_BACK ) ;
+
+        // ０．５秒待つ(『WaitTimer』使用)
+        WaitTimer( 100 ) ;
+    }
+
+    // 音をすべて削除します
+    InitSoundMem() ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N10">宣言</a></b></td><td><font color="#000088"><b>int ChangePanSoundMem( int PanPal , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データの再生にパンを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int PanPal : 左右の音量の比率<br>
+                    　　　( -255 ～ 255 ＋は左の音量を下げ、－は右の音量を下げる)<br>
+                    int SoundHandle : パンを設定する音の識別番号(サウンドハンドル)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　音の再生にパンを設定します。パンとは簡単に説明しますと左右の音の音量の比率を変化させることです。
+		PanPal に－の値を設定すると右の音量が下がり、＋の値を設定すると左の音量が下がります、
+		ただし残念ながら下がったぶん反対側の音量が上がることはありませんので正確な意味でのパンではありません。<br>
+                    　標準ではパン値は０になっており、左右の音量はどちらも同じ比率になっています。<br><br>
+
+                    　因みに音を再生中でもパンの変更は可能です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavを読みこんで右のスピーカのみから音を出します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // パンの設定
+    ChangePanSoundMem( 255 , SHandle ) ;
+
+    // 音の再生
+    PlaySoundMem( SHandle , DX_PLAYTYPE_BACK ) ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N11">宣言</a></b></td><td><font color="#000088"><b>int ChangeVolumeSoundMem( int VolumePal , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データの再生にボリュームを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int VolumePal 　: 設定する音量( 0 ～ 255 )<br>
+                    int SoundHandle : 音量を設定する音の識別番号(サウンドハンドル)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　再生する音の音量を設定します。０は無音、２５５で最大音量です。<br>
+                    　音を再生中でも音量の変更は可能です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavを読みこんで８０％の音量で再生します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // 音量の設定
+    ChangeVolumeSoundMem( 255 * 80 / 100, SHandle ) ;
+
+    // 音の再生
+    PlaySoundMem( SHandle , DX_PLAYTYPE_BACK ) ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N32">宣言</a></b></td><td><font color="#000088"><b>int ChangeNextPlayPanSoundMem( int PanPal , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データの次の再生にのみ使用するパンを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int PanPal : 左右の音量の比率<br>
+                    　　　( -255 ～ 255 ＋は左の音量を下げ、－は右の音量を下げる)<br>
+                    int SoundHandle : パンを設定する音の識別番号(サウンドハンドル)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　次に <a href="#R8N5"><b>PlaySoundMem関数</b></a> で再生される音に適用するパンを設定します。<br><br>
+		    　「既に再生している音のパンは変更したくないけど、これから再生する音のパンは変更したい」という場合に使用します。<br><br>
+                    　尚、PanPal の意味については <a href="#R8N10"><b>ChangePanSoundMem</b></a> の解説を参照してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavを読みこんで左右のスピーカーから０．１５秒毎に交互に音を鳴らします。<br>
+                　左右片方の音が鳴り止む前に次の音を鳴らしているので ChangePanSoundMem を使用した場合は<br>
+		　既に再生中の音にまでパン設定が反映されてしまいますが、ChangeNextPlayPanSoundMem では<br>
+		　次に再生する音のみ影響を与えるので、左右のスピーカーからそれぞれ独立して音が鳴ります。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() == -1 )
+	{
+		return -1 ;
+	}
+
+	// 音の読み込み
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+
+	// 左右交互に音を鳴らす
+	while( ProcessMessage() == 0 )
+	{
+		// 左側のスピーカーから音を鳴らす
+		ChangeNextPlayPanSoundMem( -255, SoundHandle ) ;
+		PlaySoundMem( SoundHandle, DX_PLAYTYPE_BACK ) ;
+
+		// ０．１５秒待つ
+		WaitTimer( 150 ) ;
+
+		// 右側のスピーカーから音を鳴らす
+		ChangeNextPlayPanSoundMem( 255, SoundHandle ) ;
+		PlaySoundMem( SoundHandle, DX_PLAYTYPE_BACK ) ;
+
+		// ０．１５秒待つ
+		WaitTimer( 150 ) ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N33">宣言</a></b></td><td><font color="#000088"><b>int ChangeNextPlayVolumeSoundMem( int VolumePal , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読みこんだ音声データの次の再生にのみ使用するボリュームを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int VolumePal 　: 次に再生する音に設定する音量( 0 ～ 255 )<br>
+                    int SoundHandle : 音量を設定する音の識別番号(サウンドハンドル)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　次に <a href="#R8N5"><b>PlaySoundMem関数</b></a> で再生される音に適用する音量を設定します。<br><br>
+		    　「既に再生している音の音量は変更したくないけど、これから再生する音の音量は変更したい」という場合に使用します。<br><br>
+                    　尚、VolumePal の意味については <a href="#R8N11"><b>ChangeVolumeSoundMem</b></a> の解説を参照してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wavを読みこんで［通常音量で音を再生する」と「小音量で音を再生する」を０．１５秒毎に交互に行います。<br>
+                　一つ前に再生した音が鳴り止む前に次の音を鳴らしているので ChangeVolumeSoundMem を使用した場合は<br>
+		　既に再生中の音にまで音量設定が反映されてしまいますが、ChangeNextPlayVolumeSoundMem では<br>
+		　次に再生する音のみ影響を与えるので、通常音量の音と小音量の音がそれぞれ独立して音が鳴ります。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() == -1 )
+	{
+		return -1 ;
+	}
+
+	// 音の読み込み
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+
+	// 「通常音量で音を再生」と「小音量で音を再生」を交互に行う
+	while( ProcessMessage() == 0 )
+	{
+		// 通常音量で音を再生する
+		ChangeNextPlayVolumeSoundMem( 255, SoundHandle ) ;
+		PlaySoundMem( SoundHandle, DX_PLAYTYPE_BACK ) ;
+
+		// ０．１５秒待つ
+		WaitTimer( 150 ) ;
+
+		// 小音量で音を再生する
+		ChangeNextPlayVolumeSoundMem( 128, SoundHandle ) ;
+		PlaySoundMem( SoundHandle, DX_PLAYTYPE_BACK ) ;
+
+		// ０．１５秒待つ
+		WaitTimer( 150 ) ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N12">宣言</a></b></td><td><font color="#000088"><b>int SetFrequencySoundMem( int FrequencyPal , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの再生周波数を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int FrequencyPal : 新たに設定する再生周波数(ヘルツ単位)<br>
+                    　　　　　　　　　　( 100～100,000  -1:デフォルトの周波数に戻す )<br>
+                    int SoundHandle : 再生周波数を設定する音の識別番号</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　指定の音の再生周波数を変更します。値が小さいほど、遅く低く、
+                    値が大きいほど速く高く再生されます。<br>
+                    　なお、音の元の再生周波数が 22.05KHz だった場合は 22050 を
+                    指定した場合が通常の再生値となり、44.10KHz だった場合は
+                    44100 が通常の再生値となりますので注意してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav をループ再生させながら、再生周波数を上げたり下げたりします。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    int SoundHandle ;
+    int Freq , Add ;
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 ) return -1;
+
+    // 音をロードする
+    SoundHandle = LoadSoundMem( "test.wav" ) ; 
+
+    // 再生周波数と再生周波数の推移値を設定する
+    Freq = 22050 ;
+    Add = -10 ;
+
+    // ロードした音のループ再生を開始する
+    PlaySoundMem( SoundHandle , DX_PLAYTYPE_LOOP ) ;
+
+    // ＥＳＣキーが押されるか、システムがエラーを起こすまでループする
+    while( ProcessMessage() == 0 &amp;&amp; CheckHitKey( KEY_INPUT_ESCAPE ) == 0 ) 
+    {
+        // 再生周波数の設定値を変化させる
+        Freq += Add ;
+        if( Freq &gt; 100000 ){ Freq = 100000 ; Add = -10 ; }
+        if( Freq &lt; 1000 ){ Freq = 1000  ; Add = 10 ; }
+
+        // 再生周波数を設定する
+        SetFrequencySoundMem( Freq , SoundHandle ) ; 
+
+        // 少し待つ
+        WaitTimer( 10 ) ;
+    }
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N13">宣言</a></b></td><td><font color="#000088"><b>int SetLoopPosSoundMem( int LoopTime, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データのループ位置を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int LoopTime  : ループ位置(ミリ秒単位)<br>
+                    int SoundHandle : ループ位置を設定する音の識別番号</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　この関数は SoundHandle が示す音声がループ指定で再生されたとき、
+                    最後まで再生された後音声中の何処から再度再生するかを音声の先頭からの経過時間(ミリ秒単位)で指定することが出来ます。<br>
+                    　何のためにあるのかは自ずと分かると思いますが、ループ再生の際に曲の終端まで再生した後必ず曲の先頭から再生されてしまうと、
+		    曲の中で一回だけしか流れない前奏を入れることが出来ないからです。<br>
+                    　前奏部分とループ部分を一緒にした音声ファイルを作成し、この関数でループ部分の先頭位置を指定する事で、
+		    前奏部分は一回だけ再生し、後は延々とループ部分のみを再生し続ける、といった事が出来るわけです。<br><br>
+
+                    <font color="#660000"><b>
+                    注意！…<br><br>
+                    　この関数でループ位置を設定した場合は、以後 ProcessMessage の呼び出し間隔を０．２秒以上空けないようにして下さい。
+		    (０．２秒以上空け続けると再生中の音が途切れる現象が発生します)<br><br>
+		    　また、この関数を使用してループ位置を設定したサウンドハンドルは、
+		    以降 PlaySoundMem の第二引数で DX_PLAYTYPE_LOOP 以外を指定しても必ずループ再生されるようになります。<br><br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　testMusic.wav のループ後の位置を先頭から２０秒後に設定してから再生します。
+                (testMusic.wav はサンプルプログラム実行用フォルダにはありませんので自前で用意してください)<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    int SoundHandle ;
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 ) return -1;
+
+    // 音声をロードする
+    SoundHandle = LoadSoundMem( "testMusic.wav" ) ;
+
+    // ループ位置を音声の先頭から２０秒後にセットする
+    SetLoopPosSoundMem( 20000, SoundHandle ) ;
+
+    // 音声をループ再生する
+    PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+    // キーの入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリ使用の終了処理
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N14">宣言</a></b></td><td><font color="#000088"><b>int SetLoopSamplePosSoundMem( int LoopSamplePosition, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データのループ位置を設定する(サンプル位置指定)<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int LoopSamplePosition  : ループ位置(サンプル単位)<br>
+                    int SoundHandle : ループ位置を設定する音の識別番号</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R8N13"><b>『SetLoopPosSoundMem』関数</b></a> のループ位置
+                    の指定の仕方がサンプル数になったものです。<br><br>
+                    　例えば、サンプリング周波数が 44.1KHz のサウンドに対しては、引数
+                    LoopSamplePosition に 44100 を渡すと丁度１秒の位置でループすることになります。<br>
+                    　秒単位の指定よりも、サンプル単位の指定の方が都合が良い場合に使用します。<br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N15">宣言</a></b></td><td><font color="#000088"><b>int SetCurrentPositionSoundMem( int SamplePosition, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの再生位置をサンプル単位で変更する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SamplePosition  : 新しい再生位置(サンプル単位)<br>
+                    int SoundHandle : 再生位置を変更する音の識別番号</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　サウンドを扱う中では時に「サウンドデータの三秒目から再生したい」ということがあると思います、
+                    この関数はそのような時に使用する関数で、次に PlaySoundMem の第三引数 TopPositionFlag が FALSE
+                    で再生された際に再生され始めるサウンドデータ中の位置を指定することができます。<br>
+
+                    　再生位置はサンプル単位で、例えばサンプリング周波数が 44.1KHz のサウンドに対しては、引数
+                    SamplePosition に 44100 を渡すと丁度１秒の位置を指定したことになります。<br><br>
+
+                    　尚、この関数はサウンドの再生中に使用してもエラーになりますので、必ず再生が停止しているときに使用してください。<br><br>
+
+                    <font color="#660000"><b>
+                    注意！…<br>
+                    　この関数で再生位置を変更しても、PlaySoundMem の第三引数 TopPositionFlag に FALSE を渡さないとサウンドデータの頭から再生されてしまいますので注意してください。<br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+<!--
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N15">宣言</a></b></td><td><font color="#000088"><b>int GetCurrentPositionSoundMem( int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの再生位置をサンプル単位で変更する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SoundHandle : 再生位置を取得する音の識別番号</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　サウンドを扱う中では時に「サウンドデータの三秒目から再生したい」ということがあると思います、
+                    この関数はそのような時に使用する関数で、次に PlaySoundMem の第三引数 TopPositionFlag が FALSE
+                    で再生された際に再生され始めるサウンドデータ中の位置を指定することができます。<br>
+
+                    　再生位置はサンプル単位で、例えばサンプリング周波数が 44.1KHz のサウンドに対しては、引数
+                    SamplePosition に 44100 を渡すと丁度１秒の位置を指定したことになります。<br><br>
+
+                    　尚、この関数はサウンドの再生中に使用してもエラーになりますので、必ず再生が停止しているときに使用してください。<br><br>
+
+                    <font color="#660000"><b>
+                    注意！…<br>
+                    　この関数で再生位置を変更しても、PlaySoundMem の第三引数 TopPositionFlag に FALSE を渡さないとサウンドデータの頭から再生されてしまいますので注意してください。<br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+-->
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N16">宣言</a></b></td><td><font color="#000088"><b>int DuplicateSoundMem( int SrcSoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>既にメモリに読み込んである音声データを使用するサウンドハンドルを新たに作成する( 非ストリームサウンドのみ )<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int SoundHandle : 新たに作成するサウンドハンドルが使用するサウンドデータを持っているサウンドハンドル</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：サウンドハンドル</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　この関数は既に <b><a href="#R8N4">LoadSoundMem</a></b> 等の関数で読み込んだ音声データと同じデータを使用する別のサウンドハンドルが欲しくなったときに使用する関数です。<br>
+                    　例えば同じ音声データを使用するキャラクターが複数居た場合、
+                    各再生毎に細かく音量や停止のタイミングを制御を行いたくなったら各キャラクターにサウンドハンドルを持たせたくなりますが、
+                    キャラクターの数だけ LoadSoundMem を使用して音声データをメモリに読み込むとロード時間が長くなり使用メモリも増大してしまいます。<br>
+                    　そんなときは音声データを LoadSoundMem でファイルから読み込むのは一回だけにして、
+                    同じ音声データを使用したい別のサウンドハンドルを得たいときに逐次 DuplicateSoundMem で LoadSoundMem で得たサウンドハンドルと同じサウンドデータを使用する別のサウンドハンドルを用意します、
+                    こうすることで各再生毎に細かい制御が可能になるとともに、音声データの読み込み時間の短縮と使用メモリの節約ができます。<br><br>
+
+                    　尚、この関数で作成されたサウンドハンドルは LoadSoundMem で作成されたサウンドハンドルと全く同じ性能を持っています。<br>
+                    　また、DuplicateSoundMem の引数に渡したサウンドハンドルを <b><a href="#R8N8">DeleteSoundMem</a></b> で削除しても、
+                    DuplicateSoundMem で作成したサウンドハンドルは削除されませんので注意してください。<br><br>
+
+                    <font color="#660000"><b>
+                    注意！…<br>
+                    　因みにこの関数は <a href="dxfunc_other.html#R15N25">SetCreateSoundDataType</a> でデフォルトタイプである DX_SOUNDDATATYPE_MEMNOPRESS 以外のストリーミングタイプのサウンドデータを指定した上で LoadSoundMem
+                    で作成されたサウンドハンドルや、３分以上の長さのあるサウンドデータから作成されたサウンドハンドルは DuplicateSoundMem の引数として渡すことはできません<br>
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を LoadSoundMem で読み込み、同じサウンドデータを使用するサウンドハンドルを作成してそれぞれのサウンドハンドルから音を再生します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    int SHandle, DupSHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.wavのメモリへの読み込みサウンドハンドルをSHandleに保存します
+    SHandle = LoadSoundMem( "test.wav" ) ;
+
+    // test.wavを使用する SHandle とは別のサウンドハンドルを作成する
+    DupSHandle = DuplicateSoundMem( SHandle ) ;
+
+    // 読みこんだ音をノーマル再生します(『PlaySoundMem』関数使用)
+    PlaySoundMem( SHandle , DX_PLAYTYPE_NORMAL ) ;
+
+    // SHandle から複製した DupSHandle をノーマル再生します
+    PlaySoundMem( DupSHandle , DX_PLAYTYPE_NORMAL ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N17">宣言</a></b></td><td><font color="#000088"><b>int Set3DPositionSoundMem( VECTOR Position, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの３Ｄサウンド用の再生位置を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Position : 新しい再生位置<br>
+		int SoundHandle : 再生位置を変更する音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データの音の再生位置( ３Ｄ空間の位置 )を設定します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、ループ再生しながら音の再生位置を左右に振って、<br>
+		　音の再生位置が変化していることを確認するためのサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+	float xadd ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos = VGet( 320.0f, 0.0f, 300.0f ) ;
+
+	// 音の再生位置を設定
+	Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+	// 音の再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// メインループ
+	xadd = 4.0f ;
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// 音の再生位置をＸ軸方向に移動
+		EmitterPos.x += xadd ;
+		if( EmitterPos.x > 640.0f || EmitterPos.x < 0.0f )
+		{
+			xadd = -xadd ;
+			EmitterPos.x += xadd ;
+		}
+		Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// 音の再生位置を描画
+		DrawBox(
+			( int )( EmitterPos.x - 8 ), ( int )( 480.0f - ( EmitterPos.z + 8 ) ),
+			( int )( EmitterPos.x + 8 ), ( int )( 480.0f - ( EmitterPos.z - 8 ) ),
+			GetColor( 255,0,255 ), TRUE ) ; 
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N18">宣言</a></b></td><td><font color="#000088"><b>int Set3DRadiusSoundMem( float Radius, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの３Ｄサウンド用の音が聞こえる距離を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		float Radius : 音が聞こえる距離<br>
+		int SoundHandle : 音が聞こえる距離を変更する音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データを再生した際の音が聞こえる距離を設定します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、ループ再生しながら音が聞こえる距離を増減させて、<br>
+		　音が聞こえる範囲が変化していることを確認するためのサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+#define MIN_RADIUS		(100.0f)
+#define MAX_RADIUS		(480.0f)
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+	float Radius ;
+	float AddRadius ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 360.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos = VGet( 320.0f, 0.0f, 120.0f ) ;
+
+	// 音の再生位置を設定
+	Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+	// 音が聞こえる距離を初期化
+	Radius = MIN_RADIUS ;
+	AddRadius = 4.0f ;
+	Set3DRadiusSoundMem( Radius, SoundHandle ) ;
+
+	// 音の再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// メインループ
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// 音が聞こえる距離を変更
+		Radius += AddRadius ;
+		if( Radius > MAX_RADIUS || Radius < MIN_RADIUS )
+		{
+			AddRadius = -AddRadius ;
+			Radius += AddRadius ;
+		}
+		Set3DRadiusSoundMem( Radius, SoundHandle ) ;
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// 音の再生位置を描画
+		DrawBox(
+			( int )( EmitterPos.x - 8 ), ( int )( 480.0f - ( EmitterPos.z + 8 ) ),
+			( int )( EmitterPos.x + 8 ), ( int )( 480.0f - ( EmitterPos.z - 8 ) ),
+			GetColor( 255,0,255 ), TRUE ) ; 
+
+		// 音が聞こえる範囲を描画
+		DrawCircle( ( int )EmitterPos.x, ( int )EmitterPos.z, ( int )Radius, GetColor( 255,255,0 ), FALSE ) ;
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N19">宣言</a></b></td><td><font color="#000088"><b>int Set3DVelocitySoundMem( VECTOR Velocity, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの３Ｄサウンド用の移動速度を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Velocity : 音の移動速度( 秒速 )<br>
+		int SoundHandle : 音が聞こえる距離を変更する音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データの移動速度を設定します。<br><br>
+
+                    　音の移動速度を設定、というと、時間経過とともに音の再生位置が変化しそうですが、変化しません。<br><br>
+		    　この関数で設定する移動速度は、所謂ドップラー効果を再現するためだけに使用されるので、音の位置には影響を与えないのです。<br><br>
+		    　引数 Velocity で渡す速度の値は「秒速」となります。なので、例えば秒間６０フレームで動作するプログラムの場合は、
+		    １フレームで移動した距離を６０倍した値を引数に渡せば良いということになります。<br><br>
+
+		    ( 秒間６０フレームのプログラムの１フレームで経過する時間は６０分の１秒、渡す値は秒速( １秒間辺りの移動距離 )なので、１フレームで移動した距離を６０倍すれば１秒間に移動する距離になる )<br><br>
+
+		    <font color="#880000">
+		    ＜注意＞<br>
+		    　ドップラー効果は XAudio2 が使用できる環境で、且つ DxLib_Init の前で <a href="#R8N35"><b>SetEnableXAudioFlag</b></a> に TRUE を渡して XAudio2 を使用する設定にしていた場合のみ発生します。
+		    XAudio2 が使用できない環境や、使用できる環境でも SetEnableXAudioFlag を使用して XAudio2 を使用する設定にしていない場合はこの関数は何も効果がありませんので注意してください。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、ループ再生しながら音の再生位置を左右に振って、<br>
+		　ドップラー効果を確認するためのサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos ;
+	VECTOR BackEmitterPos ;
+	VECTOR EmitterVel ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+	float xadd ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 512.0f, SoundHandle ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos = VGet( 320.0f, 0.0f, 300.0f ) ;
+
+	// 音の再生位置を設定
+	Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+	// 音の再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// メインループ
+	xadd = 4.0f ;
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// 移動前の音の再生位置を保存しておく
+		BackEmitterPos = EmitterPos ;
+
+		// 音の再生位置をＸ軸方向に移動
+		EmitterPos.x += xadd ;
+		if( EmitterPos.x > 640.0f || EmitterPos.x < 0.0f )
+		{
+			xadd = -xadd ;
+			EmitterPos.x += xadd ;
+		}
+		Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+		// このフレームの移動距離から移動速度を算出
+		// ( ６０分の１秒経過している前提の計算です )
+		EmitterVel = VScale( VSub( EmitterPos, BackEmitterPos ), 60.0f ) ;
+
+		// 音の移動速度を設定
+		Set3DVelocitySoundMem( EmitterVel, SoundHandle ) ;
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// 音の再生位置を描画
+		DrawBox(
+			( int )( EmitterPos.x - 8 ), ( int )( 480.0f - ( EmitterPos.z + 8 ) ),
+			( int )( EmitterPos.x + 8 ), ( int )( 480.0f - ( EmitterPos.z - 8 ) ),
+			GetColor( 255,0,255 ), TRUE ) ; 
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N20">宣言</a></b></td><td><font color="#000088"><b>int SetNextPlay3DPositionSoundMem( VECTOR Position, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の再生位置を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Position ： 次に再生する音に設定する再生位置<br>
+		int SoundHandle ： 音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データに対して、
+		    次に <a href="#R8N5"><b>PlaySoundMem関数</b></a> で再生される音の位置を設定します。<br><br>
+
+		    　「既に再生している音の位置は変更せずに、これから再生する音の位置だけ変更したい」という場合に使用します。<br><br>
+
+		    　<b><a href="#R8N17">Set3DPositionSoundMem</a></b> では既に再生している音の位置も変更してしまうため、
+		    例えば打撃音など同じ音を色々な場所で鳴らす場合は、最後に音が鳴った位置に全ての音が移動してしまいます。<br><br>
+
+		    　それを避けるためにこの関数を使用して各音がそれぞれ独立した位置で鳴るようにします。<br><br>
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、二つの位置で交互に音を鳴らします。<br>
+		　このとき SetNextPlay3DPositionSoundMem を使用しているので、二つの音の位置が独立しています。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos[ 2 ] ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+	int PositionNumber ;
+	int FrameCounter ;
+	int i ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos[ 0 ] = VGet( 220.0f, 0.0f, 300.0f ) ;
+	EmitterPos[ 1 ] = VGet( 420.0f, 0.0f, 300.0f ) ;
+
+	// 鳴らす音の番号を初期化
+	PositionNumber = 0 ;
+
+	// フレームカウンターを初期化
+	FrameCounter = 0 ;
+
+	// メインループ
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// フレームカウンターをインクリメント
+		FrameCounter ++ ;
+
+		// １５フレーム経過したら音を鳴らす
+		if( FrameCounter >= 15 )
+		{
+			// フレームカウンターを初期化
+			FrameCounter = 0 ;
+
+			// 次に鳴らす音の位置を設定する
+			SetNextPlay3DPositionSoundMem( EmitterPos[ PositionNumber ], SoundHandle ) ;
+
+			// 音を再生
+			PlaySoundMem( SoundHandle, DX_PLAYTYPE_BACK ) ;
+
+			// 音を鳴らす位置の座標番号を変更
+			PositionNumber = ( PositionNumber + 1 ) % 2 ;
+		}
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// 音の再生位置を描画
+		for( i = 0 ; i < 2 ; i ++ )
+		{
+			DrawBox(
+				( int )( EmitterPos[ i ].x - 8 ), ( int )( 480.0f - ( EmitterPos[ i ].z + 8 ) ),
+				( int )( EmitterPos[ i ].x + 8 ), ( int )( 480.0f - ( EmitterPos[ i ].z - 8 ) ),
+				GetColor( 255,0,255 ), TRUE ) ; 
+		}
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N21">宣言</a></b></td><td><font color="#000088"><b>int SetNextPlay3DRadiusSoundMem( float Radius, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の音が聞こえる距離を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		float Radius ： 次に再生する音に設定する音が聞こえる距離<br>
+		int SoundHandle ： 音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データに対して、
+		    次に <a href="#R8N5"><b>PlaySoundMem関数</b></a> で再生される音が聞こえる距離を設定します。<br><br>
+
+		    　「既に再生している音が聞こえる距離は変更せずに、これから再生する音が聞こえる距離だけ変更したい」という場合に使用します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません、「次に再生する音に対する設定」として <a href="#R8N20"><b>SetNextPlay3DPositionSoundMem</b></a> のサンプルが参考になると思います。<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N22">宣言</a></b></td><td><font color="#000088"><b>int SetNextPlay3DVelocitySoundMem( VECTOR Velocity, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの次の再生のみに使用する３Ｄサウンド用の移動速度を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Velocity ： 次に再生する音に設定する移動速度( 秒速 )<br>
+		int SoundHandle ： 音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データに対して、
+		    次に <a href="#R8N5"><b>PlaySoundMem関数</b></a> で再生される音の移動速度を設定します。<br><br>
+
+		    　「既に再生している音の移動速度は変更せずに、これから再生する音の移動速度だけ変更したい」という場合に使用します。<br><br>
+
+		    　音の移動速度については <a href="#R8N19"><b>Set3DVelocitySoundMem</b></a> の解説を参照してください。
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません、「次に再生する音に対する設定」として <a href="#R8N20"><b>SetNextPlay3DPositionSoundMem</b></a> のサンプルが参考になると思います。<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="1024"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N23">宣言</a></b></td><td><font color="#000088"><b>int Set3DReverbParamSoundMem( const SOUND3D_REVERB_PARAM *Param, int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		Param ： 音声データに設定するリバーブエフェクトパラメータの構造体のアドレス<br>
+		SoundHandle ： 音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データのリバーブエフェクトのパラメータを変更します。<br><br>
+
+		    　リバーブエフェクトのパラメータは構造体 SOUND3D_REVERB_PARAM を使用して変更します。<br>
+                    　構造体 SOUND3D_REVERB_PARAM は XAudio2 のリバーブエフェクトパラメータ用構造体 XAUDIO2FX_REVERB_PARAMETERS そのままで、
+		    それぞれのパラメータはサウンドの知識が無いと分からないものになっています。<br><br>
+
+		    ＜構造体 SOUND3D_REVERB_PARAM のメンバー変数＞<br>
+		    ( 引用元 ： <b><a href="http://msdn.microsoft.com/ja-jp/library/bb924662(v=vs.85).aspx">MSDN の XAUDIO2FX_REVERB_PARAMETERS 構造体の解説ページ</a></b> )<br><br>
+<pre>
+    // リバーブとなる出力の割合( 指定可能範囲 0.0f ～ 100.0f )
+    float        WetDryMix ;
+
+    // ダイレクト パスに対する初期反射の遅延時間、単位はミリ秒( 指定可能範囲 0 ～ 300 )
+    unsigned int ReflectionsDelay ;
+
+    // 初期反射に対するリバーブの遅延時間、単位はミリ秒( 指定可能範囲 0 ～ 85 )
+    BYTE         ReverbDelay ;
+
+    // 左後方出力および右後方出力の遅延時間、単位はミリ秒( 指定可能範囲 0 ～ 5 )
+    BYTE         RearDelay ;
+
+    // シミュレーション空間における視聴者に対する左入力の位置( 指定可能範囲 0 ～ 30 )
+    // PositionLeft を最小値に設定した場合、左入力は視聴者の近くに配置されます。
+    // この位置では、サウンド フィールドにおいて初期反射が優勢になり、残響減衰は弱まって、振幅が小さくなります。
+    // PositionLeft を最大値に設定した場合、左入力はシミュレーション室内で視聴者から最大限遠い位置に配置されます。
+    // PositionLeft は残響減衰時間 (部屋の残響効果) に影響せず、視聴者に対する音源の見かけの位置のみに影響します。
+    BYTE         PositionLeft ;
+
+    // PositionLeft と同効果の右入力値( 指定可能範囲 0 ～ 30 )、右入力にのみ影響を与える
+    BYTE         PositionRight ;
+
+    // 音源から視聴者までの距離によるインプレッションを増減させる値( 指定可能範囲 0 ～ 30 )
+    BYTE         PositionMatrixLeft ;
+
+    // 音源から視聴者までの距離によるインプレッションを増減させま値( 指定可能範囲 0 ～ 30 )
+    BYTE         PositionMatrixRight ;	
+
+    // 個々の壁の反射特性値( 指定可能範囲 0 ～ 15 )
+    // ( 堅く平らな表面をシミュレートするには小さな値を設定し、散乱性の表面をシミュレートするには大きな値を設定します。)
+    BYTE         EarlyDiffusion ;
+
+    // 個々の壁のリバーブ特性値( 指定可能範囲 0 ～ 15 )、
+    // ( 堅く平らな表面をシミュレートするには小さな値を設定し、散乱性の表面をシミュレートするには大きな値を設定します。)
+    BYTE         LateDiffusion ;
+
+    // 1 kHz における減衰時間を基準にして低周波数の減衰時間調整値( 指定可能範囲 0 ～ 12 )
+    // 値とゲイン (dB) の関係
+    // 値          0  1  2  3  4  5  6  7  8  9 10 11 12
+    // ゲイン(dB) -8 -7 -6 -5 -4 -3 -2 -1  0 +1 +2 +3 +4
+    // LowEQGain の値が 8 の場合、低周波数の減衰時間と 1 kHz における減衰時間が等しくなることに注意してください
+    BYTE         LowEQGain ;
+
+    // LowEQGain パラメーターにより制御されるローパス フィルターの折点周波数の設定値( 指定可能範囲 0 ～ 9 )
+    // 値と周波数 (Hz) の関係
+    // 値          0   1   2   3   4   5   6   7   8   9
+    // 周波数(Hz) 50 100 150 200 250 300 350 400 450 500
+    BYTE         LowEQCutoff ;
+
+    // 1 kHz における減衰時間を基準にして高周波数の減衰時間調整値( 指定可能範囲 0 ～ 8 )
+    // 値とゲイン (dB) の関係
+    // 値          0  1  2  3  4  5  6  7 8
+    // ゲイン(dB) -8 -7 -6 -5 -4 -3 -2 -1 0
+    // 0 に設定すると、高周波数の音が 1 kHz の場合と同じ割合で減衰します。
+    // 最大値に設定すると、高周波数の音が 1 kHz の場合よりもはるかに高い割合で減衰します。
+    BYTE         HighEQGain ;
+
+    // HighEQGain パラメーターにより制御されるハイパス フィルターの折点周波数設定値( 指定可能範囲 0 ～ 14 )
+    // 値と周波数 (kHz) の関係
+    // 値          0    1    2     3    4     5    6     7    8     9   10    11   12    13   14
+    // 周波数(kHz) 1  1.5    2   2.5    3   3.5    4   4.5    5   5.5    6   6.5    7   7.5    8
+    BYTE         HighEQCutoff ;
+
+    // 室内エフェクトのローパス フィルターの折点周波数、単位は Hz ( 指定可能範囲 20.0f ～ 20000.0f )
+    float        RoomFilterFreq ;
+
+    // 初期反射と後期フィールド残響の両方に適用されるローパス フィルターの
+    // パス バンド強度レベル、単位は dB ( 指定可能範囲 -100.0f ～ 0.0f )
+    float        RoomFilterMain ;
+
+    // 折点周波数 (RoomFilterFreq) での初期反射と後期フィールド残響の両方に適用される
+    // ローパス フィルターのパス バンド強度レベル、単位は dB ( 指定可能範囲 -100.0f ～ 0.0f )
+    float        RoomFilterHF ;
+
+    // 初期反射の強度/レベルを調整値、単位は dB ( 指定可能範囲 -100.0f ～ 20.0f )
+    float        ReflectionsGain ;
+
+    // リバーブの強度/レベルを調整値、単位は dB ( 指定可能範囲 -100.0f ～ 20.0f )
+    float        ReverbGain ;
+
+    // 1 kHz における残響減衰時間、単位は秒 ( 指定可能範囲 0.1f ～ 上限値特になし )、
+    // これは、フル スケールの入力信号が 60 dB 減衰するまでの時間です。
+    float        DecayTime ;
+
+    // 後期フィールド残響のモード密度を制御値、単位はパーセント( 指定可能範囲 0.0f ～ 100.0f )
+    // 無色 (colorless) の空間では、Density を最大値 (100.0f ) に設定する必要があります。
+    // Density を小さくすると、サウンドはくぐもった音 (くし形フィルターが適用された音) になります。
+    // これはサイロをシミュレーションするときに有効なエフェクトです。
+    float        Density ;
+
+    // 音響空間の見かけ上のサイズ、単位はフィート( 指定可能範囲 1.0f (30.48 cm) ～ 100.0f (30.48 m) )
+    float        RoomSize ;
+</pre>
+<br>
+
+		    　なので、通常は XAudio2 のサンプルで用意されているリバーブエフェクトパラメータのプリセットを設定する <b><a href="#R8N24">Set3DPresetReverbParamSoundMem</a></b>
+		    を使用することになると思います。<br><br>
+
+		    <font color="#880000">
+		    ＜注意＞<br>
+		    　リバーブエフェクトには XAudio2 が使用できる環境が必要で、且つ DxLib_Init の前で <a href="#R8N35"><b>SetEnableXAudioFlag</b></a> に TRUE を渡して XAudio2 を使用する設定にしている必要があります。
+		    XAudio2 が使用できない環境や、使用できる環境でも SetEnableXAudioFlag を使用して XAudio2 を使用する設定にしていない場合はリバーブエフェクトの効果は得られませんので注意してください。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、リバーブエフェクトパラメータを設定してから再生します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	SOUND3D_REVERB_PARAM ReverbParam ;
+	int SoundHandle ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音を鳴らす位置を設定する
+	Set3DPositionSoundMem( VGet( 320.0f, 0.0f, 300.0f ), SoundHandle ) ;
+
+	// リバーブエフェクトパラメータを設定
+	ReverbParam.WetDryMix           = 100.0f ;
+	ReverbParam.ReflectionsDelay    = 20 ;
+	ReverbParam.ReverbDelay         = 29 ;
+	ReverbParam.RearDelay           = 5 ;
+	ReverbParam.PositionLeft        = 6 ;
+	ReverbParam.PositionRight       = 6 ;
+	ReverbParam.PositionMatrixLeft  = 27 ;
+	ReverbParam.PositionMatrixRight = 27 ;
+	ReverbParam.EarlyDiffusion      = 15 ;
+	ReverbParam.LateDiffusion       = 15 ;
+	ReverbParam.LowEQGain           = 8 ;
+	ReverbParam.LowEQCutoff         = 4 ;
+	ReverbParam.HighEQGain          = 8 ;
+	ReverbParam.HighEQCutoff        = 6 ;
+	ReverbParam.RoomFilterFreq      = 5000.0f ;
+	ReverbParam.RoomFilterMain      = -10.0f ;
+	ReverbParam.RoomFilterHF        = -5.0f ;
+	ReverbParam.ReflectionsGain     = -12.3f ;
+	ReverbParam.ReverbGain          = -0.02f ;
+	ReverbParam.DecayTime           = 3.9200001f ;
+	ReverbParam.Density             = 100.0f ;
+	ReverbParam.RoomSize            = 100.0f ;
+	Set3DReverbParamSoundMem( &ReverbParam, SoundHandle ) ;
+
+	// 音を再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// 何かキーが押されるまで待つ
+	WaitKey() ;
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N24">宣言</a></b></td><td><font color="#000088"><b>int Set3DPresetReverbParamSoundMem( int PresetNo , int SoundHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>メモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータをプリセットを使用して設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		PresetNo ： 音声データに設定するリバーブエフェクトパラメータプリセット番号<br>
+		SoundHandle ： 音の識別番号( サウンドハンドル )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データのリバーブエフェクトのパラメータをプリセットを使用して変更します。<br><br>
+
+		    　リバーブエフェクトのパラメータは難解なので、XAudio2 のサンプルとして用意されているものを使用しよう、というわけです。<br>
+		    　PresetNo に渡せるプリセット番号は以下の通りです。
+
+<pre>
+DX_REVERB_PRESET_DEFAULT		// デフォルト
+DX_REVERB_PRESET_GENERIC		// 一般的な空間
+DX_REVERB_PRESET_PADDEDCELL		// 精神病患者室
+DX_REVERB_PRESET_ROOM			// 部屋
+DX_REVERB_PRESET_BATHROOM		// バスルーム
+DX_REVERB_PRESET_LIVINGROOM		// リビングルーム
+DX_REVERB_PRESET_STONEROOM		// 石の部屋
+DX_REVERB_PRESET_AUDITORIUM		// 講堂
+DX_REVERB_PRESET_CONCERTHALL		// コンサートホール
+DX_REVERB_PRESET_CAVE			// 洞穴
+DX_REVERB_PRESET_ARENA			// 舞台
+DX_REVERB_PRESET_HANGAR			// 格納庫
+DX_REVERB_PRESET_CARPETEDHALLWAY	// カーペットが敷かれた玄関
+DX_REVERB_PRESET_HALLWAY		// 玄関
+DX_REVERB_PRESET_STONECORRIDOR		// 石の廊下
+DX_REVERB_PRESET_ALLEY			// 裏通り
+DX_REVERB_PRESET_FOREST			// 森
+DX_REVERB_PRESET_CITY			// 都市
+DX_REVERB_PRESET_MOUNTAINS		// 山
+DX_REVERB_PRESET_QUARRY			// 採石場
+DX_REVERB_PRESET_PLAIN			// 平原
+DX_REVERB_PRESET_PARKINGLOT		// 駐車場
+DX_REVERB_PRESET_SEWERPIPE		// 下水管
+DX_REVERB_PRESET_UNDERWATER		// 水面下
+DX_REVERB_PRESET_SMALLROOM		// 小部屋
+DX_REVERB_PRESET_MEDIUMROOM		// 中部屋
+DX_REVERB_PRESET_LARGEROOM		// 大部屋
+DX_REVERB_PRESET_MEDIUMHALL		// 中ホール
+DX_REVERB_PRESET_LARGEHALL		// 大ホール
+DX_REVERB_PRESET_PLATE			// 板
+</pre>
+
+		    <font color="#880000">
+		    ＜注意＞<br>
+		    　リバーブエフェクトには XAudio2 が使用できる環境が必要で、且つ DxLib_Init の前で <a href="#R8N35"><b>SetEnableXAudioFlag</b></a> に TRUE を渡して XAudio2 を使用する設定にしている必要があります。
+		    XAudio2 が使用できない環境や、使用できる環境でも SetEnableXAudioFlag を使用して XAudio2 を使用する設定にしていない場合はリバーブエフェクトの効果は得られませんので注意してください。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込み、リバーブエフェクトパラメータをプリセットの「講堂」を使用して設定してから再生します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerDir.x = 0.0f ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = 1.0f ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音を鳴らす位置を設定する
+	Set3DPositionSoundMem( VGet( 320.0f, 0.0f, 300.0f ), SoundHandle ) ;
+
+	// リバーブエフェクトパラメータをプリセット「講堂」を使用して設定
+	Set3DPresetReverbParamSoundMem( DX_REVERB_PRESET_AUDITORIUM, SoundHandle ) ;
+
+	// 音を再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// 何かキーが押されるまで待つ
+	WaitKey() ;
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="1024"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N34">宣言</a></b></td><td><font color="#000088"><b>int Get3DPresetReverbParamSoundMem( SOUND3D_REVERB_PARAM *ParamBuffer, int PresetNo ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>３Ｄサウンド用のプリセットのリバーブエフェクトパラメータを取得する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		ParamBuffer ： プリセットのリバーブエフェクトパラメータを格納する構造体のアドレス<br>
+		PresetNo ： 取得するリバーブエフェクトパラメータのプリセット番号<br>
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　リバーブエフェクトのパラメータを、プリセットから取得します。<br><br>
+
+		    　主にプリセットのリバーブエフェクトパラメータが何なのか知りたいときに使用する関数です。<br><br>
+		    　PresetNo に渡すプリセット番号については <b><a href="#R8N24">Set3DPresetReverbParamSoundMem</a></b> の解説を参照してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　リバーブエフェクトパラメータのプリセット「水面下」を取得して、内容を画面に描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	SOUND3D_REVERB_PARAM ReverbParam ;
+	int Color ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// リバーブエフェクトパラメータのプリセット「水面下」を取得
+	Get3DPresetReverbParamSoundMem( &ReverbParam, DX_REVERB_PRESET_UNDERWATER ) ;
+
+	// リバーブエフェクトパラメータを画面に描画
+	Color = GetColor( 255,255,255 ) ;
+	DrawFormatString( 0,   0, Color, "WetDryMix          :%f", ReverbParam.WetDryMix ) ;
+	DrawFormatString( 0,  16, Color, "ReflectionsDelay   :%d", ReverbParam.ReflectionsDelay ) ;
+	DrawFormatString( 0,  32, Color, "ReverbDelay        :%d", ReverbParam.ReverbDelay ) ;
+	DrawFormatString( 0,  48, Color, "RearDelay          :%d", ReverbParam.RearDelay ) ;
+	DrawFormatString( 0,  64, Color, "PositionLeft       :%d", ReverbParam.PositionLeft ) ;
+	DrawFormatString( 0,  80, Color, "PositionRight      :%d", ReverbParam.PositionRight ) ;
+	DrawFormatString( 0,  96, Color, "PositionMatrixLeft :%d", ReverbParam.PositionMatrixLeft ) ;
+	DrawFormatString( 0, 112, Color, "PositionMatrixRight:%d", ReverbParam.PositionMatrixRight ) ;
+	DrawFormatString( 0, 128, Color, "EarlyDiffusion     :%d", ReverbParam.EarlyDiffusion ) ;
+	DrawFormatString( 0, 144, Color, "LateDiffusion      :%d", ReverbParam.LateDiffusion ) ;
+	DrawFormatString( 0, 160, Color, "LowEQGain          :%d", ReverbParam.LowEQGain ) ;
+	DrawFormatString( 0, 176, Color, "LowEQCutoff        :%d", ReverbParam.LowEQCutoff ) ;
+	DrawFormatString( 0, 192, Color, "HighEQGain         :%d", ReverbParam.HighEQGain ) ;
+	DrawFormatString( 0, 208, Color, "HighEQCutoff       :%d", ReverbParam.HighEQCutoff ) ;
+	DrawFormatString( 0, 224, Color, "RoomFilterFreq     :%f", ReverbParam.RoomFilterFreq ) ;
+	DrawFormatString( 0, 240, Color, "RoomFilterMain     :%f", ReverbParam.RoomFilterMain ) ;
+	DrawFormatString( 0, 256, Color, "RoomFilterHF       :%f", ReverbParam.RoomFilterHF ) ;
+	DrawFormatString( 0, 272, Color, "ReflectionsGain    :%f", ReverbParam.ReflectionsGain ) ;
+	DrawFormatString( 0, 288, Color, "ReverbGain         :%f", ReverbParam.ReverbGain ) ;
+	DrawFormatString( 0, 304, Color, "DecayTime          :%f", ReverbParam.DecayTime ) ;
+	DrawFormatString( 0, 320, Color, "Density            :%f", ReverbParam.Density ) ;
+	DrawFormatString( 0, 336, Color, "RoomSize           :%f", ReverbParam.RoomSize ) ;
+
+	// 何かキーが押されるまで待つ
+	WaitKey() ;
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="900"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N25">宣言</a></b></td><td><font color="#000088"><b>int Set3DReverbParamSoundMemAll( const SOUND3D_REVERB_PARAM *Param, int PlaySoundOnly ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>全てのメモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		Param ： 音に設定するリバーブエフェクトパラメータの構造体のアドレス<br>
+		PlaySoundOnly ： 再生中の音声データに対してのみパラメータを設定するかどうか<br>
+		　　　　　　( TRUE：再生中の音声データに対してのみ設定<br>
+		　　　　　　　FALSE：停止中の音声データも含めて全ての音声データに対して設定 )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた全ての音声データのリバーブエフェクトのパラメータを変更します。<br><br>
+
+		    　リバーブエフェクトは３Ｄ空間の環境によって音声データの内容に関係なく影響を与えることが殆どなので、
+		    リバーブエフェクトのパラメータが少し変化するたびに全ての音声データに対して <b><a href="#R8N23">Set3DReverbParamSoundMem</a></b>
+		    を使用するのは非効率なので、そのような場合にこの関数を使用します。<br><br>
+
+		    　ただ、全ての音声データに対してといいつつ、引数の PlaySoundOnly を TRUE にして関数を呼んだ場合は、
+		    再生中の音声データに対してのみリバーブエフェクトのパラメータを変更します。<br><br>
+
+		    　これは、あまり無いと思いますが、頻繁にリバーブエフェクトのパラメータが変化するような場合、
+		    その都度再生していない音声データに対してもリバーブエフェクトのパラメータ変更を行うのは非効率なので、
+		    その際は PlaySoundOnly を FLASE にして、再生中の音声データに対してのみリバーブエフェクトのパラメータ変更を行うようにします。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N26">宣言</a></b></td><td><font color="#000088"><b>int Set3DPresetReverbParamSoundMemAll( int PresetNo , int PlaySoundOnly ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>全てのメモリに読み込んだ音声データの３Ｄサウンド用のリバーブエフェクトパラメータをプリセットを使用して設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		PresetNo ： 音に設定するリバーブエフェクトパラメータプリセット番号<br>
+		PlaySoundOnly ： 再生中の音声データに対してのみパラメータを設定するかどうか<br>
+		　　　　　　( TRUE：再生中の音声データに対してのみ設定<br>
+		　　　　　　　FALSE：停止中の音声データも含めて全ての音声データに対して設定 )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<b><a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた全ての音声データのリバーブエフェクトのパラメータをプリセットを指定して変更します。<br><br>
+
+		    　PresetNo で指定するプリセット番号については <b><a href="#R8N24">Set3DPresetReverbParamSoundMem</a></b> の解説を参照してください。<br><br>
+
+		    　リバーブエフェクトは３Ｄ空間の環境によって音声データの内容に関係なく影響を与えることが殆どなので、
+		    リバーブエフェクトのパラメータが少し変化するたびに全ての音声データに対して <b><a href="#R8N24">Set3DPresetReverbParamSoundMem</a></b>
+		    を使用するのは非効率なので、そのような場合にこの関数を使用します。<br><br>
+
+		    　ただ、全ての音声データに対してといいつつ、引数の PlaySoundOnly を TRUE にして関数を呼んだ場合は、
+		    再生中の音声データに対してのみリバーブエフェクトのパラメータを変更します。<br><br>
+
+		    　これは、あまり無いと思いますが、頻繁にリバーブエフェクトのパラメータが変化するような場合、
+		    その都度再生していない音声データに対してもリバーブエフェクトのパラメータ変更を行うのは非効率なので、
+		    その際は PlaySoundOnly を FLASE にして、再生中の音声データに対してのみリバーブエフェクトのパラメータ変更を行うようにします。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N27">宣言</a></b></td><td><font color="#000088"><b>int SetCreate3DSoundFlag( int Flag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>次に作成するメモリに読み込む音声データを３Ｄサウンド用にするかどうかを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		Flag ： 作成する音声データを３Ｄサウンド用にするかどうかのフラグ<br>
+		　　　　( TRUE：３Ｄサウンド用にする　FALSE：２Ｄサウンド用にする( デフォルト ) )
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　３Ｄのゲームでは映像だけではなく音も鳴っている位置とリスナー( 聞く人 )の位置によって小さく聞こえたり特定の方向から聞こえたりといった２Ｄゲームとの違いがあります。<br><br>
+
+		　ＤＸライブラリでは２Ｄサウンド用の音声データと３Ｄサウンド用の音声データは区別されていて、
+		音声データが３Ｄサウンド用になるか２Ｄサウンド用になるかは LoadSoundMem などの関数で音声ファイルを読み込む前にこの関数で３Ｄサウンド用の音声データにする設定にしていたかどうかで決まります。<br><br>
+
+		　そして、３Ｄサウンド用か２Ｄサウンド用かは後から変更することはできません。<br><br>
+
+<pre>
+	＜２Ｄサウンド用として読み込む場合＞
+
+	SetCreate3DSoundFlag( FALSE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+
+
+	＜３Ｄサウンド用として読み込む場合＞
+
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+
+</pre>
+
+		　３Ｄサウンド用として読み込んだ場合は、音声データを <b><a href="#R8N5">PlaySoundMem</a></b> で再生する前に <b><a href="#R8N17">Set3DPositionSoundMem</a></b> で音の再生位置を、
+		<b><a href="#R8N18">Set3DRadiusSoundMem</a></b> で音が聞こえる距離を設定する必要があります。<br><br>
+		
+		　また、リスナーの位置も <b><a href="#R8N29">Set3DSoundListenerPosAndFrontPos_UpVecY</a></b> などの関数で設定しておく必要があります。
+		( 尚、当然ですが音が届く距離よりも音の再生位置とリスナーとの距離の方が離れている場合は、音を鳴らしてもスピーカーからは何も音が聞こえません )<br><br>
+
+		　諸々の設定を行い実際に３Ｄサウンドを再生するサンプルプログラムが <b><a href="#R8N17">Set3DPositionSoundMem</a></b>
+		のサンプルプログラムとしてありますので、参照してください。<br><br>
+
+		<font color="#880000">
+		＜注意＞<br>
+		　尚、XAudio2 が使用できる環境で、且つ DxLib_Init を呼び出す前に <a href="#R8N35"><b>SetEnableXAudioFlag</b></a> に TRUE を渡して XAudio2 を使用する設定にしている場合は XAudio2 を使用して正式な３Ｄサウンドを実現しますが、
+		XAudio2 が使用できない環境か若しくは DxLib_Init の呼び出し前に SetEnableXAudioFlag を使用して XAudio2 を使用する設定にしていない場合は DirectSound による擬似的な３Ｄサウンドとなりますので、
+		正式な３Ｄサウンド再生機能を使用したい場合は必ず SetEnableXAudioFlag を使用するようにしてください。<br><br>
+		</font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　<a href="#R8N17">Set3DPositionSoundMem</a> のサンプルを参照してください
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N35">宣言</a></b></td><td><font color="#000088"><b>int SetEnableXAudioFlag( int Flag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td>
+            <td>　サウンドの再生にXAudio2を使用するかどうかを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>Flag ： サウンドの再生に XAudio2 を使用するかどうかのフラグ<br>
+                    　　　　( TRUE：使用する　FALSE：使用しない( デフォルト ) )</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>－１：エラー発生<br>
+                ０：成功<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＤＸライブラリはデフォルトではサウンドの再生に DirectSound を使用していますが、
+		より高機能なサウンド再生機能である XAudio2 を使用したい場合はこの関数を DxLib_Init を呼び出す前に TRUE を渡して呼び出します。<br><br>
+
+		　尚、XAudio2 を使用した場合のメリットとデメリットは以下の通りです。<br><br><br>
+
+		<font color="#008800">＜メリット＞</font><br><br>
+
+		　・３Ｄサウンド再生機能が使用できる。<br>
+		　( デフォルトの DirectSound を使用する場合は擬似３Ｄサウンド再生 )<br><br>
+
+		　・サウンドのリバーブエフェクト機能が使用できる。<br><br><br>
+
+		<font color="#008800">＜デメリット＞</font><br><br>
+
+		　・CPU負荷が DirectSound よりも高い。<br><br>
+
+		　・環境によってはプログラムのデバッグ起動時に偶に数十秒ＰＣがフリーズすることがある。<br><br><br>
+
+		　メリットとデメリットを踏まえると、使用するかどうかは以下の様に判断することになると思います。<br><br>
+
+		<font color="#0000a0">「３Ｄのゲームを作成する場合は XAudio2 を使用して、２Ｄゲームを作成する場合はデフォルトの DirectSound を使用する。
+		また３Ｄゲームを作成する場合でもデバッグ起動時に偶にＰＣがフリーズする現象が発生する場合は、
+		サウンド関連の作業をする場合やリリース用ビルドを作成する場合以外では DirectSound を使用する。」</font><br><br><br>
+
+                <font color="#880000">
+		＜注意＞<br>
+		　前述の通り、この関数による設定の変更は DxLib_Init を呼ぶ前で使用した場合のみ効果がありますので注意してください。<br><br>
+		</font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N28">宣言</a></b></td><td><font color="#000088"><b>int Set3DSoundOneMetre( float Distance ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>３Ｄ空間の１メートルに相当する距離を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		Distance ： ３Ｄサウンドで１メートルに相当する距離の値
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　この関数では、<b><a href="#R8N17">Set3DPositionSoundMem</a></b> などの３Ｄ座標を扱う関数での座標値が、
+		メートル換算ではどのような値になるかを設定します。( メートル換算された値を使用してドップラー効果などの処理が行われます )<br><br><br>
+
+		　　例：３Ｄ座標での 1.0f を１メートルとして設定する
+
+<pre>
+	// DxLib_Init の前に Set3DSoundOneMetre に 1.0f を渡して呼ぶ
+	Set3DSoundOneMetre( 1.0f ) ;
+
+	if( DxLib_Init() == -1 )
+	{
+		return -1 ;
+	}
+</pre>
+
+		　<font color=#880000"><b>因みに上記の例にある通り、この関数は DxLib_Init を呼ぶ前にのみ呼ぶことができる関数です。<br>
+		　DxLib_Init の後に呼んでも設定を変更することができませんので注意してください。</b></font><br><br>
+
+		　何故このような関数があるかというと、３Ｄグラフィックスでは値の扱いが色々で、
+		例えば身長１８０ｃｍのキャラクターモデルの頭の天辺の y座標が、あるモデルでは 180.0f で、
+		また別のモデルでは 1.8f だったりと、作り手や製作環境によって１メートルの扱いが異なるからです。<br><br>
+
+		　３Ｄグラフィックスでは 1.0f を １メートルとするか、１センチメートルとするかは製作者同士で共通の認識ができていれば問題がありませんが、
+		３Ｄサウンドでは 1.0f が １メートルなのか、１センチメートルなのかでドップラー効果やリバーブエフェクトの掛かり方にかなりの違いが発生するので、
+		この関数で明示的に「これから動作するプログラムでは１メートルは 100.0f として扱います」のようにサウンドシステムに伝えておく必要があるというわけです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　<a href="#R8N19">Set3DVelocitySoundMem</a> のサンプルを参照してください
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N29">宣言</a></b></td><td><font color="#000088"><b>int Set3DSoundListenerPosAndFrontPos_UpVecY( VECTOR Position, VECTOR FrontPosition ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>３Ｄサウンドのリスナーの位置とリスナーの前方位置を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Position ： リスナーの位置<br>
+		VECTOR FrontPosition ： リスナーの前方位置
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　<b>　<a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データが再生された際に関係するリスナー( 聞く人 )の位置と、
+		リスナーの向きを決定する為のリスナーの前方の位置を設定します。<br><br>
+		
+		　尚、リスナーの位置は３Ｄグラフィックスで言うところのカメラの位置、リスナーの前方位置はカメラの注視点に相当するので、
+		<b><a href="./dxfunc_3d.html#R12N2">SetCameraPositionAndTarget_UpVecY</a></b> を使用している場合は引数をそのまま Set3DSoundListenerPosAndFrontPos_UpVecY に渡すことができます。( Position は Position、Target は FrontPosition として )<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込みループ再生している状態で、<br>
+		　リスナーの位置を方向キーで、リスナーの向きをＺＸキーで操作できるようにしたサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+#include &lt;math.h&gt;
+
+#define MOVE_SPEED		4.0f
+#define ANGLE_SPEED		0.1f
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerDir ;
+	float ListenerAngle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 40.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerAngle = DX_PI_F / 2.0f ;
+	ListenerDir.x = cos( ListenerAngle ) ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = sin( ListenerAngle ) ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// 音の再生位置を設定
+	Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+	// 音の再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// メインループ
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// 方向キーでリスナーの位置を移動
+		if( CheckHitKey( KEY_INPUT_LEFT ) == 1 )
+		{
+			ListenerPos.x -= MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_RIGHT ) == 1 )
+		{
+			ListenerPos.x += MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_UP ) == 1 )
+		{
+			ListenerPos.z += MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_DOWN ) == 1 )
+		{
+			ListenerPos.z -= MOVE_SPEED ;
+		}
+
+		// ＺＸキーで向きを変更
+		if( CheckHitKey( KEY_INPUT_Z ) == 1 )
+		{
+			ListenerAngle += ANGLE_SPEED ;
+			if( ListenerAngle > DX_PI_F )
+			{
+				ListenerAngle -= DX_TWO_PI_F ;
+			}
+		}
+
+		if( CheckHitKey( KEY_INPUT_X ) == 1 )
+		{
+			ListenerAngle -= ANGLE_SPEED ;
+			if( ListenerAngle < -DX_PI_F )
+			{
+				ListenerAngle += DX_TWO_PI_F ;
+			}
+		}
+
+		// リスナーの位置と向きを設定
+		ListenerDir.x = cos( ListenerAngle ) ;
+		ListenerDir.y = 0.0f ;
+		ListenerDir.z = sin( ListenerAngle ) ;
+		Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// リスナーの向きを描画
+		DrawLine(
+			( int )           ListenerPos.x,
+			( int )( 480.0f - ListenerPos.z ),
+			( int )(            ListenerPos.x + ListenerDir.x * 40.0f ),
+			( int )( 480.0f - ( ListenerPos.z + ListenerDir.z * 40.0f ) ),
+			GetColor( 255,255,255 ) ) ; 
+
+		// 音の再生位置を描画
+		DrawBox(
+			( int )( EmitterPos.x - 8 ), ( int )( 480.0f - ( EmitterPos.z + 8 ) ),
+			( int )( EmitterPos.x + 8 ), ( int )( 480.0f - ( EmitterPos.z - 8 ) ),
+			GetColor( 255,0,255 ), TRUE ) ; 
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="1024"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N30">宣言</a></b></td><td><font color="#000088"><b>int Set3DSoundListenerPosAndFrontPosAndUpVec( VECTOR Position, VECTOR FrontPosition, VECTOR UpVector ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>３Ｄサウンドのリスナーの位置とリスナーの前方位置とリスナーの上方向を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Position ： リスナーの位置<br>
+		VECTOR FrontPosition ： リスナーの前方位置<br>
+		VECTOR UpVector： リスナーの上方向<br>
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　<b>　<a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データが再生された際に関係するリスナー( 聞く人 )の位置と、
+		リスナーの向きを決定する為のリスナーの前方の位置と、リスナーの上方向を設定します。
+		( 因みに <b><a href="#R8N29">Set3DSoundListenerPosAndFrontPos_UpVecY</a></b> ではこの関数での UpVector はＹ軸の方向( x = 0.0f, y = 1.0f, z = 0.0f )となっています )<br><br>
+		
+		　尚、リスナーの位置は３Ｄグラフィックスで言うところのカメラの位置、リスナーの前方位置はカメラの注視点、
+		リスナーの上方向はカメラの上方向に相当するので、
+		<b><a href="./dxfunc_3d.html#R12N3">SetCameraPositionAndTargetAndUpVec</a></b> を使用している場合は引数をそのまま
+		Set3DSoundListenerPosAndFrontPosAndUpVec に渡すことができます。( Position は Position、Target は FrontPosition、Up は UpVector として )<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R8N31">宣言</a></b></td><td><font color="#000088"><b>int Set3DSoundListenerVelocity( VECTOR Velocity ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>３Ｄサウンドのリスナーの移動速度を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+		VECTOR Velocity ： リスナーの移動速度( 秒速 )<br>
+		</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　<b>　<a href="#R8N27">SetCreate3DSoundFlag</a></b> を使用して３Ｄサウンドとして読み込まれた音声データが再生された際のリスナー( 聞く人 )の移動速度を設定します。<br><br>
+		
+                    　リスナーの移動速度を設定、というと、時間経過とともにリスナーの位置が変化しそうですが、変化しません。<br><br>
+		    　この関数で設定する移動速度は、所謂ドップラー効果を再現するためだけに使用されるので、リスナーの位置には影響を与えないのです。<br><br>
+
+		    　引数 Velocity で渡す速度の値は「秒速」となります。なので、例えば秒間６０フレームで動作するプログラムの場合は、
+		    １フレームで移動した距離を６０倍した値を引数に渡せば良いということになります。<br><br>
+
+		    ( 秒間６０フレームのプログラムの１フレームで経過する時間は６０分の１秒、渡す値は秒速( １秒間辺りの移動距離 )なので、１フレームで移動した距離を６０倍すれば１秒間に移動する距離になる )<br><br>
+
+		    <font color="#880000">
+		    ＜注意＞<br>
+		    　ドップラー効果は XAudio2 が使用できる環境で、且つ DxLib_Init の前で <a href="#R8N35"><b>SetEnableXAudioFlag</b></a> に TRUE を渡して XAudio2 を使用する設定にしていた場合のみ発生します。
+		    XAudio2 が使用できない環境や、使用できる環境でも SetEnableXAudioFlag を使用して XAudio2 を使用する設定にしていない場合はこの関数は何も効果がありませんので注意してください。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.wav を ３Ｄサウンドとして読み込みループ再生している状態で、<br>
+		　リスナーの位置を方向キーで、リスナーの向きをＺＸキーで操作できるようにして、<br>
+		　１フレームの移動距離から移動速度を算出してドップラー効果を確認できるようにしたサンプルです。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+#include &lt;math.h&gt;
+
+#define MOVE_SPEED		4.0f
+#define ANGLE_SPEED		0.1f
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int SoundHandle ;
+	VECTOR EmitterPos ;
+	VECTOR ListenerVel ;
+	VECTOR ListenerPos ;
+	VECTOR ListenerBackPos ;
+	VECTOR ListenerDir ;
+	float ListenerAngle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE );
+
+	// １メートルに相当する値を設定する
+	Set3DSoundOneMetre( 16.0f ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK );
+
+	// リスナーの位置を初期化
+	ListenerPos = VGet( 320.0f, 0.0f, 40.0f ) ;
+
+	// リスナーの向きを初期化
+	ListenerAngle = DX_PI_F / 2.0f ;
+	ListenerDir.x = cos( ListenerAngle ) ;
+	ListenerDir.y = 0.0f ;
+	ListenerDir.z = sin( ListenerAngle ) ;
+
+	// リスナーの位置と向きを設定
+	Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+	// 音を３Ｄサウンドとして読み込む
+	SetCreate3DSoundFlag( TRUE ) ;
+	SoundHandle = LoadSoundMem( "Test.wav" ) ;
+	SetCreate3DSoundFlag( FALSE ) ;
+
+	// 音が聞こえる距離を設定する
+	Set3DRadiusSoundMem( 256.0f, SoundHandle ) ;
+
+	// 音の再生位置を初期化
+	EmitterPos = VGet( 320.0f, 0.0f, 240.0f ) ;
+
+	// 音の再生位置を設定
+	Set3DPositionSoundMem( EmitterPos, SoundHandle ) ;
+
+	// 音の再生を開始
+	PlaySoundMem( SoundHandle, DX_PLAYTYPE_LOOP ) ;
+
+	// メインループ
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen();
+
+		// 移動前のリスナーの位置を保存
+		ListenerBackPos = ListenerPos ;
+
+		// 方向キーでリスナーの位置を移動
+		if( CheckHitKey( KEY_INPUT_LEFT ) == 1 )
+		{
+			ListenerPos.x -= MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_RIGHT ) == 1 )
+		{
+			ListenerPos.x += MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_UP ) == 1 )
+		{
+			ListenerPos.z += MOVE_SPEED ;
+		}
+
+		if( CheckHitKey( KEY_INPUT_DOWN ) == 1 )
+		{
+			ListenerPos.z -= MOVE_SPEED ;
+		}
+
+		// ＺＸキーで向きを変更
+		if( CheckHitKey( KEY_INPUT_Z ) == 1 )
+		{
+			ListenerAngle += ANGLE_SPEED ;
+			if( ListenerAngle > DX_PI_F )
+			{
+				ListenerAngle -= DX_TWO_PI_F ;
+			}
+		}
+
+		if( CheckHitKey( KEY_INPUT_X ) == 1 )
+		{
+			ListenerAngle -= ANGLE_SPEED ;
+			if( ListenerAngle < -DX_PI_F )
+			{
+				ListenerAngle += DX_TWO_PI_F ;
+			}
+		}
+
+		// このフレームのリスナーの移動距離から移動速度を算出
+		// ( ６０分の１秒経過している前提の計算です )
+		ListenerVel = VScale( VSub( ListenerPos, ListenerBackPos ), 60.0f ) ;
+
+		// リスナーの移動速度を設定
+		Set3DSoundListenerVelocity( ListenerVel ) ;
+
+		// リスナーの位置と向きを設定
+		ListenerDir.x = cos( ListenerAngle ) ;
+		ListenerDir.y = 0.0f ;
+		ListenerDir.z = sin( ListenerAngle ) ;
+		Set3DSoundListenerPosAndFrontPos_UpVecY( ListenerPos, VAdd( ListenerPos, ListenerDir ) ) ;
+
+		// リスナーの位置を描画
+		DrawBox(
+			( int )( ListenerPos.x - 8 ), ( int )( 480.0f - ( ListenerPos.z + 8 ) ),
+			( int )( ListenerPos.x + 8 ), ( int )( 480.0f - ( ListenerPos.z - 8 ) ),
+			GetColor( 255,0,0 ),   TRUE ) ; 
+
+		// リスナーの向きを描画
+		DrawLine(
+			( int )           ListenerPos.x,
+			( int )( 480.0f - ListenerPos.z ),
+			( int )(            ListenerPos.x + ListenerDir.x * 40.0f ),
+			( int )( 480.0f - ( ListenerPos.z + ListenerDir.z * 40.0f ) ),
+			GetColor( 255,255,255 ) ) ; 
+
+		// 音の再生位置を描画
+		DrawBox(
+			( int )( EmitterPos.x - 8 ), ( int )( 480.0f - ( EmitterPos.z + 8 ) ),
+			( int )( EmitterPos.x + 8 ), ( int )( 480.0f - ( EmitterPos.z - 8 ) ),
+			GetColor( 255,0,255 ), TRUE ) ; 
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End();
+
+	// ソフトの終了
+	return 0;
+}
+</pre>
+            <hr>
+            <br><br><br><br><br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><font size="3" color="#005500"><b>音楽再生関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R9N1">宣言</a></b></td><td><font color="#000088"><b>int    PlayMusic( char *FileName , int PlayType ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ＭＩＤＩ又はＭＰ３ファイルを演奏(再生)する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>FileName : 演奏(再生)するＭＩＤＩ又はＭＰ３ファイルのファイルパス文字列の<br>
+                　　　　　　　ポインタ<br>
+                    PlayType : 演奏(再生)形式<br>
+                    　　　　　　　　DX_PLAYTYPE_NORMAL　:　ノーマル演奏(再生)<br>
+                    　　　　　　　　DX_PLAYTYPE_BACK　　:　バックグラウンド演奏(再生)<br>
+                    　　　　　　　　DX_PLAYTYPE_LOOP　　:　ループ演奏(再生)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＭＩＤＩ又はＭＰ３ファイルを演奏(再生)します。<br>
+                    　ＭＩＤＩの演奏にはＭＣＩを使用するので演奏開始までに０．５か、
+                    それ以上の処理の一次的停止が起こります。(ＭＰ３でもタイムラグが
+                    あります)<br>
+                    　さらにループ演奏を指定した場合ループするときに再び０．５秒
+                    程度の処理の停止が起こりますので、リアルタイム性の高いソフト
+                    でのＭＩＤＩ演奏には曲の１演奏辺りにかかる時間が長い曲を
+                    使用することをお勧めします。(ＭＰ３再生では瞬時に戻ります)<br>
+                    （演奏形式については<a href="#R8N1"><b>『PlaySoundFile』関数</b></a>の解説を参照してください）<br><br>
+
+                    余談　　ＷＡＶファイルも実は再生できます。これにより大容量<br>
+                    　　　ＷＡＶファイルのストリーム再生も可能となっています。<br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.mid をノーマル演奏します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.midのノーマル演奏
+    PlayMusic( "test.mid" , DX_PLAYTYPE_NORMAL ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R9N2">宣言</a></b></td><td><font color="#000088"><b>int    CheckMusic( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ＭＩＤＩ又はＭＰ３ファイルが演奏(再生)中かの情報を取得する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+                <td>０：演奏(再生)中ではない<br>
+                    １：演奏(再生)中<br>
+                    －１：エラー<BR><br></td>
+            </tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R9N1"><b>PlayMusic関数</b></a>で開始したＭＩＤＩ又はＭＰ３演奏(再生)がまだ続いているか情報を
+                    得ます。戻り値として０が返ってくれば演奏(再生)は終了しており、１が
+                    返ってくれば演奏(再生)はまだ続いていると言うことになります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.mid をバックグラウンド演奏し、演奏が終了するまで待ちます。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.midのバックグラウンド演奏
+    PlayMusic( "test.mid" , DX_PLAYTYPE_BACK ) ;
+
+    // 演奏終了までここでループ
+    while( CheckMusic() == 1 )
+    {
+        // メッセージ処理
+        if( ProcessMessage() == -1 )
+        {
+            break ;    // エラーが起きたらループを抜ける
+        }
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R9N3">宣言</a></b></td><td><font color="#000088"><b>int    StopMusic( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ＭＩＤＩ又はＭＰ３ファイルの演奏(再生)停止<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R9N1"><b>PlayMusic関数</b></a>で開始したＭＩＤＩ又はＭＰ３演奏(再生)を停止します<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.midをループ再生し、２秒経ったら止めます<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // test.midのループ演奏
+    PlayMusic( "test.wav" , DX_PLAYTYPE_LOOP ) ;
+
+    // ２秒待つ『WaitTimer』使用
+    WaitTimer( 2000 ) ;
+
+    // 演奏を止めます
+    StopMusic() ;
+
+    // キー入力があるまで待ちます(『WaitKey』使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+                
+        <tr><td><table align="center" width="650"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R9N4">宣言</a></b></td><td><font color="#000088"><b>int SetVolumeMusic( int Volume ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ＭＩＤＩ又はＭＰ３ファイルの演奏(再生)の音量を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>int Volume : 音量( 0～255 )</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R9N1"><b>PlayMusic関数</b></a> で開始した演奏の音量を設定します０が無音、
+                    ２５５が最大音量(デフォルト)となります。<br><br>
+                    <font color="#800000"><b>注意！…ＭＣＩを使用したＭＩＤＩ演奏の場合は音量を変更することは出来ません。</b></font><br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません。<br>
+            <br><br><br><br><br>
+        </td></tr>
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

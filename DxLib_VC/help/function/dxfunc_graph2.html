@@ -1,0 +1,1087 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="800" cellspacing="0" cellpadding="0" >
+
+        <tr><td colspan="2">
+            <font size="3" color="#005500"><b>文字描画関係関数</b><br><br></font>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N1">宣言</a></b></td><td><font color="#000088"><b>int    DrawString( int x , int y , char *String , int Color ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>文字列を描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>    x , y　 : 文字列を描画する領域の左上の座標<br>
+                    String　: 描画する文字列のポインタ<br>
+                    Color　 : 描画する文字列の色</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x , y )が示す座標にStringポインタが示している文字列を
+                    Color色で描画します。<br>
+                    （パソコン画面上での座標のとり方、色の指定方法は<a href="#R2N1"><b>『DrawLine』</b></a>
+                    の解説を参照してください）<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面の中心に文字列を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // 文字列の描画
+    DrawString( 250 , 240 - 32 , "Hello C World!" , Cr );
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N20">宣言</a></b></td><td><font color="#000088">
+            <b>int DrawFormatString( int x , int y , int Color ,<br>
+            　　　　　　　　　　　　　 char *FormatString , ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>書式付き文字列を描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>    int x , y : 文字列を描画する起点座標<br>
+                    int Color : 描画する文字列の色<br>
+                    char *FormatString : 描画したい書式付き文字列のアドレス<br>
+                    ... : 書式付き文字列に付随する引数</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　printf という関数はご存知でしょうか？書式を指定することに
+                    より容易に数値変数や文字列配列の内容を画面に出力することの
+                    出来る便利なＣ言語の標準関数です。<br>
+                    　そんな便利な printf 関数ですが、ＤＸライブラリを含む 
+                    DirectX を使う環境では printf 関数は使うことが出来ません。<br>
+                    　そこで登場するのがこの DrawFormatString 関数です。<br>
+                    　この関数は printf と違い描画する座標や色を指定するという
+                    違いはあるものの、ほぼ printf と同じ機能を提供します。<br><br><br>
+
+
+                    例<br><br>
+                    
+                    　printf で 変数 i の内容を説明付きで出力する場合<br><br>
+
+<pre>
+    printf( "変数 i の値は %d です\n" , i ) ;
+</pre>
+<br>
+                    　DrawFormatString で 画面左上端に 変数 i の内容を
+                    説明付きで出力する場合( 文字の色は白 )<br><br>
+
+<pre>
+    int Color ;
+
+    Color = GetColor( 255 , 255 , 255 ) ;
+    DrawFormatString( 0, 0, Color, "変数 i の値は %d です\n", i ) ;
+</pre>
+<br>
+                    　となります。<br>
+                    　流石に \t や \n のエスケープシーケンスを表現することは
+                    出来ませんが、普通に使う分には問題無いはずです。<br>
+                    　なお、肝心の書式の指定方法ですが、かなり複雑で説明が大変なので
+                    詳しくはＣ言語のヘルプを参照して下さい。<br>
+                    　主な例を次に記載しておきますので、参考にしてください。<br><br><br>
+
+
+
+                    文字列を描画する例<br><br>
+
+<pre>
+    char String[ 100 ] ;
+    strcpy( String , "曇り" ) ;
+    DrawFormatString( 0, 0, Color, "今日の天気は %s です", String ) ;
+</pre>
+<br><br>
+                    int 型整数値を描画する例<br><br>
+
+<pre>
+    DrawFormatString( 0, 0, Color, "タイム %d  速度 %d ", t, s ) ;
+</pre>
+<br><br>
+                    double 型浮動小数点数値を描画する例<br><br>
+
+<pre>
+    DrawFormatString( 0, 0, Color, "倍率 %f ",r ) ;
+</pre>
+<br><br>
+                    double 型浮動小数点数値を少数第三位まで描画する例<br><br>
+
+<pre>
+    DrawFormatString( 0, 0, Color, "倍率 %.3f ",r ) ;
+</pre>
+<br><br>
+                    int 型整数値と double 型浮動小数点数値と文字列を描画する例<br><br>
+
+<pre>
+    char String[ 100 ] ;
+    strcpy( String , "城北" ) ;
+    DrawFormatString( 0, 0, Color,
+         "%s 高等学校　出願者数 %d人  倍率 %.3f ",s ,n ,r ) ;
+</pre>
+<br><br>
+                    　なお、文章の量を抑えるために Color は常に
+                      Color = GetColor( 255 , 255 , 255 ) ; が
+                    代入されているものとします。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　メッセージを表示してからボタンが押されるまでの時間を描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    int Start , Time ;
+    int Cr ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return 0;
+
+    // 白の色コードを保存
+    Cr = GetColor( 255 , 255, 255 ) ;
+
+    // スタートタイムを取得
+    Start = GetNowCount() ;
+
+    // メッセージを表示
+    DrawString( 0 , 0 , "なにかキーを押してください" , Cr ) ;
+
+    // ボタンが押されるまで待つ
+    WaitKey() ;
+
+    // 終了、経過時間を算出
+    Time = GetNowCount() - Start ;
+
+    // 画面に表示
+    ClearDrawScreen() ;
+    DrawFormatString( 0, 0, Cr, "ボタンが押されるまでに %dミリ秒経過しました", Time ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリ使用の終了
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N2">宣言</a></b></td><td><font color="#000088"><b>int GetDrawStringWidth( char *String , int StrLen ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画した時の文字列の幅(ドット単位)を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *StrData : 描画時の幅を調べたい文字列のアドレス<br>
+                int StrLen : 調べたい文字列の長さ(半角文字単位)</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：描画時の幅</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　DrawString で描画される文字列のドット単位の長さは文字数が
+                    同じでも一つ一つの文字の幅が違うために一定では有りません。<br>
+                    　そこでこの関数を用いて文字列を描画した際の長さを調べる
+                    ことが出来ます。StrLen として文字列の長さをわざわざ指定する
+                    ようにしたのは色々な側面から見て文字列の長さを指定できるよう
+                    にしたほうが良いと思ったからです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　一つの文章を同じ列に２回にわけて描画します
+            <hr>
+<pre>
+#include &lt;string.h&gt; 
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+            LPSTR lpCmdLine, int nCmdShow )
+{
+    int StrWidth , StrLen ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return -1 ;
+
+    // 最初の文字列を描画
+    DrawString( 0 , 0 , "今日もいい天気だ" , GetColor( 255 , 255 , 255 ) ) ;
+
+    // 文字列の長さを取得
+    StrLen = strlen( "今日もいい天気だ" ) ;
+
+    // 描画時の文字列の幅を取得
+    StrWidth = GetDrawStringWidth( "今日もいい天気だ" , StrLen ) ;
+
+    // 「今日もいい天気だ」の直後に新たな文字列を描画
+    DrawString( StrWidth , 0 , "明日も晴れると良いなあ" , GetColor( 255 , 255 , 255 ) ) ;
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの使用終了
+    DxLib_End() ;
+
+    // 終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N21">宣言</a></b></td><td><font color="#000088"><b>int GetDrawFormatStringWidth( char *FormatString , ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>DrawFormatString 関数書式付き文字列の描画幅(ドット単位)を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *FormatString : 描画幅を得たい書式付き文字列のアドレス<br>
+                ... : 書式付き文字列に付随する引数</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：描画時の幅</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N2"><b>GetDrawStringWidth</b></a> の書式付き文字列版です。書式付き
+                    文字列の説明は <a href="#R17N20"><b>DrawFormatString</b></a> 関数を参照してください。<br>
+                    　なお、書式付き文字列の場合は結果的に文字列の文字数が幾つに
+                    なるかはわからないので GetDrawStringWidth のように参照する
+                    文字数は取りません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N7">宣言</a></b></td><td><font color="#000088"><b>int    SetFontSize( int FontSize ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画する文字列のフォントのサイズをセットする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>FontSize : 描画するフォントのサイズ（およそドット単位）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N1"><b>『DrawString』関数</b></a>で描画する文字列の文字の大きさを
+                    設定します。フォントのサイズは FontSize で指定したドット数に大体比例します。<br><br>
+
+                    <font color="#660000"><b>
+                    &lt;&lt;注意&gt;&gt;<br>
+		    SetFontSize は負荷の重い処理なので、頻繁に SetFontSize を呼ぶ必要がある場合は関数
+		    <a href="#R17N10"><b>CreateFontToHandle</b></a> で予め必要なサイズのフォントを作成しておくようにして
+		    SetFontSize を頻繁に呼ばないようにすることをお勧めします。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　フォントのサイズを６４にし、画面中心に文字列を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画する文字列のサイズを設定
+    SetFontSize( 64 ) ;
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // 文字列の描画
+    DrawString( 100 , 240 - 42 , "Hello C World!" , Cr );
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N8">宣言</a></b></td><td><font color="#000088"><b>int    SetFontThickness( int TinckPal ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画する文字列の文字の太さをセットする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>TinckPal : 文字の太さ( 0 ～　9 )</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N1"><b>『DrawString』関数</b></a>で描画する文字列の太さを引数 TinckPal
+                    が示す太さに変更します。デフォルトでは 6 になっています。<br>
+                    　因みにフォントの関係上、１や２の太さの違いでは見た目に影響が
+                    出ない場合があります。<br><br>
+
+                    <font color="#660000"><b>
+                    &lt;&lt;注意&gt;&gt;<br>
+		    SetFontThickness は負荷の重い処理なので、頻繁に SetFontThickness を呼ぶ必要がある場合は関数
+		    <a href="#R17N10"><b>CreateFontToHandle</b></a> で予め必要な太さのフォントを作成しておくようにして
+		    SetFontThickness を頻繁に呼ばないようにすることをお勧めします。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　フォントの太さを3にし、文字列を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画する文字列の太さを設定
+    SetFontThickness( 3 ) ;
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // 文字列の描画
+    DrawString( 100 , 240 - 42 , "Hello C World!" , Cr );
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N9">宣言</a></b></td><td><font color="#000088"><b>int    ChangeFont( char *FontName ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>文字列描画に使用するフォントを変更する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>char *FontName : フォントの名前</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N1"><b>『DrawString』関数</b></a>で描画するフォントの名前を 引数
+                    FontName の示すフォントに変更します。もし指定のフォントがなかった場合はデフォルトのフォントになります。<br>
+                    　注意としましてはあまりマイナーなフォントはソフトをプレーする方のパソコンに入っていない場合がありますので、
+		    その場合はフォントもソフトと一緒に配布するか、または Windows に標準で入っているフォントを使うことをお勧めします。<br><br>
+
+                    <font color="#660000"><b>
+                    &lt;&lt;注意&gt;&gt;<br>
+		    ChangeFont は負荷の重い処理なので、頻繁に ChangeFont を呼ぶ必要がある場合は関数
+		    <a href="#R17N10"><b>CreateFontToHandle</b></a> で予め必要なフォントを作成しておくようにして
+		    ChangeFont を頻繁に呼ばないようにすることをお勧めします。<br><br>
+		    </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                フォントをＭＳ明朝にして文字列を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画する文字列の文字セットを変更します
+    ChangeFont( "ＭＳ 明朝" ) ;
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // 文字列の描画
+    DrawString( 100 , 240 - 42 , "Hello C World!" , Cr );
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N24">宣言</a></b></td><td><font color="#000088"><b>int    ChangeFontType( int FontType ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>文字列描画に使用するフォントのタイプを変更する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int FontType : フォントのタイプ<br>
+            (　-1　　　　　　　　　　　　　　　　　　　: デフォルトフォント(DX_FONTTYPE_NORMAL と同じ)<br>
+            　DX_FONTTYPE_NORMAL　　　　　　: ノーマルフォント<br>
+            　DX_FONTTYPE_EDGE　　　　　　　　: エッジつきフォント<br>
+            　DX_FONTTYPE_ANTIALIASING　　　　: アンチエイリアスフォント<br>
+            　DX_FONTTYPE_ANTIALIASING_4X4　　　: アンチエイリアスフォント( 4x4サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_8X8　　　: アンチエイリアスフォント( 8x8サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_EDGE　　　: アンチエイリアス＆エッジ付きフォント<br>
+            　DX_FONTTYPE_ANTIALIASING_EDGE_4X4　: アンチエイリアス＆エッジ付きフォント( 4x4サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_EDGE_8X8　: アンチエイリアス＆エッジ付きフォント( 8x8サンプリング ) )</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N1"><b>『DrawString』</b></a>関数等で描画する文字のタイプを変更します。<br>
+                    　タイプの変更とは、文字に縁取りを付けるか、綺麗な文字にするか、などです。
+                    上記のいずれかの引数を関数に渡すことによりフォントのタイプを変更することが出来ます。<br><br>
+
+                    　DX_FONTTYPE_NORMAL は普通のフォントです。アンチエイリアスなし、
+                    エッジなしのもっとも高速に描画処理を行えるフォントです。
+                    ただし見た目はあまりよくありません。<br><br>
+
+                    　DX_FONTTYPE_EDGE はエッジつきフォントです。<br>
+                    　エッジとは文字の縁のことです、
+                    エッジフォントとは文字の輪郭を文字のメインの色とは違う色でなぞることでノーマルフォントよりも見やすくしたフォントです。<br><br>
+
+                    　DX_FONTTYPE_ANTIALIASING はアンチエイリアスフォントです。<br>
+                    　エイリアスとは解像度が低いがために目立ってしまう、
+                    例えば文字の輪郭のギザギザのことなどを示します。
+                    (640x480などの解像度の低い画面モードではドットがくっきり見えてしまうのでこの現象が発生します、
+                    デスクトップ画面などで使われている画面モードは通常 1024x768 以上なので、
+                    ギザギザしていても大して気にならないのです)<br>
+                    　このエイリアスを抑えたフォントがアンチエイリアスフォントです。<br>
+                    　具体的には文字をベタッと画面に描画するのではなく、
+                    書き込まれる画面に溶け込むように描画します。<br><br>
+
+                    　DX_FONTTYPE_ANTIALIASING_4X4 もアンチエイリアスフォントです。<br>
+                    　DX_FONTTYPE_ANTIALIASING と同じくアンチエイリアス付きのフォントですが、
+                    DX_FONTTYPE_ANTIALIASING とは異なる方式でアンチエイリアス処理を行っていて、
+                    通常は DX_FONTTYPE_ANTIALIASING よりも良好な描画結果が得られます。
+                    ( DX_FONTTYPE_ANTIALIASING ではフォントサイズが小さい場合に文字の太さが歪になったりすることがあります )<br>
+                    　処理負荷は DX_FONTTYPE_ANTIALIASING と同じくらいです。<br><br>
+
+                    　DX_FONTTYPE_ANTIALIASING_8X8 もアンチエイリアスフォントです。<br>
+                    　DX_FONTTYPE_ANTIALIASING_4X4 と同じ方式でより精度の高い描画結果が得られます。
+                    が、DX_FONTTYPE_ANTIALIASING_4X4 よりも処理負荷が高くなります。<br>
+                    　精度が高いと言ってもよく見ないと DX_FONTTYPE_ANTIALIASING_4X4 との違いが分からない程度なので、
+                    分からない程度でもできる限り綺麗な文字を描画したいという場合以外はあまり使う意味はありません。<br><br>
+
+                    　DX_FONTTYPE_ANTIALIASING_EDGE はエッジつきアンチエイリアスフォントです。<br>
+                    　上記のアンチエイリアスフォントにエッジをつけたタイプです。エッジも
+                    画面に溶け込むように描かれます。<br><br>
+                    
+                    　DX_FONTTYPE_ANTIALIASING_EDGE_4X4 もエッジ付きアンチエイリアスフォントです。<br>
+                    　DX_FONTTYPE_ANTIALIASING_EDGE のアンチエイリアス処理は DX_FONTTYPE_ANTIALIASING と同じ方式ですが、
+                    それを DX_FONTTYPE_ANTIALIASING_4X4 と同じ方式にしたものです。<br><br>
+                    
+                    　DX_FONTTYPE_ANTIALIASING_EDGE_8X8 もエッジ付きアンチエイリアスフォントです。<br>
+                    　DX_FONTTYPE_ANTIALIASING_EDGE_4X4 よりもアンチエイリアス処理の精度を上げたものです。<br><br><br>
+
+                    <font color="#660000"><b>
+                    &lt;&lt;注意&gt;&gt;<br>
+		    ChangeFontType は負荷の重い処理なので、頻繁に ChangeFontType を呼ぶ必要がある場合は関数
+		    <a href="#R17N10"><b>CreateFontToHandle</b></a> で予め必要なフォントタイプのフォントを作成しておくようにして
+		    ChangeFontType を頻繁に呼ばないようにすることをお勧めします。<br><br><br>
+		    </font>
+
+                    
+                    　＜裏話　エッジ(縁)の色は指定できないのか！？＞<br>
+                    　通常エッジは黒で描画されますが、実際はこのエッジ色も指定することが
+                    出来ます。DrawFormatString と DrawFormatStringToHandle を除くすべての
+                    文字列描画関数の一番後ろにカラーコードを入力することで、エッジのカラーを
+                    指定することが出来ます。<br><br>
+                    
+                    例<br><br>
+<pre>
+// エッジカラー指定なし文字色白<br>
+DrawString( 0 , 0 , "ＤＸライブラリ" , GetColor( 255,255,255 ) ) ;<br><br>
+
+// エッジカラー指定、青、文字色は白<br>
+DrawString( 0 , 0 , "ＤＸライブラリ" ,
+         GetColor( 255,255,255 ), GetColor( 0,0,255 ) ) ;<br><br><br>
+
+
+// エッジカラー指定なし文字色白<br>
+DrawStringToHandle( 0 , 0 , "ＤＸライブラリ" ,
+         GetColor( 255,255,255 ), FontHandle ) ;<br><br>
+
+// エッジカラー指定、青、文字色は白<br>
+DrawStringToHandle( 0 , 0 , "ＤＸライブラリ" ,
+         GetColor( 255,255,255 ),
+         FontHandle, GetColor( 0,0,255 ) ) ;<br><br><br>
+
+</pre>
+
+
+                    　仕様の関係上 <a href="#R17N20"><b>DrawFormatString</b></a> と <a href="#R17N12"><b>DrawFormatStringToHandle</b></a> 関数は
+                    残念ながらエッジ色を指定することは出来ません。エッジカラー指定を
+                    書式付文字列描画 で使用したい場合などはＣの標準関数である sprintf 関数
+                    との組み合わせで実現してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　最初にサイズ４０で『ＤＸライブラリ』と描画した後、フォントの
+                タイプをエッジつきアンチエイリアスフォントに変更してもう一度
+                『ＤＸライブラリ』と描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return 0 ;
+
+    // 画面を黄色で塗りつぶします
+    DrawBox( 0 , 0 , 640 , 480 , GetColor( 128,128, 0) , TRUE ) ;
+
+    // サイズを４０に変更
+    SetFontSize( 40 ) ;
+
+    // 『ＤＸライブラリ』と描画
+    DrawString( 100 , 100 , "ＤＸライブラリ" , GetColor( 255,255,255 ) ) ;
+
+    // フォントのタイプをエッジつきアンチエイリアスフォントに変更
+    ChangeFontType( DX_FONTTYPE_ANTIALIASING_EDGE ) ;
+
+    // 『ＤＸライブラリ』と描画
+    DrawString( 100 , 160 , "ＤＸライブラリ" , GetColor( 255,255,255 ), GetColor( 0,0,0 ) ) ;
+
+
+    // キー入力を待つ
+    WaitKey() ;
+
+
+    // ＤＸライブラリの終了
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+
+
+
+
+
+
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N10">宣言</a></b></td><td><font color="#000088"><b>int CreateFontToHandle( char *FontName , int Size , int Thick , int FontType ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>新しいフォントデータを作成<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *FontName : 作成するフォント名( NULL にするとデフォルトのフォント )<br>
+                int Size : フォントのサイズ( およそドット数  -1:デフォルトのサイズ )<br>
+                int Thick : フォントの太さ( 0 ～　9         -1:デフォルトの太さ  )<br>
+                int FontType : フォントのタイプ<br>
+            (　-1　　　　　　　　　　　　　　　　　　　: デフォルトフォント(DX_FONTTYPE_NORMAL と同じ)<br>
+            　DX_FONTTYPE_NORMAL　　　　　　: ノーマルフォント<br>
+            　DX_FONTTYPE_EDGE　　　　　　　　: エッジつきフォント<br>
+            　DX_FONTTYPE_ANTIALIASING　　　　: アンチエイリアスフォント<br>
+            　DX_FONTTYPE_ANTIALIASING_4X4　　　: アンチエイリアスフォント( 4x4サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_8X8　　　: アンチエイリアスフォント( 8x8サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_EDGE_4X4　: アンチエイリアス＆エッジ付きフォント( 4x4サンプリング )<br>
+            　DX_FONTTYPE_ANTIALIASING_EDGE_8X8　: アンチエイリアス＆エッジ付きフォント( 8x8サンプリング ) )</td></tr>
+
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>戻り値    -1 : 失敗<br>
+                0以上 : フォントハンドル<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　　普段 <a href="#R17N1"><b>DrawString</b></a> 関数や <a href="#R17N20"><b>DrawFormatString</b></a> 関数で
+                    文字列を描画していて、ふと一回の画面の更新で複数のタイプの
+                    フォントを使いたくなったりしたとします。<br>
+                    　当然描きたいフォントのサイズや太さに応じてその都度 
+                    <a href="#R17N7"><b>SetFontSize</b></a> 関数や <a href="#R17N8"><b>SetFontThickness</b></a> 関数を使用する
+                    しかないのですが、実はフォントのサイズや太さを変えるのは非常に
+                    時間がかかり、高速処理を行わなければならないゲームソフトでは
+                    致命的な負荷となります。<br>
+                    　そこで解決方法として、元々ある標準のフォントデータを場合に
+                    応じてサイズや太さを変えるのではなく、標準のフォントデータとは
+                    全く別に、必要な分だけフォントデータを作成しておき、文字列
+                    描画時にあらかじめ用意されたフォントデータを使って描画処理を
+                    行うというものがあります。<br>
+                    　この関数は上記の方法を実現するための一つ目である『標準で
+                    使用するフォントデータ以外のフォントデータを作る』ための機能を
+                    持っています。<br><br>
+
+                    　具体的に説明しますと、まずこの CreateFontToHandle 関数で作成
+                    されたフォントのデータはひとつの識別番号を付けられます。
+                    この CreateFontToHandle 関数は戻り値としてこの int 型の識別
+                    番号値を返してきますので、この値を何らかの変数に保存します。<br>
+                    　そしてあとは今まで紹介された DrawString 関数 ,  
+                    <a href="#R17N2"><b>GetDrawStringWidth</b></a> 関数 などと使い方はほとんど同じで、
+                    違いは各関数名の語尾には 『ToHandle』が付き、関数の引数の
+                    最後にどのフォントのデータを使うのか、を示す保存しておいた
+                    識別番号を渡す必要があるということだけです。<br><br>
+
+                    　ただしこのフォントデータ機能には、SetFontSize 関数や SetFontThickness 関数
+                    のような、途中でサイズや太さの変更をすることは出来ません。ので、違う
+                    タイプのフォントを使用したい場合は再度この CreateFontToHandle 関数
+                    でフォントデータを作成する必要があります。<br><br>
+
+                    　CreateFontToHandle 関数は FontName に作成するフォントの
+                    名前の文字列を、Size に作成するフォントのサイズを、Thick に
+                    作成するフォントの線の太さを渡すことで任意のフォントデータを
+                    作成してくれます。<br>
+                    　なお、FontName に NULL を指定するとデフォルトのフォントが
+                    使用され、Size 及び Thick も -1 を指定することによりそれぞれ
+                    標準のサイズ、太さのフォントが作成されます。<br><br>
+
+                    　FontType は作成するフォントのタイプを指定します。<br>
+                    　種類が沢山あり、説明が少々長くなるので詳細は<a href="#R17N24"><b>ChangeFontType</b></a> 関数
+                    の解説を参照してください。<br><br>
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　まずサイズ４０、太さ３のフォントを作成し、そのフォントで画面に
+                『ＨＥＬＬＯＷ！！』と描画します。そのあと標準のフォントデータで
+                『ＯＫ？』と言う文字列を描画します。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    int FontHandle ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() == -1 ) return 0 ;
+
+
+    // 　デフォルトのフォントで、サイズ４０、太さ３のフォントを作成し
+    // 作成したデータの識別番号を変数 FontHandle に保存する
+    FontHandle = CreateFontToHandle( NULL , 40 , 3 ) ;
+
+    // 作成したフォントで画面左上に『Ｈｅｌｌｏｗ！！』と白色の文字列を描画する
+    DrawStringToHandle( 0 , 0 , "ＨＥＬＬＯＷ！！" , GetColor( 255 , 255 , 255 ) , FontHandle ) ;
+
+    // 次に標準フォントデータで画面に『ＯＫ？』という文字列を描画する
+    DrawString( 0 , 50 , "ＯＫ？" , GetColor( 255 , 128 , 100 ) ) ; 
+
+
+    // キー入力を待つ
+    WaitKey() ;
+
+    // 作成したフォントデータを削除する
+    DeleteFontToHandle( FontHandle ) ;
+
+
+    // ＤＸライブラリの終了
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N11">宣言</a></b></td><td><font color="#000088"><b>int DeleteFontToHandle( int FontHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>フォントデータを削除する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>FontHandle : 削除したいフォントデータに付けられた識別番号(フォントハンドル)</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数で作成したフォントのデータを
+                    メモリーから削除するための関数です。引数に CreateFontToHandle 関数
+                    で戻り値として受け取ったデータの識別番号を渡すことによって
+                    指定のフォントデータを削除することが出来ます。<br>
+                    　なお、作成したフォントデータは削除せずに <a href="../dxfunc.html#R1N2"><b>DxLib_End</b></a> 関数により
+                    ソフトを終了しようとした場合は自動的にＤＸライブラリがデータを
+                    消去してくれます。この関数は、明らかに使われなくなったフォント
+                    データがメモリ領域を圧迫して迷惑を掛けているときに使うと有効です。
+                    (フォントデータはひとつあたり１．２ＭＢ程のメモリ領域を必要とします。)<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数のサンプルを参照してください。
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N25">宣言</a></b></td><td><font color="#000088"><b>int SetFontCacheUsePremulAlphaFlag( int Flag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>作成するフォントデータを『乗算済みα』用にするかどうかを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int Flag ： 作成するフォントデータを『乗算済みα』用にするかどうか<br>
+		　　　　　　　　( TRUE:乗算済みα用にする　FALSE:乗算済みα用にしない( デフォルト ) )
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数で作成するフォントのデータを <a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a>の解説にある『乗算済みα』用のフォントデータにするかどうかを設定する関数です。<br><br>
+
+		詳しい解説は<a href="../lecture/PremulAlpha/PremulAlpha.html">『乗算済みアルファのすすめ』</a>をご覧ください。
+
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　αチャンネルつきの『描画対象にできるグラフィックハンドル』に対して『乗算済みα』用のフォントで文字列を描画し、
+		その後文字列が描画されたグラフィックハンドルを裏画面に描画するサンプルです。<br>
+		　『乗算済みα』用のブレンドモードで描画処理が行われた『描画対象にできるグラフィックハンドル』を裏画面( や、表画面 )に対して描画する場合も『乗算済みα』用のブレンドモードで描画する必要があります。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int FontHandle ;
+	int ScreenHandle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリ初期化処理
+	if( DxLib_Init() == -1 )
+		 return -1;
+
+	// 描画対象にできるαチャンネル付きのグラフィックハンドルを作成する
+	ScreenHandle = MakeScreen( 256, 64, TRUE ) ;
+
+	// 乗算済みα用のフォントハンドルを作成する
+	SetFontCacheUsePremulAlphaFlag( TRUE ) ;
+	FontHandle = CreateFontToHandle( "ＭＳ ゴシック", 32, 4, DX_FONTTYPE_ANTIALIASING_8X8 ) ;
+
+	// 描画先を作成したグラフィックハンドルにする
+	SetDrawScreen( ScreenHandle ) ;
+
+	// グラフィックハンドルに乗算済みα用のαブレンドモードで透明度50%で文字を描画する
+	SetDrawBlendMode( DX_BLENDMODE_PMA_ALPHA, 128 ) ;
+	DrawStringToHandle( 0, 0, "テスト文字列", GetColor( 255,255,255 ), FontHandle ) ;
+
+	// 描画先を裏画面に変更する
+	SetDrawScreen( DX_SCREEN_BACK ) ;
+
+	// 結果が分かりやすいように裏画面を緑で塗りつぶす
+	SetDrawBlendMode( DX_BLENDMODE_NOBLEND, 255 ) ;
+	DrawBox( 0, 0, 640, 480, GetColor( 0,200,0 ), TRUE ) ;
+
+	// 裏画面に文字列を描画したグラフィックハンドルを乗算済みα用のαブレンドモードで描画する
+	SetDrawBlendMode( DX_BLENDMODE_PMA_ALPHA, 255 ) ;
+	DrawGraph( 100, 100, ScreenHandle, TRUE ) ;
+
+	// 裏画面の内容を表画面に反映させる
+	ScreenFlip() ;
+
+	// キー入力待ち
+	WaitKey() ;
+
+	// ＤＸライブラリ使用の終了処理
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N12">宣言</a></b></td><td><font color="#000088">
+            <b>int    DrawStringToHandle( int x , int y , char *String ,<br>
+            　　　　　　　　　　　　　　　　　　int Color , int FontHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のフォントデータで文字列を描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int x , y : 文字列を描画する起点座標<br>
+                char *String : 描画したい文字列のポインタ<br>
+                int Color : 描画する文字列の色を示すカラーコード<br>
+                int FontHandle : 描画に使用するフォントのデータ識別番号(フォントハンドル)</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数を使って作成したフォントを
+                    使用して ( x , y ) を描画する文字列の起点座標、とし、String
+                    の示す文字列を Color で指定された色で画面に描画します。<br>
+                    　引数の最後に CreateFontToHandle 関数で取得したフォント
+                    データの識別番号を渡す以外は全て <a href="#R17N1"><b>DrawString</b></a> と動作は
+                    同じです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数のサンプルを参照してください。
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N22">宣言</a></b></td><td><font color="#000088">
+            <b>int DrawFormatStringToHandle( int x , int y , int Color ,<br>
+                　　　　　　　　　　　　　　　int FontHandle , char *FormatString , ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のフォントデータで書式付き文字列を描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int x , y : 文字列を描画する起点座標<br>
+                    int Color : 描画する文字列の色のコード<br>
+                    int FontHandle : 描画に使用するフォントデータの識別番号(ハンドル)<br>
+                    char *FormatString : 描画したい書式付き文字列のアドレス<br>
+                    ... : 書式付き文字列に付随する引数<br></td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数を使って作成したフォントを
+                    使用して書式付き文字列の描画を行います。<br>
+                    　フォントハンドルを使用して処理を行う、ということ以外は
+                    すべて <a href="#R17N20"><b>DrawFormatString</b></a> 関数と同じです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　動作については <a href="#R17N20"><b>DrawFormatString</b></a> 関数を参照して下さい。
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N13">宣言</a></b></td><td><font color="#000088">
+            <b>int GetDrawStringWidthToHandle( char *String ,<br>
+            　　　　　　　　　　　　　　　　　　 int StrLen , int FontHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のフォントデータで描画する文字列の幅(ドット単位)を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *StrData : 描画時の幅を調べたい文字列のアドレス<br>
+                    int StrLen : 調べたい文字列の長さ(半角文字単位)<br>
+                    int FontHandle : 描画幅を取得する際に使用するフォントデータの識別番号</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：描画時の幅</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数を使って作成したフォントを
+                    使用して、String の示す文字列を描画した際の実際の描画幅を
+                    取得します。<br>
+                    　引数の最後に CreateFontToHandle 関数で取得したフォント
+                    データの識別番号を渡す以外は全て <a href="#R17N2"><b>GetDrawStringWidth</b></a> と動作は
+                    同じです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　動作の挙動については <a href="#R17N2"><b>GetDrawStringWidth</b></a> 関数のサンプルを参照して
+                ください
+                <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N23">宣言</a></b></td><td><font color="#000088">
+            <b>int GetDrawFormatStringWidthToHandle( int FontHandle ,<br>
+            　　　　　　　　　　　　　　　　　　　　 char *FormatString , ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のフォントデータで書式付き文字列の描画幅を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int FontHandle : 描画幅を調べる再に使用するフォントデータのハンドル<br>
+                    char *FormatString : 描画幅を得たい書式付き文字列のアドレス<br>
+                    ... : 書式付き文字列に付随する引数</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：描画時の幅</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数を使って作成したフォントを
+                    使用して、書式付き文字列の描画幅を取得します。<br>
+                    　取得する際にフォントデータのハンドルを使う、ということ以外は
+                    <a href="#R17N21"><b>GetDrawFormatStringWidth</b></a> 関数と同じです。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　動作の挙動については <a href="#R17N21"><b>GetDrawFormatStringWidth</b></a> 関数を参照して
+                ください<br><br>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N18">宣言</a></b></td><td><font color="#000088">
+            <b>int GetFontStateToHandle( char *FontName , int *Size ,<br>
+            　　　　　　　　　　　　　　　 int *Thick , int FontHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のフォントデータの情報を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *FontName : フォント名を保存する char 型配列へのポインタ<br>
+                    int *Size : サイズを保存する int 型変数へのポインタ<br>
+                    int *Thick : 太さを保存する int 型変数へのポインタ<br>
+                    int FontHandle : 情報を得たいフォントデータの識別番号(フォントハンドル)</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数で作成したフォントデータの情報を
+                    それぞれポインタ FontName , Size , Thick の示すアドレスに格納
+                    します。作成したフォントのサイズ等の情報を得たい場合に使用します。<br>
+                    　なお、サイズの情報だけ取得したくて、ほかのフォント名と太さの
+                    情報は要らない、などの場合はそれぞれ引数に NULL を渡すことによって
+                    キャンセルすることが出来ます。<br><br>
+
+                    例　サイズだけ取得したい場合<br><br>
+
+                    FontHandle : フォントのデータ識別番号と仮定<br><br>
+                        
+                    　　int FontSize ;<br><br>
+
+                    　　GetFontStateToHandle( NULL , &amp;FontSize , NULL , FontHandle ) ;<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません。<br>
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R17N19">宣言</a></b></td><td><font color="#000088"><b>int InitFontToHandle( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>フォントデータを全て初期化する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R17N10"><b>CreateFontToHandle</b></a> 関数で作成した全てのフォントデータを
+                    削除します。具体的に言えば、全てのフォントデータを、
+                    <a href="#R17N11"><b>DeleteFontToHandle</b></a> 関数に渡した場合と同じ事を行います。<br>
+                    　複数のフォントが一度にいらなくなり、個別に DeleteFontToHandle 関数
+                    を実行するのが面倒なときに有効です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                                　ありません。<br>
+            <br><br>
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

@@ -1,0 +1,1150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="800" cellspacing="0" cellpadding="0" >
+
+        <tr><td><font size="3" color="#005500"><b>マスク関係関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N1">宣言</a></b></td><td><font color="#000088"><b>int CreateMaskScreen( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスク画面を作成する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>なし</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　マスク情報を保持するためのマスク画面を作成します。<br><br><br>
+
+
+                    <font color="#ff0000"><b>マスク画面とは</b></font><br><br>
+
+                    　マスク画面とは普通のグラフィックを表示する画面のように存在し、
+                    <a href="#R16N3"><b>LoadMask</b></a> 等で画像ファイルをマスクデータとして読みこんだマスクを
+                    <a href="#R16N5"><b>DrawMask</b></a> , <a href="#R16N6"><b>DrawFillMask</b></a> 等でマスク画面に描画できます。<br>
+                    　マスク画面はグラフィック画面とは違い黒と白の２つ(２色)の状態しかない
+                    ピクセル(点)で構成されていて、マスク画面の状態はグラフィック画面に
+                    描画作業を行う際に影響を及ぼします。<br>
+                    　例えば画面座標(10,10)の位置のマスク画面での点の状態が白の時、グラフィ
+                    ック画面に <a href="dxfunc_graph0.html#R2N4"><b>DrawPixel</b></a> やその他の関数で描画しようとしても座標(10,10)の状態は
+                    変化しません、逆に状態が黒ですと通常通り描画できることとなります。<br>
+                    ( 尚、CreateMaskScreen の直後のマスク画面は黒で塗りつぶされています )<br><br>
+
+                    　このマスク機能は画面のフェードインや、グラフィックの描画にアクセントを
+                    付ける場合などに有効な機能といえます。<br><br><br>
+
+
+
+                    　この関数を使用しなければマスク画面を使用できない主な理由には
+                    マスク画面を使用するにはビデオメモリ(VRAM)をグラフィック画面
+                    １つ分、メインメモリもグラフィック画面一つ分必要とするので、マスク
+                    画面を必要としない場合にもこれだけの資源を占有されてしまうのは単純に
+                    もったいないから、及び、マスク処理というのはかなりのＣＰＵパワーを
+                    必要とし、描画処理に多大な負担を与える事となるので使用しない時にも
+                    常にマスク画面が存在するのは不都合極まりないからです。<br><br>
+                    </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　マスク画面を作成し、マスクデータを testMask.bmp から読みこみ、
+                マスク画面の左上に描画した後、画面を赤色で埋め尽くします。<br>
+                　するとマスクを描画した画面左上の部分だけ赤くなりません。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+            LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    MaskHandle = <a href="#R16N3"><b>LoadMask</b></a>( "testMask.bmp" ) ;
+
+    // ロードしたマスクデータを画面の左上に描画します
+    <a href="#R16N5"><b>DrawMask</b></a>( 0 , 0 , MaskHandle , DX_MASKTRANS_NONE ) ;
+
+    // 画面いっぱいに赤い四角を描きます
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 255 , 0 , 0 ) , TRUE ) ;
+
+    // キーの入力待ちをします
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N2">宣言</a></b></td><td><font color="#000088"><b>int    DeleteMaskScreen( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスク画面を削除する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>なし</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N1"><b>CreateMaskScreen</b></a> で作成したマスク画面を削除します。<br>
+                    　以降マスク関係の機能は使用不可になりますので、再びマスクの機能を
+                    使用したい場合は <a href="#R16N1"><b>CreateMaskScreen</b></a> 関数を使用します。<br><br>
+                    </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                <a href="#R16N1"><b>CreateMaskScreen</b></a> のサンプルを参照して下さい
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N3">宣言</a></b></td><td><font color="#000088"><b>int    LoadMask( char *FileName ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータを画像ファイル(ＢＭＰ．ＪＰＥＧ．ＰＮＧ)から構築する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>char *FileName :  マスクとしてロードする画像ファイル(ＢＭＰ or<br> 
+                    　　　　　　　　　　ＰＮＧ or ＪＰＧ ファイル)のパス</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：マスクデータハンドル</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　マスク画面に描画するためのマスクデータを FileName で指定した画像
+                    ファイルから構築します。<br>
+                    　画像ファイル中の真っ黒の部分と真っ白の部分をそれぞれマスクなし、
+                    ありとして判別しマスクデータを構築します。この関数を使用すると
+                    返り値としてマスクデータハンドル(識別番号)が返ってきます。この
+                    ハンドルを使用して <a href="#R16N5"><b>DrawMask</b></a> や <a href="#R16N6"><b>DrawFillMask</b></a> 等の関数で構築した
+                    マスクデータをマスク画面に書きこむことが出来ます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　testMask.bmp を読みこみ画面上のランダムな場所に１０回描画し、その後
+                画面全体を青い四角で描画する。
+                <br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+    int i ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    MaskHandle = <a href="#R16N3"><b>LoadMask</b></a>( "testMask.bmp" ) ;
+
+    // ロードしたマスクデータを画面のランダムな位置に１０個描画します
+    for( i = 0 ; i &lt; 10 ; i ++ )
+        <a href="#R16N5"><b>DrawMask</b></a>( GetRand( 639 ) , GetRand( 479 ) , MaskHandle , DX_MASKTRANS_NONE ) ;
+
+    // 画面いっぱいに青い四角を描きます
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 0 , 255 ) , TRUE ) ;
+
+    // キーの入力待ちをします
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N4">宣言</a></b></td><td><font color="#000088"><b>
+            int    LoadDivMask( char *FileName , int AllNum , int XNum , int YNum ,<br>
+            　　　　　　　　　　　　　　　int XSize , int YSize , int *HandleBuf ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータを画像ファイル(ＢＭＰ．ＪＰＥＧ．ＰＮＧ)から分割構築する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>char FileName : マスクとしてロードする画像ファイルのパス<br>
+                    int AllNum : 画像を分割して読みこむ総数<br>
+                    int XNum : 画像をＸ軸に対して分割する数<br>
+                    int YNum : 画像をＹ軸に対して分割する数<br>
+                    int XSize : 分割された画像一つの幅<br>
+                    int YSize : 分割された画像一つの高さ<br>
+                    int *HandleBuf :  分割した画像一つ一つに割り当てられるマスクハンドル<br>
+                    　　　　　　　　(識別番号)を格納する int 型配列のアドレス</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　FileName で指定された画像ファイルを各パラメータに応じて分割し、
+                    分割された画像一つ一つに <a href="#R16N3"><b>LoadMask</b></a> で得られるマスクハンドルと同様の
+                    マスクハンドル(識別番号)を割り当てます。<br>
+                    　<a href="#R16N3"><b>LoadMask</b></a> 関数と違い一度に得られるハンドルが複数あるので最後の
+                    引数 HandleBuf の示す int 型配列に順次格納していきます。この int 型
+                    配列は分割総数分だけ確保しておく必要があります。分割総数以下の数しか
+                    ない配列をこの関数に渡した場合の動作保証はいたしかねますので気を付け
+                    てください。<br>
+                    　読みこみ、作られたマスクハンドルはHandleBufで指定したint型変数配列
+                    には以下のような順にマスクハンドルが格納されていきます。<br><br>
+
+                    XNum = 4 ; YNum = 4 ; AllNum = 14 ; 
+                    <TABLE BORDER=2 CELLSPACING=5 CELLPADDING=5>
+                        <tr><td>1</td><td>2</td><td>3</td><td>4</td></tr>
+                        <tr><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+                        <tr><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+                        <tr><td>13</td><td>14</td><td> </td><td> </td></tr>
+                    </table>
+                            AllNum = 14<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　testMask2.bmp を 横 8 縦 2 、分割される一つの画像サイズを 8 × 16 、分割
+                画像の総数 16 として読みこみ、得られたマスクハンドルを配列に保存しその後
+                ０から順番に画面全体にマスクグラフィックを描画しアニメーションさせます。<br><br>
+
+                　いちいち画面を消去するので裏画面を使用しています。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                    LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle[ 16 ] ;
+    int i ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画先画面を裏画面にします
+    <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a>( DX_SCREEN_BACK ) ;
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    <a href="#R16N4"><b>LoadDivMask</b></a>( "testMask2.bmp", 16, 8, 2, 8, 16, MaskHandle ) ;
+
+    // マスクを画面全体にタイル上に描画しアニメーションさせます
+    for( i = 0 ; i &lt; 16 ; i ++ )
+    {
+        // 画面初期化
+        <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;
+
+        // 画面全体にタイル上描画
+        <a href="#R16N6"><b>DrawFillMask</b></a>( 0 , 0 , 640 , 480 , MaskHandle[ i ] ) ;
+
+        // 画面いっぱいに青い四角を描きます
+        <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 0 , 255 ) , TRUE ) ;
+
+        // 時間待ち
+        <a href="dxfunc_other.html#R6N1"><b>WaitTimer</b></a>( 100 ) ;
+
+        // 裏画面の内容を表画面に反映させる
+        <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+    }
+
+    // 最後の時間待ち
+    <a href="dxfunc_other.html#R6N1"><b>WaitTimer</b></a>( 1000 ) ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N5">宣言</a></b></td><td><font color="#000088"><b>int    DrawMask( int x , int y , int MaskHandle , int TransMode ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータをマスク画面に描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x , y : マスクを描画する座標(マスクの左上頂点と対応)<br>
+                    int MaskHandle : 描画するマスクのハンドル(識別番号)<br>
+                    int TransMode : マスクを描画する際の透過色のタイプ<br>
+                    　　　　　DX_MASKTRANS_NONE. 透過色なし<br>
+                    　　　　　DX_MASKTRANS_BLACK. マスク中の黒色部分を書き込まない<br>
+                    　　　　　DX_MASKTRANS_WHITE. マスク中の白色部分を書き込まない
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td> 　<a href="#R16N3"><b>LoadMask</b></a> . <a href="#R16N4"><b>LoadDivMask</b></a> 等の関数で構築したマスクをマスク画面に
+                    描画します。描画する際 TransMode で指定したパラメータに応じて
+                    透過色処理が行われます。<br>
+                    　透過色処理とは DX_MASKTRANS_BLACK を指定すると描画するマスクの
+                    白い部分のみがマスク画面に書きこまれ、黒い部分は書きこまれません。
+                    そして DX_MASKTRANS_WHITE はその逆です。<br>
+                    　DX_MASKTRANS_NONE はそれらのマスク処理を行わないパラメータとなり
+                    ます。<br><br>
+                    
+                    　<a href="dxfunc_graph1.html#R3N7"><b>DrawGraph</b></a> . <a href="dxfunc_graph1.html#R3N8"><b>DrawExtendGraph</b></a> のように TRUE . FALSE の２種類では
+                    透過色の種類数に対応できないためにこのような形を取ることになりました。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="#R16N1"><b>CreateMaskScreen</b></a> 関数のサンプルを参照して下さい。
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N6">宣言</a></b></td><td><font color="#000088"><b>int DrawFillMask( int x1 , int y1 , int x2 , int y2 , int MaskHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>指定のマスク画面領域を指定のマスクデータをタイル上に並べて埋める<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x1 , y1 : 埋める領域を矩形とした場合の左上の頂点となる座標<br>
+                    int x2 , y2 : 埋める領域を矩形とした場合の右下＋１の頂点となる座標<br>
+                    int MaskHandle : 埋めるのに使用するマスクのハンドル(識別番号)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　概略の通り、( x1, y1 )-( x2 - 1, y2 - 1 ) の占める範囲を MaskHandle が示すマスク
+                    をタイル上に並べて埋めます。<br><br>
+
+                    　この関数の機能は <a href="#R16N5"><b>DrawMask</b></a> 関数を複数回使用することで実現可能
+                    なのですが、如何せん小さいマスクパターンを使用して広範囲を埋める
+                    という機会が多いマスク処理において、 <a href="#R16N5"><b>DrawMask</b></a> 関数でそれを実現
+                    するのは非常に不効率、過負荷がかかるので専用の高速に処理できる
+                    関数をという次第で用意されました。<br>
+                    　高速な代わりに <a href="#R16N5"><b>DrawMask</b></a> 関数のような透過処理は出来ませんので
+                    ご了承下さい。<br><br>
+
+                    <font color="#800000"><b>
+                    注…『なんで右下の頂点は「-1」してるの？』と思われた方は<a href="dxfunc_graph0.html#R2N2">DrawBox</a>の解説を読んでみて下さい。
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　(100,200)-(640,480)の領域を testMask.bmp から構築したマスクで
+                埋めます。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+            LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    MaskHandle = <a href="#R16N3"><b>LoadMask</b></a>( "testMask.bmp" ) ;
+
+    // (100,200)-(400,400)の領域にマスクをタイル上に並べて描画します
+    <a href="#R16N6"><b>DrawFillMask</b></a>( 100 , 200 , 400 , 400 , MaskHandle ) ;
+
+    // 画面いっぱいに緑の四角を描画
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+    // マスクを削除します
+    <a href="#R16N7"><b>DeleteMask</b></a>( MaskHandle ) ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+                
+            
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N7">宣言</a></b></td><td><font color="#000088"><b>int    DeleteMask( int MaskHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータを削除<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int MaskHandle : 削除するマスクのハンドル(識別番号)</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N3"><b>LoadMask</b></a> . <a href="#R16N4"><b>LoadDivMask</b></a> 関数等で構築したマスクを削除します。<br>
+                    　削除した後は使えなくなります。それだけです。使わなくなった
+                    マスクデータが占有しているメモリ資源を解放するために使用する
+                    関数です。<br><br>
+                    
+                    　因みに削除せずにソフトを終了した場合は終了時に自動的にマスクは
+                    削除されます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                <a href="#R16N6"><b>DrawFillMask</b></a> 関数のサンプルを参照して下さい
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N8">宣言</a></b></td><td><font color="#000088"><b>int    InitMask( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータを初期化する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>なし</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N3"><b>LoadMask</b></a> . <a href="#R16N4"><b>LoadDivMask</b></a> 関数等で構築したマスクをすべて削除します。<br>
+                    　構築したマスクすべてに <a href="#R16N7"><b>DeleteMask</b></a> 関数を使用した場合と同じです。<br><br>
+
+                    　一度にすべてのマスクを削除したい場合に使用します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N9">宣言</a></b></td><td><font color="#000088"><b>int    FillMaskScreen( int Flag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスク画面を指定の色で塗りつぶす<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int Flag : マスク画面を白黒どちらの色で塗りつぶすかを決める引数。<br>
+                    　　　　　　( 0:黒　1:白 )</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　マスク画面を白、又は黒で塗りつぶします。グラフィック画面で言う
+                    ところの <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a> 関数に相当する関数です。<br>
+                    　各色の効果の程は <a href="#R16N1"><b>CreateMaskScreen</b></a> 関数の解説を参照して下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+            
+                　<a href="#R16N6"><b>DrawFillMask</b></a> 関数で一部マスクを適用し、緑の四角を描画した後、
+                マスク画面を白で覆い尽くしてから再び緑の四角を描画します<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+            LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    MaskHandle = <a href="#R16N3"><b>LoadMask</b></a>( "testMask.bmp" ) ;
+
+    // (100,200)-(400,400)の領域にマスクをタイル上に並べて描画します
+    <a href="#R16N6"><b>DrawFillMask</b></a>( 100 , 200 , 400 , 400 , MaskHandle ) ;
+
+    // 画面いっぱいに緑の四角を描画
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+    // マスク画面を白で覆い尽くします
+    <a href="#R16N9"><b>FillMaskScreen</b></a>( 1 ) ;
+
+    // もう一度画面いっぱいに緑の四角を描きます
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+    // マスクを削除します
+    <a href="#R16N7"><b>DeleteMask</b></a>( MaskHandle ) ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N10">宣言</a></b></td><td><font color="#000088"><b>int    SetUseMaskScreenFlag( int ValidFlag ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスク画面の有効の有無を変更<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int ValidFlag : マスク画面の有効状態( TRUE:有効 FALSE:無効 )</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　マスク画面の有効、無効を変更します。マスク処理は常に必要ではなく
+                    且使用する時と使用しない時が短時間の内に切り替わる場合、いくらマスク
+                    処理がマシンに過負荷を与えるとしてもその度に <a href="#R16N1"><b>CreateMaskScreen</b></a> 関数
+                    <a href="#R16N2"><b>DeleteMaskScreen</b></a> 関数を使用するのは効率的ではありません。<br>
+                    　ですので一時的にマスク画面の効果を取り下げたい場合にこの関数は
+                    有効です。当然マスク画面を作成した直後の状態ではこの関数で言うところ
+                    の TRUE(有効) 状態になっています。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　まず testMask.bmp を <a href="#R16N6"><b>DrawFillMask</b></a> 関数をもって画面全体に描画します。
+                その後緑の四角を画面全体に、以後マスク画面を無効にして同じことを、更に再び
+                マスク画面を有効にして再度緑の四角を画面に描画します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータをロードします
+    MaskHandle = <a href="#R16N3"><b>LoadMask</b></a>( "testMask.bmp" ) ;
+
+    // 画面全体にマスクをタイル上に並べて描画します
+    <a href="#R16N6"><b>DrawFillMask</b></a>( 0 , 0 , 640 , 480 , MaskHandle ) ;
+
+    // 画面いっぱいに緑の四角を描画
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+    <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+
+    // マスク画面を無効にします
+    <a href="#R16N10"><b>SetUseMaskScreenFlag</b></a>( FALSE );
+
+    // もう一度画面いっぱいに緑の四角を描きます
+    <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;    // 画面初期化
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+    <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+
+    // マスク画面を有効にします
+    <a href="#R16N10"><b>SetUseMaskScreenFlag</b></a>( TRUE ) ;
+
+    // 再び一度画面いっぱいに緑の四角を描きます
+    <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;    // 画面初期化
+    <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 0 , 255 , 0 ) , TRUE ) ;
+    <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+    // キー入力待ち
+    <a href="dxfunc_other.html#R6N3"><b>WaitKey</b></a>() ;
+
+
+    // マスクを削除します
+    <a href="#R16N7"><b>DeleteMask</b></a>( MaskHandle ) ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N11">宣言</a></b></td><td><font color="#000088"><b>int    MakeMask( int Width , int Height ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>空のマスクデータの作成<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int Width , Height : それぞれ作成する空マスクの幅と高さ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>－１以外：マスクデータハンドル</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N3"><b>LoadMask</b></a> , <a href="#R16N4"><b>LoadDivMask</b></a> 等で構築する事の出来るマスクデータの
+                    空っぽの何もデータのないバージョンのマスクを作成し、そのハンドル
+                    (識別番号)を得ます。<br>
+                    　用途としては SetDataToMask 関数で動的にプログラム中に作成した
+                    マスクデータをセットして使用する場合などがあります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　MakeMask 関数で 16 × 16 の大きさの空マスクを作成し、プログラム中で
+                動的に作成、変更を加えたマスクデータを <a href="#R16N13"><b>SetDataToMask</b></a> 関数 で順次転送、
+                そしてそのマスクデータを持ってマスク画面を埋め尽くし、マスクの結果を
+                確認するために画面いっぱいに白い四角を描画しています。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                LPSTR lpCmdLine, int nCmdShow )
+{
+    int MaskHandle ;
+    unsigned char MaskData[ 16 ][ 16 ] ;
+    int i , j ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画先を裏画面にします
+    <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a>( DX_SCREEN_BACK ) ;
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // 空のマスクを作成します
+    MaskHandle = <a href="#R16N11"><b>MakeMask</b></a>( 16 , 16 ) ;
+
+    // マスクデータを白で埋めます
+    for( i = 0 ; i &lt; 16 ; i ++ )
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0xff ;
+
+    // ループ
+    for( i = 0 ; i &lt; 16 ; i ++ )
+    {
+        // 画面を初期化
+        <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;
+
+        // マスクのデータを一部変更
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0 ;
+
+        // マスクにデータをセット
+        <a href="#R16N13"><b>SetDataToMask</b></a>( 16 , 16 , MaskData , MaskHandle ) ;
+
+        // マスク画面をセットしたマスクデータで埋めます
+        <a href="#R16N6"><b>DrawFillMask</b></a>( 0 , 0 , 640 , 480 , MaskHandle ) ;
+
+        // 白の四角を画面全体に描画します
+        <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 255 , 255 , 255 ) , TRUE ) ;
+
+        // 裏画面の内容を表画面に反映させます
+        <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+        // 時間待ち
+        <a href="dxfunc_other.html#R6N1"><b>WaitTimer</b></a>( 100 ) ;
+    }
+
+    // マスクを削除します
+    <a href="#R16N7"><b>DeleteMask</b></a>( MaskHandle ) ;
+
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+                
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N12">宣言</a></b></td><td><font color="#000088"><b>int    GetMaskSize( int *WidthBuf , int *HeightBuf , int MaskHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクデータの大きさを得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int *WidthBuf , *HeightBuf :   それぞれマスクデータの幅と高さを<br>
+                    　　　　　　　　　　　　　　　保存するint 型変数のアドレス<br>
+                    int MaskHandle : サイズを取得するマスクハンドル(識別番号)
+                    </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N3"><b>LoadMask</b></a> , <a href="#R16N4"><b>LoadDivMask</b></a> 等の関数で構築したマスクデータの
+                    サイズを得ます。主な用途はありません。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                特になし
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N13">宣言</a></b></td><td><font color="#000088"><b>
+            int    SetDataToMask( int Width , int Height ,<br>
+            　　　　　　　　　　void *MaskData , int MaskHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクのデータをマスクデータ領域に転送する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int Width ,Heiht : それぞれマスクデータの幅と高さ<br>
+                    void *MaskData : マスクのデータがあるアドレス<br>
+                    int MaskHandle : 　マスクのデータを転送する先となるマスクの<br>
+                    　　　　　　　　　ハンドル(識別番号)
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N3"><b>LoadMask</b></a> , <a href="#R16N4"><b>LoadDivMask</b></a> , <a href="#R16N11"><b>MakeMask</b></a> 関数で構築したマスクの
+                    データを指定のデータに置き換えます。<br>
+                    　主な用途としてはマスクデータを画像ファイルから読みこむの
+                    ではなく動的に生成して使用したい場合などが上げられます。<br><br>
+
+                    　因みにWidth , Height が示すサイズは転送先となるマスクと
+                    同サイズでなければエラーとなります。わざわざ引数として取る
+                    のはプログラマー側の確認を取るという意味があります。<br>
+                    　後このようなマスクのデータを直接マスク画面に転送する
+                    <a href="#R16N14"><b>DrawMaskToDirectData</b></a> 関数がありますが、これは同じデータで
+                    複数回描画する場合には <a href="#R16N13"><b>SetDataToMask</b></a> 関数で通常のマスクデー
+                    タに転送してから <a href="#R16N5"><b>DrawMask</b></a> 等で描画したほうが速度面で有利と
+                    なりますので注意してください。速度面での違いが起こるのは
+                    <a href="#R16N14"><b>DrawMaskToDirectData</b></a> 関数ですと描画毎にデータの変換をする
+                    必要があるからです。<br><br><br>
+
+
+                    <font color="#ff0000"><b>データ形式</b></font><br><br>
+
+                    　マスクのデータ形式としては １ドット = 1 バイト、unsigned
+                    char 型の変数一つで１ドットを表します。そしてその値が０の
+                    場合は黒に、255(0xff)の場合は白と解釈されます。つまり幅３２
+                    高さ１６のマスクデータ領域を用意し、マスクデータ上のＸ軸上１５
+                    Ｙ軸上１０のドットを白にしたいときは次のようになります。<br><br>
+
+                    　　　unsigned char MaskData[16][32] ;<br><br>
+
+                    　　　MaskData[10][15] = 255 ;<br><br>
+
+                    　普段Ｘ，Ｙを指定するときとはＸとＹの位置関係が逆になるので
+                    注意してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                MakeMask 関数のサンプルを参照して下さい
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N14">宣言</a></b></td><td><font color="#000088"><b>
+            int    DrawMaskToDirectData( int x , int y ,<br>
+            　　　　　　　　　　　　　　int Width , int Height ,<br>
+            　　　　　　　　　　　　　　void *MaskData  , int TransMode ) ; </b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクのデータをマスク画面に直接描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x ,y : マスクデータの描画先のマスク画面上の座標<br>
+                    int Width , Height : 描画するマスクデータの幅と高さ<br>
+                    void *MaskData : マスクのデータが格納されているアドレス<br>
+                    int TransMode : 描画時の透過色モード<br>
+                    　　　　　　　　DX_MASKTRANS_NONE . 透過色なし<br>
+                    　　　　　　　　DX_MASKTRANS_BLACK . マスク中の黒色部分を透過色<br>
+                    　　　　　　　　DX_MASKTRANS_WHITE . マスク中の白色部分を透過色</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　マスク画面上の( x , y )の座標を描画領域の左上頂点 として
+                    MaskData の示す先に格納されているマスクデータを直接マスク
+                    画面に転送します。<br>
+                    　要は <a href="#R16N5"><b>DrawMask</b></a> 関数のマスクハンドルの代わりに直接データを
+                    渡すタイプです。<br>
+                    　透過色処理とは DX_MASKTRANS_BLACK を指定すると描画するマスクの
+                    白い部分のみがマスク画面に書きこまれ、黒い部分は書きこまれません。
+                    そして DX_MASKTRANS_WHITE はその逆です。<br>
+                    　DX_MASKTRANS_NONE はそれらのマスク処理を行わないパラメータとなり
+                    ます。<br><br>
+
+                    　主に動的にマスクデータを用意し、複数回そのデータで描画
+                    しない場合に有効です。複数回描画を行う場合は <a href="#R16N11"><b>MakeMask</b></a> 関数
+                    で空のマスクを作成し、そこにマスクのデータを転送した後
+                    作成したマスクのハンドルをもって描画したほうが高速です。<br><br>
+
+                    　データ形式に付いては <a href="#R16N13"><b>SetDataToMask</b></a> 関数の解説を参照して
+                    下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　マスクのデータを直接マスク画面の左上に転送し、そのつど
+                画面全体に白い四角を描画し、マスクの状態を確認します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+            LPSTR lpCmdLine, int nCmdShow )
+{
+    unsigned char MaskData[ 16 ][ 16 ] ;
+    int i , j ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが起きたら直ちに終了
+    }
+
+    // 描画先を裏画面にします
+    <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a>( DX_SCREEN_BACK ) ;
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータを白で埋めます
+    for( i = 0 ; i &lt; 16 ; i ++ )
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0xff ;
+
+    // ループ
+    for( i = 0 ; i &lt; 16 ; i ++ )
+    {
+        // 画面を初期化
+        <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;
+
+        // マスクのデータを一部変更
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0 ;
+
+        // マスクのデータを直接画面に転送
+        <a href="#R16N14"><b>DrawMaskToDirectData</b></a>( 0 , 0 , 16 , 16 , MaskData , DX_MASKTRANS_NONE ) ;
+
+        // 白の四角を画面全体に描画します
+        <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 255 , 255 , 255 ) , TRUE ) ;
+
+        // 裏画面の内容を表画面に反映させます
+        <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+        // 時間待ち
+        <a href="dxfunc_other.html#R6N1"><b>WaitTimer</b></a>( 100 ) ;
+    }
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N15">宣言</a></b></td><td><font color="#000088"><b>
+            int    DrawFillMaskToDirectData( int x1, int y1, int x2, int y2,<br>
+            　　　　　　　　　　　　　　　 int Width, int Height, void *MaskData ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクのデータをタイル上に並べた形で直接マスク画面全体に描画する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int x1, y1: データを埋め尽くす領域を矩形とした場合の左上の頂点座標<br>
+                    int x2, y2: データを埋め尽くす領域を矩形とした場合の右下＋１の頂点座標<br>
+                    int Width , Height : 描画するマスクデータの幅と高さ<br>
+                    void *MaskData : マスクのデータが格納されているアドレス</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R16N6"><b>DrawFillMask</b></a> 関数の直接データを渡すバージョンです。<br>
+                    　( x1, y1 )-( x2 - 1, y2 - 1 ) の占める範囲を Width , Height, MaskData が示す
+                    マスクデータをタイル上に並べて埋めます。<br><br>
+
+                    　マスクのデータ形式に付いては <a href="#R16N13"><b>SetDataToMask</b></a> 関数の解説を参照
+                    してください。<br><br>
+                    <font color="#800000"><b>
+                    注…『なんで右下の頂点は「-1」してるの？』と思われた方は<a href="dxfunc_graph0.html#R2N2">DrawBox</a>の解説を読んでみて下さい。
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ダイレクトにマスク画面に動的に生成した 16 × 16 の大きさのマスク
+                データを画面全体に描画し、その結果を確認するために描画毎に画面全体に
+                白い四角を描画します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                LPSTR lpCmdLine, int nCmdShow )
+{
+    unsigned char MaskData[ 16 ][ 16 ] ;
+    int i , j ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;        // エラーが起きたら直ちに終了
+    }
+
+    // 描画先を裏画面にします
+    <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a>( DX_SCREEN_BACK ) ;
+
+    // マスク画面を作成します
+    <a href="#R16N1"><b>CreateMaskScreen</b></a>() ;
+
+    // マスクデータを白で埋めます
+    for( i = 0 ; i &lt; 16 ; i ++ )
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0xff ;
+
+    // ループ
+    for( i = 0 ; i &lt; 16 ; i ++ )
+    {
+        // 画面を初期化
+        <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a>() ;
+
+        // マスクのデータを一部変更
+        for( j = 0 ; j &lt; 16 ; j ++ )
+            MaskData[ i ][ j ] = 0 ;
+
+        // マスクのデータを直接画面全体に転送
+        <a href="#R16N15"><b>DrawFillMaskToDirectData</b></a>( 0 , 0 , 640 , 480 , 16 , 16 , MaskData ) ;
+
+        // 白の四角を画面全体に描画します
+        <a href="dxfunc_graph0.html#R2N2"><b>DrawBox</b></a>( 0 , 0 , 640 , 480 , GetColor( 255 , 255 , 255 ) , TRUE ) ;
+
+        // 裏画面の内容を表画面に反映させます
+        <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a>() ;
+
+        // 時間待ち
+        <a href="dxfunc_other.html#R6N1"><b>WaitTimer</b></a>( 100 ) ;
+    }
+    // マスク画面を削除します
+    <a href="#R16N2"><b>DeleteMaskScreen</b></a>() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br><br><br><br>
+        </td></tr>
+
+<!--
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R16N16">宣言</a></b></td><td><font color="#000088"><b>
+            int SetMaskTransColor( int ColorCode ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>マスクに使う透過色のセット<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int ColorCode : 透過色に使う色のコード</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＤＸライブラリのマスク処理は、高速化と諸事情のため DirectX の
+                    透過色機能を使って実現しています。つまりどれかの色が透過色として
+                    使われていて、その色が透過されては困るような画像を画面に描画しようと
+                    した時に不都合が起きます。<br>
+                    　デフォルトではこの透過色は黒( コード 0 )が設定されていますが、
+                    黒は意外に使用されていることが多いので、そんなときにこの関数で
+                    マスク用の透過色を変更することが出来ます。<br><br>
+
+                    　なおこの関数で設定できる透過色はあくまでマスク処理用の透過色で、
+                    <a href="dxfunc_graph1.html#R15N7"><b>SetTransColor</b></a> で設定できる透過色とは全く関係ないので注意してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+            　画面に色々な色の矩形を描き、それにマスク処理を施し効果をためします。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    unsigned char m[8][8] ;
+    int i, j ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init()==-1 ) return -1;
+
+    // マスクの模様を作成
+    for( i = 0 ; i &lt; 8 ; i ++ )
+        for( j = 0 ; j &lt; 8 ; j ++ )
+            m[i][j] = ( ( i + j ) & 1 ) * 0xff ;
+
+    // 画面を灰色で埋める
+    DrawBox( 0, 0, 640, 480, GetColor( 128, 128, 128 ), TRUE ) ;
+
+    // 白、黒、赤、緑、青の色の矩形を描画
+    DrawBox( 10, 30, 200, 200, GetColor( 255, 255, 255 ), TRUE ) ; 
+    DrawBox( 60, 20, 400, 120, GetColor( 0, 0, 0 ), TRUE ) ; 
+    DrawBox( 100, 200, 410, 450, GetColor( 255, 0, 0 ), TRUE ) ; 
+    DrawBox( 220, 80, 580, 160, GetColor( 0, 255, 0 ), TRUE ) ; 
+    DrawBox( 400, 300, 630, 480, GetColor( 0, 0, 255 ), TRUE ) ; 
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // マスクスクリーンの作成
+    CreateMaskScreen() ;
+
+    // マスクスクリーンを有効にする
+    SetUseMaskScreenFlag( TRUE ) ;
+
+    // マスクをマスクスクリーン全体に描画
+    DrawFillMaskToDirectData( 0, 0, 640, 480, 8, 8, m ) ;
+
+    // 同じ工程を繰り返す(黒い四角が消えてしまっているはず)
+    ClearDrawScreen() ;
+    DrawBox( 0, 0, 640, 480, GetColor( 128, 128, 128 ), TRUE ) ;
+
+    DrawBox( 10, 30, 200, 200, GetColor( 255, 255, 255 ), TRUE ) ; 
+    DrawBox( 60, 20, 400, 120, GetColor( 0, 0, 0 ), TRUE ) ; 
+    DrawBox( 100, 200, 410, 450, GetColor( 255, 0, 0 ), TRUE ) ; 
+    DrawBox( 220, 80, 580, 160, GetColor( 0, 255, 0 ), TRUE ) ; 
+    DrawBox( 400, 300, 630, 480, GetColor( 0, 0, 255 ), TRUE ) ; 
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // 透過色を紫にして同じ工程を繰り返す(黒い四角が消えないはず)
+    ClearDrawScreen() ;
+    SetMaskTransColor( GetColor( 255, 0, 255 ) ) ;
+    DrawBox( 0, 0, 640, 480, GetColor( 128, 128, 128 ), TRUE ) ;
+
+    DrawBox( 10, 30, 200, 200, GetColor( 255, 255, 255 ), TRUE ) ; 
+    DrawBox( 60, 20, 400, 120, GetColor( 0, 0, 0 ), TRUE ) ; 
+    DrawBox( 100, 200, 410, 450, GetColor( 255, 0, 0 ), TRUE ) ; 
+    DrawBox( 220, 80, 580, 160, GetColor( 0, 255, 0 ), TRUE ) ; 
+    DrawBox( 400, 300, 630, 480, GetColor( 0, 0, 255 ), TRUE ) ; 
+
+    // キー入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの使用終了
+    DxLib_End();
+
+    // ソフト終了
+    return 0;
+}
+</pre>
+            <hr>
+            <br><br><br><br><br>
+        </td></tr>
+-->
+
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

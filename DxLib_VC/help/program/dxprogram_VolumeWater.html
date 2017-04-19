@@ -1,0 +1,41 @@
+<TITLE>ＤＸライブラリ置き場　厚さによって透明度が変化する水の表現</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　厚さによって透明度が変化する水の表現　( 要プログラマブルシェーダー２．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/VolumeWater.jpg" HSPACE="0" VSPACE="0" ALT="ボリューム水">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　視線方向の水面から地面の距離が長いほど水の色が濃くなる( 透明度が低くなる )処理のサンプルプログラムです。<BR><BR>
+
+			　手順としては、<A HREF="dxprogram_DepthOfField.html"><B>被写界深度処理</B></A>の処理のようにまずシーンの深度( カメラから描画ピクセルまでの距離 )<BR>
+			を描画可能画像に描画して、その後水面以外を普通に描画した後、水面を深度の画像を使用して描画します。<BR>
+			このとき、深度画像の深度から水面の深度を引き算して水面から地面( 若しくはキャラクター )までの距離を算出し、<BR>
+			その値を元に透明度を決定します。<BR>
+			　こうすることで厚みのある半透明なものを表現することができます。<BR><BR><BR>
+
+
+
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/VolumeWater.zip"><B>こちら</B></A>にあります。<BR><BR>
+
+			<A HREF="VolumeWater/VolumeWater.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR><BR>
+
+			<A HREF="VolumeWater/Depth_NormalMeshVS.fx"><B>剛体メッシュ用の深度描画に使用する頂点シェーダー</B></A><BR><BR>
+			<A HREF="VolumeWater/Depth_SkinMeshVS.fx"><B>スキニングメッシュ用の深度描画に使用する頂点シェーダー</B></A><BR><BR>
+			<A HREF="VolumeWater/DepthPS.fx"><B>深度描画用のピクセルシェーダープログラム</B></A><BR><BR><BR>
+
+			<A HREF="VolumeWater/VolumeWaterVS.fx"><B>厚みによって透明度が変化する水処理用の頂点シェーダープログラム</B></A><BR><BR>
+			<A HREF="VolumeWater/VolumeWaterPS.fx"><B>厚みによって透明度が変化する水処理用のピクセルシェーダープログラム</B></A><BR><BR>
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

@@ -1,0 +1,238 @@
+<TITLE>ＤＸライブラリ置き場　方向入力によるキャラクター移動( カメラ固定 )</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　方向入力によるキャラクター移動( カメラ固定 )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/CharactorControl.png" HSPACE="0" VSPACE="0" ALT="方向入力によるキャラクター移動( カメラ固定 )">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR><BR>
+			　ゲームパッドやキーボードの方向キーの入力に従ってキャラクターモデルを移動させるサンプルです。<BR>
+			　キャラクターモデルの移動と同時に、移動中は走りアニメーション、移動中ではないときは待機アニメーションを<BR>
+			再生するようにしています。<BR><BR>
+			
+			　カメラ位置を固定して、向きやアニメーションを滑らかに切り替える処理などもしていないので、<BR>
+			比較的シンプルなプログラムです。<BR><BR>
+
+			　( プログラムの実行に必要なファイルは<A HREF="http://dxlib.o.oo7.jp/file/CharactorControl.zip"><B>こちら</B></A> )<BR><BR><BR>
+
+<PRE>
+// 方向入力に従ってキャラクターを移動させる
+
+#include "DxLib.h"
+
+// 移動速度
+#define MOVESPEED		10.0f
+
+// DxChara.x での走りアニメーションの番号
+#define ANIM_RUN		1
+
+// DxChara.x での待機アニメーションの番号
+#define ANIM_NEUTRAL		4
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int    ModelHandle ;
+	float  AnimTotalTime ;
+	float  AnimNowTime ;
+	int    AnimAttachIndex ;
+	int    RunFlag ;
+	int    MoveAnimFrameIndex ;
+	VECTOR Position ;
+	int    Input ;
+	int    MoveFlag ;
+	float  Angle ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1 ;
+
+	// ３Ｄモデルの読み込み
+	ModelHandle = MV1LoadModel( "DxChara.x" ) ;
+
+	// 向きを初期化
+	Angle = 0.0f ;
+
+	// 走っているフラグを倒す
+	RunFlag = FALSE ;
+
+	// 待機アニメーションをアタッチ
+	AnimAttachIndex = MV1AttachAnim( ModelHandle, ANIM_NEUTRAL ) ;
+
+	// 待機アニメーションの総時間を取得しておく
+	AnimTotalTime = MV1GetAttachAnimTotalTime( ModelHandle, AnimAttachIndex ) ;
+
+	// アニメーション再生時間を初期化
+	AnimNowTime = 0.0f ;
+	MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+	// アニメーションで移動をしているフレームの番号を検索する
+	MoveAnimFrameIndex = MV1SearchFrame( ModelHandle, "BasePoint" ) ;
+
+	// アニメーションで移動をしているフレームを無効にする
+	MV1SetFrameUserLocalMatrix( ModelHandle, MoveAnimFrameIndex, MGetIdent() ) ;
+
+	// ３Ｄモデルの座標を初期化
+	Position = VGet( 0.0f, 0.0f, 0.0f ) ;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK ) ;
+
+	// カメラの位置と向きを設定
+	SetCameraPositionAndTarget_UpVecY( VGet( 0.0f, 1200.0f, -2000.0f ), VGet( 0.0f, 400.0f, 0.0f ) );
+
+	// カメラのクリッピング距離を設定
+	SetCameraNearFar( 16.0f, 5000.0f );
+
+	// 背景の色を灰色にする
+	SetBackgroundColor( 128, 128, 128 ) ;
+
+	// メインループ(何かキーが押されたらループを抜ける)
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen() ;
+
+		// ゲームパッド＋キーボードの入力を取得
+		Input = GetJoypadInputState( DX_INPUT_KEY_PAD1 ) ;
+
+		// 移動しているかどうかのフラグを倒す
+		MoveFlag = FALSE ;
+
+		// 方向入力に従ってキャラクターを移動
+		// ( 最初に斜め入力の判定を、その後上下左右単体の入力の判定をしています )
+		if( ( Input & PAD_INPUT_LEFT ) != 0 && ( Input & PAD_INPUT_UP ) != 0 )
+		{
+			Angle       = 135.0f ;
+			MoveFlag    = TRUE ;
+			Position.x -= MOVESPEED * VECTOR_SCALING ;
+			Position.z += MOVESPEED * VECTOR_SCALING ;
+		}
+		else
+		if( ( Input & PAD_INPUT_UP ) != 0 && ( Input & PAD_INPUT_RIGHT ) != 0 )
+		{
+			Angle       = -135.0f ;
+			MoveFlag    = TRUE ;
+			Position.x += MOVESPEED * VECTOR_SCALING ;
+			Position.z += MOVESPEED * VECTOR_SCALING ;
+		}
+		else
+		if( ( Input & PAD_INPUT_RIGHT ) != 0 && ( Input & PAD_INPUT_DOWN ) != 0 )
+		{
+			Angle       = -45.0f ;
+			MoveFlag    = TRUE ;
+			Position.x += MOVESPEED * VECTOR_SCALING ;
+			Position.z -= MOVESPEED * VECTOR_SCALING ;
+		}
+		else
+		if( ( Input & PAD_INPUT_DOWN ) != 0 && ( Input & PAD_INPUT_LEFT ) != 0 )
+		{
+			Angle       = 45.0f ;
+			MoveFlag    = TRUE ;
+			Position.x -= MOVESPEED * VECTOR_SCALING ;
+			Position.z -= MOVESPEED * VECTOR_SCALING ;
+		}
+		else
+		if( ( Input & PAD_INPUT_LEFT ) != 0 )
+		{
+			Angle       = 90.0f ;
+			MoveFlag    = TRUE ;
+			Position.x -= MOVESPEED ;
+		}
+		else
+		if( ( Input & PAD_INPUT_RIGHT ) != 0 )
+		{
+			Angle       = -90.0f ;
+			MoveFlag    = TRUE ;
+			Position.x += MOVESPEED ;
+		}
+		else
+		if( ( Input & PAD_INPUT_DOWN ) != 0 )
+		{
+			Angle       = 0.0f ;
+			MoveFlag    = TRUE ;
+			Position.z -= MOVESPEED ;
+		}
+		else
+		if( ( Input & PAD_INPUT_UP ) != 0 )
+		{
+			Angle       = 180.0f ;
+			MoveFlag    = TRUE ;
+			Position.z += MOVESPEED ;
+		}
+
+		// 今までと状態が変化した場合はアニメーションを変更する
+		if( RunFlag != MoveFlag )
+		{
+			// 走っているかどうかのフラグを保存
+			RunFlag = MoveFlag ;
+
+			// 今までアタッチしていたアニメーションをデタッチ
+			MV1DetachAnim( ModelHandle, AnimAttachIndex ) ;
+
+			// 新しいアニメーションをアタッチ
+			if( RunFlag )
+			{
+				AnimAttachIndex = MV1AttachAnim( ModelHandle, ANIM_RUN ) ;
+			}
+			else
+			{
+				AnimAttachIndex = MV1AttachAnim( ModelHandle, ANIM_NEUTRAL ) ;
+			}
+
+			// アニメーションの総時間を取得しておく
+			AnimTotalTime = MV1GetAttachAnimTotalTime( ModelHandle, AnimAttachIndex ) ;
+
+			// アニメーション再生時間を初期化
+			AnimNowTime = 0.0f ;
+		}
+		else
+		{
+			// アニメーション再生時間を進める
+			AnimNowTime += 200.0f ;
+
+			// アニメーション再生時間がアニメーションの総時間を越えていたらループさせる
+			if( AnimNowTime >= AnimTotalTime )
+			{
+				// 新しいアニメーション再生時間は、アニメーション再生時間からアニメーション総時間を引いたもの
+				AnimNowTime -= AnimTotalTime ;
+			}
+		}
+
+		// 新しいアニメーション再生時間をセット
+		MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+		// 新しい向きをセット
+		MV1SetRotationXYZ( ModelHandle, VGet( 0.0f, Angle / 180.0f * DX_PI_F, 0.0f ) ) ;
+
+		// ３Ｄモデルに新しい座標をセット
+		MV1SetPosition( ModelHandle, Position ) ;
+
+		// ３Ｄモデルの描画
+		MV1DrawModel( ModelHandle ) ;
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+</PRE>
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

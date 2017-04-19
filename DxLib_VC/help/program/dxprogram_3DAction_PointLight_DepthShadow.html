@@ -1,0 +1,47 @@
+<TITLE>ＤＸライブラリ置き場　３Ｄアクション基本＋深度値を利用した影表現、ポイントライト編</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　３Ｄアクション基本＋深度値を利用した影表現、ポイントライト編　( 要プログラマブルシェーダー３．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/3DAction_PointLightDepthShadow.jpg" HSPACE="0" VSPACE="0" ALT="３Ｄアクション基本＋深度値を利用した影表現、ポイントライト編">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　「９．３Ｄアクション基本＋深度値を利用した影表現基本」の影表現は基本的に１方向からの光にしか対応できないので、<BR>
+			ポイントライトのような全方位に光の影ができるようなものには対応できません。<BR>
+			　その対策として複数の深度値画像を使用した全方位への影表現があります。<BR><BR>
+
+			　手順としては、全方向の深度値を採集するために影描画用の描画可能画像を６つ用意して、<BR>
+			その６つの描画可能画像に対してそれぞれライトの正面方向、背面方向、上方向、下方向、左方向、<BR>
+			右方向を見たときのカメラ設定をした上で深度描画用のシェーダーを使用してステージモデル＋キャラクターモデルを描画します。<BR><BR>
+
+			　次にカメラを本来のカメラの設定に戻した後、用意した６つの影描画用画像を使用して<BR>
+			「９．３Ｄアクション基本＋深度値を利用した影表現基本」と同じ要領で影処理を行います。<BR>
+			が、このとき描画する座標が用意した６つの影描画用画像のどこに映っているのかを判断する必要があります。<BR>
+			　今回のサンプルでは何の工夫も無く６つの影描画用画像ひとつひとつに対して映っているかどうかを判定して、<BR>
+			映っていたらその影描画用画像の深度値を適用するという方法を採っています。<BR><BR>
+
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/3DAction_PointLight_DepthShadow.zip"><B>こちら</B></A>にあります。<BR><BR><BR>
+
+
+			<A HREF="3DAction_PointLight_DepthShadow/3DAction_PointLight_DepthShadow.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR>
+
+			<A HREF="3DAction_PointLight_DepthShadow/NormalMesh_DepthShadow_Step1VS.fx"><B>深度記録画像への描画用の剛体メッシュ用頂点シェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_PointLight_DepthShadow/SkinMesh4_DepthShadow_Step1VS.fx"><B>深度記録画像への描画用のスキニングメッシュ用頂点シェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_PointLight_DepthShadow/DepthShadow_Step1PS.fx"><B>深度記録画像への描画用のピクセルシェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_PointLight_DepthShadow/NormalMesh_PointLight_DepthShadow_Step2VS.fx"><B>深度記録画像を使ったポイントライト一つ付きの剛体メッシュ描画用頂点シェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_PointLight_DepthShadow/SkinMesh4_PointLight_DepthShadow_Step2VS.fx"><B>深度記録画像を使ったポイントライト一つ付きのスキニングメッシュ描画用頂点シェーダーのプログラム</B></A><BR><BR>
+			<A HREF="3DAction_PointLight_DepthShadow/PointLight_DepthShadow_Step2PS.fx"><B>深度記録画像を使ったポイントライト一つ付きの描画用ピクセルシェーダーのプログラム</B></A><BR><BR>
+
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

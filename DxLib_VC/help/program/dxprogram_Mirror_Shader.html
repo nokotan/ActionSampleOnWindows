@@ -1,0 +1,40 @@
+<TITLE>ＤＸライブラリ置き場　鏡面効果基本　シェーダー使用版</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　鏡面効果基本　シェーダー使用版　( 要プログラマブルシェーダー２．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/MirrorShader.jpg" HSPACE="0" VSPACE="0" ALT="鏡面効果基本">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　<A HREF="dxprogram_Mirror.html"><B>鏡面効果基本</B></A> をプログラマブルシェーダーを使用するように変更したサンプルプログラムです。<BR><BR>
+
+			　シェーダー化のメリットとしては、元のサンプルでは鏡に移る絵の歪みを抑えるために鏡を沢山の頂点で分割して描画していた箇所が、<BR>
+			４頂点だけで表せるようになるので、プログラムがすっきりするのと、頂点分割よりも歪みが少ないことです。<BR><BR>
+			
+			　逆にデメリットとしてはライティング効果も加えたい場合は自分でライティング処理をシェーダーで書かなければならないことです。<BR>
+			元のサンプルでは通常の頂点描画処理を使用しているのでライティングが自動的に掛かりますが、今回のサンプルではシェーダープログラムが<BR>
+			煩雑になるのを避けるためにライティング処理は省いています。<BR><BR>
+
+			　尚、このサンプルでは Ver3.08c で VERTEX3DSHADER に追加した spos というメンバ変数を使用していますので、実行の際は Ver3.08c 以降を使用してください。m(_ _)m<BR><BR>
+
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/Mirror.zip"><B>こちら</B></A>にあります。<BR><BR><BR>
+
+
+			<A HREF="Mirror/Mirror.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR>
+
+			<A HREF="Mirror/MirrorVS.fx"><B>鏡面処理の頂点シェーダープログラム</B></A><BR><BR>
+			<A HREF="Mirror/MirrorPS.fx"><B>鏡面処理のピクセルシェーダープログラム</B></A><BR><BR>
+
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

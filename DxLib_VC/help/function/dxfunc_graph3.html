@@ -1,0 +1,1309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja-JP">
+    <head>
+    <meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+    <title>ＤＸライブラリ置き場　リファレンスページ</title>
+    </head>
+    <body bgcolor="#ffffff" text="#000000" link="#0033CC" vlink="#800040">
+    <table align="center" width="800" cellspacing="0" cellpadding="0" >
+
+        <tr><td><font size="3" color="#005500"><b>簡易画面出力関数</b><br><br></font></td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R18N1">宣言</a></b></td><td><font color="#000088">
+            <b>int printfDx( char *FormatString , ... ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>簡易文字列出力を行う<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *FormatString : 書式付き文字列のアドレス<br>
+                    ... : 書式付き文字列に付随する引数</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ＤＸライブラリで作成できるソフトをはじめとする Windows ソフトはＣ言語の入門書などに必ず出てくる printf という便利な画面出力関数が使えません。<br>
+                    　ＤＸライブラリにも <a href="dxfunc_graph2.html#R17N1"><b>DrawString</b></a> や <a href="dxfunc_graph2.html#R17N20"><b>DrawFormatString</b></a>
+                    という文字列を出力する関数がありますが、色や座標を指定しなくてはなりませんし、
+                    なにより他のグラフィック描画関数と使う順番を誤ると他のグラフィックの影になり、
+                    見えなくなってしまったりします。<br>
+                    　『座標や色はどうでもいいから、とにかく画面に情報を表示したい』という時は必ずあるものです。<br>
+                    　そんなときに便利なのが printfDx 関数です。<br>
+                    　この関数は名前こそ後ろに 『Dx』 と書かれていますが、Ｃ言語の標準出力関数である printf 関数と同じような使い方ができます。<br>
+                    　ですので詳細はＣ言語の入門書、もしくは統合環境のヘルプを参照してください。
+                    (書式付き文字列の簡単な説明は <a href="dxfunc_graph2.html#R17N20"><b>DrawFormatString</b></a>関数にありますのでよろしかったら参照してください。)<br><br>
+
+                    <font color="#660000">≪注意！≫</font><br>
+                    　printfDx では『\n』『\t』以外のエスケープシーケンスには対応していません。<br>
+                    　また、printfDx 関数で出力された文字列はすぐには画面には表示されません。<br>
+                    他の描画関数によって文字列が隠れないようにするために <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a> 関数が使われた瞬間に一度に画面に表示されるようになっています。<br>
+                    　なお、画面には縁付き文字で表示されますが、この文字の描画は非常に処理負荷が重いので、あくまでちょっとした情報の表示程度に使用してください。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面に適当に文字列を出力する<br>
+            <br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    // ＤＸライブラリ初期化
+    if( DxLib_Init() == -1 ) return 0;
+
+    // Ｈｅｌｌｏ Ｃ Ｗｏｒｌｄ！と表示、最後に改行
+    printfDx( "Hello Ｃ World!\n" ) ;
+
+    // 画面に適当に数値を描画
+    printfDx( " 600 x 800 = %d \n" , 600 * 800 ) ;
+
+    // 画面が降り切れるほど文字列を描画
+    printfDx( "実験実験実験実験実験実験実験実験実験" ) ;
+    printfDx( "実験実験実験実験実験実験実験実験実験" ) ;
+    printfDx( "実験実験実験実験実験実験実験実験実験実験" ) ;
+
+    // 画面を青くする
+    DrawBox( 0 , 0 , 640 , 480 , GetColor( 0 , 0 , 255 ) , TRUE ) ;
+
+    // 出力した文字列を表示
+    ScreenFlip() ;
+
+    // キーが押されるまで待つ
+    WaitKey() ;
+
+    // ＤＸライブラリの使用終了
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R18N2">宣言</a></b></td><td><font color="#000088">
+            <b>int clsDx( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>簡易画面出力履歴をクリアする<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>char *FormatString : 書式付き文字列のアドレス<br>
+                    ... : 書式付き文字列に付随する引数</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　printfDx 関数で文字列を画面に表示しつづけるとやがて画面が
+                    文字でいっぱいになってしまい、とてもうっとうしくなります。<br>
+                    　そんなうっとうしい文字列達を一掃するのがこの関数す。<br><br>
+
+                    　なお、文字達を消す、とはいっても <a href="dxfunc_graph2.html#R17N1"><b>DrawString</b></a> 等の関数で
+                    描画された文字は消えませんのでご注意下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面に延々と文字列を表示しつづけ、キーが押されたら文字列を一掃します<br>
+            <br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+// WinMain関数
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                     LPSTR lpCmdLine, int nCmdShow )
+{
+    // ＤＸライブラリ初期化
+    if( DxLib_Init() == -1 ) return 0;
+
+    // 描画先画面を裏画面にする
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // なにかキーが押されるまでループ
+    while( CheckHitKeyAll() == 0 )
+    {
+        // Ｈｅｌｌｏ Ｃ Ｗｏｒｌｄ！と表示
+        printfDx( "Hello C World" ) ;
+
+        // 画面を青くする
+        DrawBox( 0 , 0 , 640 , 480 , GetColor( 0 , 0 , 255 ) , TRUE ) ;
+
+        // 出力した文字列を表示
+        ScreenFlip() ;
+
+        // Windows依存処理
+        if( ProcessMessage() == -1 ) break ;
+    }
+
+    // 画面の文字達を消す
+    clsDx() ;
+
+    // 画面にメッセージを表示
+    printfDx( "消えましたか？" ) ;
+
+    // 画面を赤くする
+    DrawBox( 0 , 0 , 640 , 480 , GetColor( 255 , 0 , 0 ) , TRUE ) ;
+
+    // 画面の状態を更新
+    ScreenFlip() ;
+
+    // キーが押されるまで待つ
+    WaitKey() ;
+
+    // ＤＸライブラリの使用終了
+    DxLib_End() ;
+
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br><br><br>
+        </td></tr>
+
+
+
+
+
+
+        <tr><td><font size="3" color="#005500"><b>その他画面操作系関数</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N1">宣言</a></b></td><td><font color="#000088"><b>int SetGraphMode( int SizeX , int SizeY , int ColorBitNum ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画面モードの変更<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>SizeX , SizeY　:　画面の解像度<br>
+                    ColorBitNum　　:　カラービット数</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>
+            DX_CHANGESCREEN_OK　　　: 画面変更は成功した<br>
+            DX_CHANGESCREEN_RETURN　: 画面の変更は失敗し元の画面モードに戻された<br>
+            DX_CHANGESCREEN_DEFAULT : 画面の変更は失敗し標準の画面モードに変更された<br>
+            </td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　画面の解像度や最大表示色数を変更します。<br><br>
+
+                <font color="#a00000">
+                    ＜注意＞<br>
+                    　この関数を実行するとロードしたすべてのグラフィックデータハンドル、
+                    作成したフォントハンドルは自動的に削除され、<a href="dxfunc_graph3.html#R4N3">SetDrawArea</a>, <a href="dxfunc_graph3.html#R4N6">SetDrawScreen</a>, <a href="dxfunc_graph1.html#R3N16">SetDrawMode</a>,
+                    <a href="dxfunc_graph1.html#R3N17">SetDrawBlendMode</a>, <a href="dxfunc_graph1.html#R3N18">SetDrawBright</a> 等の描画に関係する設定を行う関数による設定も全て初期状態に戻りますので、
+                    画面モード変更後 <a href="dxfunc_graph1.html#R3N2">LoadGraph</a>関数や <a href="dxfunc_graph2.html#R17N10">CreateFontToHandle</a>関数等で再度ハンドルを作成し直し、
+                    描画可能領域、描画対象画面等の各種描画系の設定も再度行う必要があります。<br><br>
+                </font>
+
+                    　画面の解像度は画面を表現するのに使用されるドット（点）の数です。<br>
+		    　パソコンのモニターが対応している解像度としては主に<br><br>
+
+                    　　<b>640×480　800×600　1024×768　1280×1024　1280×720　1920×1080</b><br><br>
+
+                    　があります。（ デフォルトは640×480です ）。<br>
+		    　画面の解像度を上げると画面を構成する点の数が増え表現力も高くなりますが、
+                    そのぶん画面の記憶に必要なメモリ容量も増えますので注意してください。<br><br>
+
+                    　指定した解像度がモニターやグラフィックスデバイスが対応していない場合は <a href="#R4N10"><b>SetFullScreenResolutionMode</b></a> で設定できる解像度モードに沿ってモニターが対応している別の解像度に拡大されて表示されます。
+		    ( 別の解像度に拡大する処理は処理負荷がそこそこ高いので、モニターが対応している解像度を使用することをお勧めします )<br><br>
+
+                    　カラービット数とは使用する画面の色の数です。<br>
+                    　ビットとは２進数の１桁の事で、１６ビットで６５５３６色（Trueカラー）
+                    ２４ビットで１６７７万色（フルカラー）表現できます。
+                    ビット数が上がれば上がるほど表現できる色の数は増えますが、その分必要なデータ量も増えますので注意してください。<br><br>
+
+                    　このライブラリで指定できるカラービット数は１６ビットと３２ビットの二つになります。<br><br>
+                    
+                    　指定したカラービット数に対応する３Ｄ機能を持たないグラフィックスデバイスでは３Ｄ機能が使用不可になります。<br>
+                    　１６ビットはＤＸライブラリの標準色ビット数で、６５５３６色を使って画像を表現します。<br>
+                    　３２ビットは内部的には２４ビットを使って１６６７万色で画像を表現します。（ 残りの８ビットは使用されません ）
+                    このモードを選択するとグラフィックデータのサイズが１６bitモードに比べて２倍になります。<br><br>
+
+                    　戻り値は、変更が成功した場合は DX_CAHNGESCREEN_OK　が失敗して元の画面モードに戻された場合は DX_CHANGESCREEN_RETURN
+                    が失敗して元の画面にも戻せず、デフォルトの画面モード( 640x480 16bit color)に変更された場合は DX_CHANGESCREEN_DEFAULT が、
+                    それすらも失敗した場合はソフトが自動終了します。<br><br>
+
+                    　なおこの関数を <a href="../dxfunc.html#R1N1">DxLib_Init</a> 関数を使用する前に呼び出すことにより初期状態の画面モードを設定することが出来ます。<br>
+                    この場合は画面モードの変更は DxLib_Init が呼ばれた際に行われるので画面モードの変更が成功するかどうか分からず、
+                    関数は必ず DX_CHANGESCREEN_OK を返します。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　解像度８００×６００、カラービット数３２ビットで起動し、グラフィックを
+                グラフィックを読み込み描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int GHandle ;
+
+    // 画面モードの設定
+    SetGraphMode( 800 , 600 , 32 ) ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // test.bmpの読み込み
+    GHandle = LoadGraph( "test1.bmp" ) ;
+
+    // グラフィックの描画
+    DrawGraph( 0 , 0 , GHandle , FALSE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N10">宣言</a></b></td><td><font color="#000088"><b>int SetFullScreenResolutionMode( int ResolutionMode ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>フルスクリーンモード時の解像度モードを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>ResolutionMode　:　フルスクリーンモード時の解像度モード<br>
+		    　　　　　DX_FSRESOLUTIONMODE_NATIVE<br>
+		    　　　　　　　　モニターの解像度を <a href="#R4N1"><b>SetGraphMode</b></a> で指定した解像度に変更するモード（デフォルト）<br><br>
+
+		    　　　　　DX_FSRESOLUTIONMODE_DESKTOP<br>
+		    　　　　　　　　モニターの解像度をデスクトップ画面と同じにして<br>
+		    　　　　　　　　SetGraphMode で指定した解像度の画面を拡大して表示するモード<br><br>
+
+		    　　　　　DX_FSRESOLUTIONMODE_MAXIMUM<br>
+		    　　　　　　　　モニターの解像度を最大にして、SetGraphMode で指定した解像度の画面を<br>
+		    　　　　　　　　拡大して表示するモード</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　フルスクリーンモードで実行する場合の画面解像度の決定に関する動作モードを設定する関数です。<br><br>
+
+		　　DX_FSRESOLUTIONMODE_NATIVE<br>
+		　　　　モニターの解像度を <a href="#R4N1"><b>SetGraphMode</b></a> で指定した解像度に変更します。<br><br>
+
+		　　　　モニターが SetGraphMode で指定した解像度に対応していない場合は、<br>
+		　　　　DX_FSRESOLUTIONMODE_DESKTOP と同じ動作をします。<br><br>
+
+		　　　　モニターが SetGraphMode で指定した解像度に対応している場合は、<a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a> が３種類の<br>
+		　　　　モードの中で最も高速に動作します。<br><br>
+
+		　　　　デフォルトではこのモードになっています。<br><br><br>
+
+
+		　　DX_FSRESOLUTIONMODE_DESKTOP<br>
+		　　　　モニターの解像度をデスクトップ画面と同じにして、SetGraphMode で指定した解像度の画面を<br>
+		　　　　縦横比を維持しながら拡大して表示します。( 余分な部分は黒で塗りつぶされます )<br><br>
+
+		　　　　SetGraphMode で指定した解像度がデスクトップ画面の解像度よりも高い場合は<br>
+		　　　　DX_FSRESOLUTIONMODE_MAXIMUM と同じ動作をします。<br><br>
+
+		　　　　モニターの縦横比と異なる縦横比の解像度を指定しても、モニターの縦横比で表示してしまう<br>
+		　　　　モニターも存在するので( 結果画像が横( 又は縦 )に伸びで表示されてしまう )、<br>
+		　　　　デスクトップ画面の解像度を使用することで意図した通りの表示結果が得られる<br>
+		　　　　確率が上がります。( デスクトップ画面を横や縦に伸びて表示される解像度に<br>
+		　　　　設定している人は少ない為 )<br><br>
+
+		　　　　ただ、SetGraphMode で指定した解像度の画面をデスクトップ画面の解像度に拡大する処理が<br>
+		　　　　実行されるので、ScreenFlip の動作速度は DX_FSRESOLUTIONMODE_NATIVE よりも<br>
+		　　　　遅くなります。<br><br><br>
+
+
+		　　DX_FSRESOLUTIONMODE_MAXIMUM<br>
+		　　　　モニターの解像度を最大にして、SetGraphMode で指定した解像度の画面を縦横比を維持しながら<br>
+		　　　　拡大して表示します。( 余分な部分は黒で塗りつぶされます )<br><br>
+
+		　　　　この設定と SetFullScreenScalingMode で拡大モードに<br>
+		　　　　DX_FULLSCREENSCALINGMODE_NEAREST を指定すると、最もドットがくっきり<br>
+		　　　　四角く表示されます。<br><br>
+
+		　　　　ただ、SetGraphMode で指定した解像度の画面をモニターの最大解像度に拡大する処理が実行<br>
+		　　　　されるので、ScreenFlip の動作速度は３つのモードの中で最も遅くなります。<br><br><br>
+
+
+                <font color="#a00000">
+                    ＜注意＞<br>
+                    　この関数は <a href="../dxfunc.html#R1N1">DxLib_Init</a> を呼び出す前にのみ実行することが出来ます。<br>
+		    　DxLib_Init を呼び出した後にこの関数を実行しても何も効果はありませんのでご注意ください。<br><br>
+                </font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　フルスクリーンモード時の解像度モードをモニターの最大解像度を使用する設定にした上で、
+		画面の解像度を縦横２５６ドットに設定、起動後に画面の中心に黄色い円を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    // フルスクリーンモード時の解像度モードをモニターの最大解像度を使用するモードに設定
+    SetFullScreenResolutionMode( DX_FSRESOLUTIONMODE_MAXIMUM ) ;
+
+    // 画面の解像度を縦横２５６ドットに設定
+    SetGraphMode( 256, 256, 32 ) ;
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 )
+    {
+         return -1;      // エラーが発生したら終了
+    }
+
+    // 画面の中心に円を描画
+    DrawCircle( 128, 128, 48, GetColor( 255,255,0 ), FALSE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;           // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N11">宣言</a></b></td><td><font color="#000088"><b>int SetFullScreenScalingMode( int ScalingMode ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>フルスクリーンモード時の画面拡大モードを設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>ScalingMode　:　フルスクリーンモード時の画面拡大モード<br>
+		    　　　　　DX_FSSCALINGMODE_BILINEAR<br>
+		    　　　　　　　　バイリニアモード( ピクセルが滲んでピクセルとピクセルの<br>
+		    　　　　　　　　区切りがはっきりしない )（ デフォルト ）<br><br>
+
+		    　　　　　DX_FSSCALINGMODE_NEAREST<br>
+		    　　　　　　　　最近点モード( ピクセルが四角くくっきり表示される )</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+		　フルスクリーンモードで <a href="#R4N1"><b>SetGraphMode</b></a> で指定した解像度とモニターの解像度が一致していない場合に行われる画面拡大処理での拡大処理方式を設定する関数です。<br><br>
+
+		　　DX_FSSCALINGMODE_BILINEAR<br>
+		　　　　バイリニア補間による拡大処理を行います。ピクセルとピクセルの区切りがぼやけます。<br><br>
+
+		　　　　デフォルトではこのモードになっています。<br><br><br>
+
+
+		　　DX_FSSCALINGMODE_NEAREST<br>
+		　　　　最近点法による拡大処理を行います。ピクセルとピクセルの区切りが四角くくっきり表示されます。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　フルスクリーンモード時の解像度モードをモニターの最大解像度を使用する設定に、
+		画面の拡大モードを最近点モードにした上で、画面の解像度を縦横２５６ドットに設定、
+		起動後に画面の中心に黄色い円を描画します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    // フルスクリーンモード時の解像度モードをモニターの解像度を最大にするモードに設定
+    SetFullScreenResolutionMode( DX_FSRESOLUTIONMODE_MAXIMUM ) ;
+
+    // フルスクリーンモード時の画面の拡大モードを最近点モードに設定
+    SetFullScreenScalingMode( DX_FSSCALINGMODE_NEAREST ) ;
+
+    // 画面の解像度を縦横２５６ドットに設定
+    SetGraphMode( 256, 256, 32 ) ;
+
+    // ＤＸライブラリ初期化処理
+    if( DxLib_Init() == -1 )
+    {
+         return -1;    // エラーが起きたら終了
+    }
+
+    // 画面の中心に円を描画
+    DrawCircle( 128, 128, 48, GetColor( 255,255,0 ), FALSE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N2">宣言</a></b></td><td><font color="#000088"><b>int GetScreenState( int *SizeX , int *SizeY , int *ColorBitDepth ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>現在の画面の大きさとカラービット数を得る <br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>int *SizeX , *SizeY : それぞれ画面の幅と高さを保存する int 型変数のポインタ<br>
+                    int *ColorBitDepth : 画面のカラービット深度を保存する int 型変数のポインタ</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　現在の画面の幅と高さ、そして１ピクセルあたりに使用されているビット数
+                    を得ます。<br><br>
+
+                    例    Sx,Sy,Cb にそれぞれ画面の幅、高さ、カラービット数を取得する<br><br>
+
+
+<pre>
+    int Sx , Sy , Cb ;
+
+    GetScreenState( &amp;Sx , &amp;Sy , &amp;Cb ) ;
+</pre>
+<br>
+                    　なおここでいう画面の幅、高さとはＤＸライブラリが実際に描きこめる
+                    広さのことを示しており、ウインドウモード時などのデスクトップ自体の
+                    画面の広さのことではないので注意してください。<br>
+                    ( 例　デスクトップの広さ 1024x768 ＤＸライブラリの画面の広さ 640x480 だった
+                    　場合、この関数で得られる数値は後者の 640x480 です)<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ありません<br>
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N3">宣言</a></b></td><td><font color="#000088"><b>int    SetDrawArea( int x1 , int y1 , int x2 , int y2 ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画可能領域のセット<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>x1 , y1 : 描画可能領域を示す矩形の左上の頂点<br>
+                    x2 , y2 : 描画可能領域を示す矩形の右下＋１の頂点</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　( x1, y1 )を左上頂点、( x2 - 1, y2 - 1 ) を右下頂点とした矩形
+                    を各描画関数で描画可能な領域として設定します。この領域をはみ出て
+                    描画しようとした場合はその部分は描画されません。<br><br>
+
+                    <font color="#800000"><b>
+                    注…『なんで右下の頂点は「-1」してるの？』と思われた方は<a href="#R2N2">DrawBox</a>の解説を読んでみて下さい。
+                    </b></font>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　画面の半分を描画不可能にして画面全体に青い四角を描画しようとする<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // 描画可能領域セット
+    SetDrawArea( 0 , 0 , 320 , 480 ) ;
+
+    // 青色の値を取得
+    Cr = GetColor( 0 , 0 , 255 ) ;
+
+    // 青い四角形の描画
+    DrawBox( 0 , 0 , 640 , 480 , Cr , TRUE ) ;
+
+    // キー待ち(『WaitKey』を使用)
+    WaitKey() ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N4">宣言</a></b></td><td><font color="#000088"><b>int    ClearDrawScreen( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画面に描かれたものを消去する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　各種描画関数で描画したグラフィックをすべて消し画面を初期化します。<br><br> </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　ランダムな座標で１０００個の点を描画した後画面を消去します<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    int i ;
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // 白色の値を取得
+    Cr = GetColor( 255 , 255 , 255 ) ;
+
+    // １０００個の点を描く
+    for( i = 0 ; i &lt; 1000 ; i ++ )
+    {
+        // ランダムな位置に点を描く（『GetRand』を使用） 
+        DrawPixel( GetRand( 639 ) , GetRand( 479 ) , Cr ) ;
+    }
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    // 画面を初期化
+    ClearDrawScreen() ;
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N9">宣言</a></b></td><td><font color="#000088"><b>int SetBackgroundColor( int Red, int Green, int Blue ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>画面の背景色を設定する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>
+            Red ： 背景色の赤成分( ０～２５５ )<br>
+            Green ： 背景色の緑成分( ０～２５５ )<br>
+            Blue ： 背景色の青成分( ０～２５５ )<br>
+            </td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ウインドウの背景色、また <a href="dxfunc_graph3.html#R4N4"><b>ClearDrawScreen</b></a> を使用した際の描画先画面のクリアカラーとなる色を設定します。<br><br>
+
+                    　色は光の３原色の赤・緑・青のそれぞれの輝度の強さで指定します。<br><br>
+                    
+                    ＜例＞<br><br>
+                    
+                    白　SetBackgroundColor( 255, 255, 255 ) ;<br>
+                    赤　SetBackgroundColor( 255,   0,   0 ) ;<br>
+                    緑　SetBackgroundColor(   0, 255,   0 ) ;<br>
+                    青　SetBackgroundColor(   0,   0, 255 ) ;<br>
+                    黄　SetBackgroundColor( 255, 255,   0 ) ;<br>
+                    水　SetBackgroundColor(   0, 255, 255 ) ;<br>
+                    紫　SetBackgroundColor( 255,   0, 255 ) ;<br><br><br>
+
+                    　また、この関数を DxLib_Init を呼び出す前に呼ぶことで起動時の画面の色を設定することができます。<br><br>
+                    </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+                　ありません
+            <br><br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N5">宣言</a></b></td><td><font color="#000088"><b>int GetColor( int Red , int Green , int Blue ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>色コードを取得する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>Red , Green , Blue : 取得したい色の各輝度値（０～２５５）</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>カラーコード<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　DrawLine、DrawPixel、DrawString、DrawBox、DrawCircleで
+                    使用する色の値を取得します。Red、Green、Blueはそれぞれ
+                    色の３原色に対応していてこの値を指定することで希望の
+                    色コードが取得できます。（各色要素の上限値は２５５です）<br><br>
+                    &lt;&lt;注意！&gt;&gt;<br>
+                    　色コードは画面のカラービット数によって変化しますので、画面のカラービット数が変化するとそれ以前にこの関数で得られた色コードは無効( 別の色を表す数値 )になります。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　灰色の線を描く<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int Cr ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // 灰色の値を取得
+    Cr = GetColor( 128 , 128 , 128 ) ;
+
+    // 線の描画
+    DrawLine( 120 , 150 , 300 , 240 , Cr );
+
+    WaitKey() ;        // キーの入力待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+         <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N6">宣言</a></b></td><td><font color="#000088"><b>int    SetDrawScreen( int DrawScreen ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>描画先グラフィック領域の指定<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>DrawScreen　:　描画する対象となるグラフィック領域を指定します。<br>
+                    　　　　　　　　DX_SCREEN_FRONT　:　表の画面（表示されている画面）<br>
+                    　　　　　　　　DX_SCREEN_BACK 　:　裏の画面（表示されていない画面）</td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　アニメーショングラフィックを表示するとして、
+                    常に表示されている画面に対して描画処理を行うと、画面への描画、
+                    消去が見えてしまい結果として画面がちらついているように見えます。
+                    （ 注 … グラフィックカードによってはちらつかない場合も    ありますが、一般にはちらつきます ）<br>
+                    　そこで画面への描画中は見えないようにして、
+                    描画処理が終った後で見えるようにすれば画面のちらつきは消えるはずです。
+                    それを実現するためにこの関数があります。<br>
+                    　デフォルトでは描画先は DX_SCREEN_FRONT （表の画面）となっていて描画処理中も見えてしまい画面はちらつきますが、
+                    描画先を DX_SCREEN_BACK （裏の画面）を指定すると描画先が普段は見えない裏の画面に対して行われます。<br>
+                    　描画が終った後で次に示す関数<a href="dxfunc_graph3.html#R4N7"><b>『ScreenFlip』</b></a>を呼び出せば、
+                    裏画面の内容が表画面に反映され、裏画面に描画していた内容が実際に表示されます。<br>
+                    　この関数はその描画先をどちらの画面にするか、を指定するための関数です。<br><br>
+
+                    <font color="#400000"><b>
+                    ＜注意＞<br>
+                    　この関数を使用して描画対象を変更すると、<a href="dxfunc_graph3.html#R4N3">SetDrawArea</a> で設定した描画可能範囲と、
+                    ３Ｄ描画で使用するカメラの設定（ <a href="dxfunc_3d.html#R12N2">SetCameraPositionAndTarget_UpVecY</a> などの関数でパラメータを設定する )がリセットされます。
+                    </b></font>
+                    <br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　最初に表画面を描画先にしてランダムに四角形を描き続き、次に
+                描画先を裏画面にして同じことをしてみます。<br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int i ;
+    int Cr ;
+    int x , y ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // 描画先画面を表にする
+    SetDrawScreen( DX_SCREEN_FRONT ) ;
+
+    // １００００個四角形を描きます
+    for( i = 0 ; i &lt; 10000 ; i ++ )
+    {
+        // ランダムな色を取得する『GetRand』使用
+        Cr = GetColor( GetRand( 255 ) , GetRand( 255 ) , GetRand( 255 ) ) ;
+
+        // ランダムな位置に四角形を描く 
+        x = GetRand( 639 ) ;
+        y = GetRand( 479 ) ;
+        DrawBox( x , y , x + GetRand( 639 ) , y + GetRand( 479 ) , Cr , TRUE ) ;
+    }
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    // 画面を初期化
+    ClearDrawScreen() ;
+
+    // 描画先画面を裏にする
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // １００００個四角形を描きます
+    for( i = 0 ; i &lt; 10000 ; i ++ )
+    {
+        // ランダムな色を取得する『GetRand』使用
+        Cr = GetColor( GetRand( 255 ) , GetRand( 255 ) , GetRand( 255 ) ) ;
+
+        // ランダムな位置に四角形を描く 
+        x = GetRand( 639 ) ;
+        y = GetRand( 479 ) ;
+        DrawBox( x , y , x + GetRand( 639 ) , y + GetRand( 479 ) , Cr , TRUE ) ;
+    }
+
+    // 裏画面の内容を表画面に反映します
+    ScreenFlip() ;
+
+    WaitKey() ;        // 結果を見るためにキー待ち(『WaitKey』を使用)
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N7">宣言</a></b></td><td><font color="#000088"><b>int    ScreenFlip( void ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td>
+                <td>　フリップ関数、画面の裏ページ（普段は表示されていない）を
+                    表ページ（普段表示されている）に反映する<br><br></td>
+            </tr>
+            <tr><td valign="top" width="100"><b>引数</b></td><td>なし</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　裏ページの内容を表ページに反映します。<br>
+                (裏ページ、表ページについては <a href="dxfunc_graph3.html#R4N6"><b>『SetDrawScreen』関数</b></a>の解説を参照してください)<br><br>
+                <font color="#800000"><b>
+                注…この関数を使用した後の裏ページの内容は環境によって変わりますので、ScreenFlip 関数を使用した後は ClearDrawScreen 等を使用して裏ページを初期化して下さい
+                </b></font>
+                 </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="dxfunc_graph3.html#R4N6"><b>『SetDrawScreen』関数</b></a>の解説を参照してください<br>
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R4N8">宣言</a></b></td><td><font color="#000088"><b>int SetFullSceneAntiAliasingMode( int Samples, int Quality ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td>
+                <td>　画面のフルスクリーンアンチエイリアスモードの設定をする<br><br></td>
+            </tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>
+                int Samples ： マルチサンプルレベル<br>
+                int Quality ： マルチサンプルクオリティ<br>
+                </td>
+            </tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>
+                　画面のフルスクリーンアンチエイリアスモードの設定をします。<br><br>
+                
+                <font color="#880000"><b>＜注意！＞</b><br>
+                １．この関数は <a href="../dxfunc.html#R1N1"><b>DxLib_Init</b></a> の前で実行した場合のみ効果が得られます<br><br>
+                ２．この関数は実行したＰＣに搭載されているグラフィックスデバイスがフルシーンアンチエイリアスに対応している場合のみ効果を得ることができます<br><br>
+                ３．フルスクリーンアンチエイリアスを有効にした場合は必ず <a href="dxfunc_graph3.html#R4N6"><b>SetDrawScreen</b></a> で「裏画面」を使用して <a href="dxfunc_graph3.html#R4N7"><b>ScreenFlip</b></a> で画面を更新する必要があります</font><br><br>
+
+                　フルシーンアンチエイリアスが有効なのは主に３Ｄ描画に関してで、２Ｄ描画には殆ど効果はありません。
+                ( 寧ろぼやけて汚くなってしまうことも・・・ )<br>
+                　３Ｄ描画の結果は、フルシーンアンチエイリアスを有効にすることによってジャギが消え、フルシーンアンチエイリアスがＯＦＦの時には潰れてしまっていた細かい部分も見えるようになります。<br>
+                　要は元の画面解像度の高い解像度の画面に描画した結果を綺麗に縮小したような効果を得ることができます。<br>
+                　その「画面の解像度に対して、どれくらい高い解像度の画面に描画したのと同じような結果を得るか」の「どれくらい」の部分に当たるのが引数 Samples です。<br>
+                　Samples の値を 1 にした場合は１倍なので、フルシーンアンチエイリアスの効果は得られません。
+                ２にすると２倍面積の解像度の画面に描画してそれを綺麗に縮小したような効果をえることが、４にすると４倍面積の解像度の、１６にすると１６倍面積の解像度の画面に描画してから縮小したような効果を得ることができます。
+                ( つまり画面の解像度が 640x480 だった場合は 2560x1920 の解像度の画面に描画してから縮小したような結果が得られる！( 解像度が倍になると面積は４倍になるので面積１６倍＝解像度４倍 ) )<br>
+                　ただ、高い解像度の画面に描画する、となると想像が付くと思いますが、引数 Samples の値が大きければ大きいだけ処理負荷は高くなります。
+                フルシーンアンチエイリアス無しと比べると Samples の値が 4 でもかなり見た目が違いますので、効果が得られる可能な限り小さい値を渡すのが賢明です。<br><br>
+
+                　引数 Quality について、Samples の値に従って「高い解像度の画面に描画して、それを綺麗に縮小した場合と同じような効果が得られる」フルシーンアンチエイリアスの機能ですが、
+                その「綺麗に縮小」する工程の、「どのくらい綺麗にするか」を Quality で指定します。<br>
+                　値の上限はグラフィックスデバイス毎に設定されていて、大体指定できる範囲は 0 ～ 3 です。この引数も Samples と同様に値が大きければ大きいほど処理負荷が高くなりますので、
+                満足できる効果が得られる、可能な限り小さい値を渡すのが賢明です。<br><br>
+
+                　尚、この関数でフルスクリーンアンチエイリアスモードの設定を行えるのは裏画面、表画面のみで、<a href="dxfunc_graph1.html#R3N25"><b>MakeScreen</b></a> 関数で作成できる描画可能画像のフルスクリーンアンチエイリアスについての設定は <a href="dxfunc_graph1.html#R3N32"><b>SetCreateDrawValidGraphMultiSample</b></a> で行います。
+                 </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　フルスクリーンアンチエイリアスを有効にした状態で DxChara.x を読み込み、画面に表示します<br><br>
+                <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+    int ModelHandle ;
+
+    // フルシーンアンチエイリアスを設定する
+    SetFullSceneAntiAliasingMode( 4, 2 ) ;
+
+    // ＤＸライブラリの初期化
+    if( DxLib_Init() &lt; 0 )
+    {
+        // エラーが発生したら直ちに終了
+        return -1 ;
+    }
+
+    // ３Ｄモデルの読み込み
+    ModelHandle = MV1LoadModel( "DxChara.x" ) ;
+
+    // 画面に映る位置に３Ｄモデルを移動
+    MV1SetPosition( ModelHandle, VGet( 320.0f, -300.0f, 600.0f ) ) ;
+
+    // 描画先を裏画面に設定
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // ３Ｄモデルの描画
+    MV1DrawModel( ModelHandle ) ;
+
+    // 裏画面の内容を表画面に反映
+    ScreenFlip() ;
+
+    // キーの入力待ち
+    WaitKey() ;
+
+    // ＤＸライブラリの後始末
+    DxLib_End() ;
+
+    // ソフトの終了
+    return 0 ;
+}
+</pre>
+            <hr>
+            <br><br><br><br>
+        </td></tr>
+
+        <tr><td><font size="3" color="#005500"><b>動画関係</b><br><br></font></td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N1">宣言</a></b></td><td><font color="#000088"><b>int PlayMovie( char *FileName , int ExRate , int PlayType ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>　動画ファイルを再生する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+                <td>char *FileName : 再生する動画ファイルのパス<br>
+                    int　ExRate　　: 再生時の拡大率<br>
+                    　　　　　　　　　　(1=等倍 2=2倍 など,1.5倍などは出来ません)<br>
+                    int　PlayType　: 再生のタイプ<br>
+                    　　　　　　　　　　DX_MOVIEPLAYTYPE_BCANCEL : ボタンキャンセルあり<br>
+                    　　　　　　　　　　DX_MOVIEPLAYTYPE_NORMAL　: ボタンキャンセルなし<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　FileNameで指定された動画ファイルを ExRate で指定された倍率
+                    に拡大し、画面中心に再生します。なお PlayType に DX_MOVIEPLAYTYPE_BCANCEL
+                    を指定した場合は再生中にボタンが押されるとそこで再生を中断します。<br>
+                    DX_MOVIEPLAYTYPE_NORMAL を指定するとボタンを押しても中断しません。<br><br>
+
+                    　ＡＶＩ(Codecがない形式は再生できません),ＭＰＧ　等<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　test.aviを等倍で再生する（ボタン押しキャンセルなし）
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+         LPSTR lpCmdLine, int nCmdShow )
+{
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    PlayMovie( "test.avi" , 1 , DX_MOVIEPLAYTYPE_NORMAL ) ;
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br>
+        </td></tr>
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N2">宣言</a></b></td><td><font color="#000088"><b>int PlayMovieToGraph( int GraphHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ムービーグラフィックの動画の再生を開始する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int GraphHandle : ムービーグラフィックハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数で取得したムービーグラフィックハンドルが
+                    持っているムービーファイルの再生を開始します。<br>
+                    　ムービーグラフィックについては <a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数の説明書きを
+                    参照して下さい。<br><br><br>
+
+                
+                ムービーグラフィックハンドルによるムービーの再生<br><br>
+
+                    　百聞は一見にしかず、まず次のプログラムを見てください。<br><br>
+
+<pre>
+int MovieGraphHandle ;
+
+MovieGraphHandle = LoadGraph( "??.mpg" ) ;
+
+PlayMovieToGraph( MovieGraphHandle ) ;
+
+while( ProcessMessage() == 0 )
+{
+    DrawGraph( 0 , 0 , MovieGraphHandle , FALSE ) ;
+    WaitTimer( 10 ) ;
+}
+</pre>
+                    　このプログラムを実行すると ??.mpg という動画ファイルを
+                    再生し、画面に表示します。<br>
+                    　まず <a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数で動画ファイルをロードし、その
+                    ムービーを示すムービーグラフィックハンドルを変数 MovieGraphHandle に
+                    保存します、そして次の行の PlayMovieToGraph 関数でロードした
+                    ムービーを再生状態にします。<br>
+                    　次が肝です、１ループごとに <a href="dxfunc_graph1.html#R3N7"><b>DrawGraph</b></a> 関数で MovieGraphHandle
+                    変数の示すムービーを描画し、その後１０ミリ秒停止しています。<br>
+                    　この <a href="dxfunc_graph1.html#R3N7"><b>DrawGraph</b></a> 関数では何が描画されるかといいますとずばり
+                    ムービー映像が描画されます。<br>
+                    　つまり、画像ファイルをロードして得ることが出来るグラフィック
+                    ハンドルでは決まったグラフィックが常に描画されるわけですが、
+                    ムービーグラフィックハンドルの場合は描画されるグラフィックが
+                    ムービーファイルのデータに応じて次々に変更されるということです。<br><br>
+
+                    　説明がわかりにくいので次のサンプルプログラムを見てイメージを
+                    つかんでください。<br>
+                    　ちなみに動画の再生のみを行う場合は <a href="#R14N1"><b>PlayMovie</b></a> 関数を使用すること
+                    をお勧めします。こちらのほうがムービー再生のみであれば低負荷、
+                    高画質で処理することが出来るからです。<br><br><br>
+
+                    &lt;&lt;注意&gt;&gt;<br>
+                    　動画の再生処理は非同期で行われますので、
+                    この関数から出てきた時点で動画の再生が確実に開始されていることや、
+                    動画の再生が GetNowCount で取得できる時刻通りに正確に行われ続ける保証はありません。<br>
+                    　なのでもし動画の映像に合わせて何かを行う処理をする場合は TellMovieToGraph
+                    を使用して動画の再生時間に合わせて処理を行う必要があります。<br><br>
+
+                    &lt;&lt;余談&gt;&gt;<br>
+                    　ムービーの『ロード』といっていますが、動画ファイルは容量が
+                    大きいので、実際にはメモリにすべてロードしているわけではありません。<br>
+                    　正しくはムービーの『オープン』です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                ??.mpg を画面いっぱいに拡大して再生します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int MovieGraphHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // ムービーファイルをロードします。
+    MovieGraphHandle = LoadGraph( "??.mpg" ) ;
+
+    // ムービーを再生状態にします
+    PlayMovieToGraph( MovieGraphHandle ) ;
+
+    // ループ、<a href="#R14N5"><b>GetMovieStateToGraph</b></a> 関数はムービーの再生状態を得る関数です
+    // 戻り値が１の間は再生状態ですのでループを続けます
+    while( ProcessMessage() == 0 &amp;&amp; GetMovieStateToGraph( MovieGraphHandle ) == 1 )
+    {
+        // ムービー映像を画面いっぱいに描画します
+        DrawExtendGraph( 0 , 0 , 640 , 480 , MovieGraphHandle , FALSE ) ;
+
+        // ウエイトをかけます、あまり速く描画すると画面がちらつくからです
+        WaitTimer( 17 ) ;
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br><br>
+        </td></tr>
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N3">宣言</a></b></td><td><font color="#000088"><b>int PauseMovieToGraph( int GraphHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ムービーグラフィックの動画再生を一時停止する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int GraphHandle : ムービーグラフィックハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　<a href="#R14N2"><b>PlayMovieToGraph</b></a> 関数で開始したムービー再生にポーズを掛けます。
+                    ポーズを解除するには再び <a href="#R14N2"><b>PlayMovieToGraph</b></a> 関数を使用します。<br>
+                    　ムービーグラフィックについては <a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数の説明書きを
+                    参照して下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                ありません<br>
+            <br><br><br>
+        </td></tr>
+
+
+    
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N4">宣言</a></b></td><td><font color="#000088"><b>int SeekMovieToGraph( int GraphHandle , int Time ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ムービーグラフィックの動画の再生位置を変更する<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int GraphHandle : ムービーグラフィックハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>　０：成功</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　再生する動画の再生位置を変更します。<br>
+                    　時間は Time で指定します、単位は細かいですが 1ミリ秒単位となります。<br>
+                    　ムービーグラフィックについては <a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数の説明書きを
+                    参照して下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　??.avi ファイルを５秒目から再生します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int MovieGraphHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // ムービーファイルをロードします。
+    MovieGraphHandle = LoadGraph( "??.avi" ) ;
+
+    // ムービーの再生位置を５秒目に変更します
+    SeekMovieToGraph( MovieGraphHandle , 5000 ) ; 
+
+    // ムービーを再生状態にします
+    PlayMovieToGraph( MovieGraphHandle ) ;
+
+    // ループ、GetMovieStateToGraph 関数はムービーの再生状態を得る関数です
+    // 戻り値が１の間は再生状態ですのでループを続けます
+    while( ProcessMessage() == 0 &amp;&amp; GetMovieStateToGraph( MovieGraphHandle ) == 1 )
+    {
+        // ムービー映像を画面いっぱいに描画します
+        DrawExtendGraph( 0 , 0 , 640 , 480 , MovieGraphHandle , FALSE ) ;
+
+        // ウエイトをかけます、あまり速く描画すると画面がちらつくからです
+        WaitTimer( 17 ) ;
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N6">宣言</a></b></td><td><font color="#000088"><b>int TellMovieToGraph( int GraphHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ムービーグラフィックの動画の再生位置を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int GraphHandle : ムービーグラフィックハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td><td>０以上：再生時間（単位はミリ秒）</td></tr>
+            <tr><td width="100">　</td><td>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　再生している動画の再生位置を取得します。<br>
+                    　戻り値は <a href="dxfunc_other.html#R7N1"><b>GetNowCount</b></a> と同じくミリ秒単位です。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　??.mpg ファイルを再生しながら、画面左上に再生時間を表示します。<br><br>
+            <hr>
+<pre>
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
+             LPSTR lpCmdLine, int nCmdShow )
+{
+    int MovieGraphHandle ;
+
+    if( DxLib_Init() == -1 )    // ＤＸライブラリ初期化処理
+    {
+         return -1;    // エラーが発生したら終了
+    }
+
+    // ムービーファイルをロードします。
+    MovieGraphHandle = LoadGraph( "??.mpg" ) ;
+
+    // ムービーを再生状態にします
+    PlayMovieToGraph( MovieGraphHandle ) ;
+
+    // 描画先の画面を裏画面に
+    SetDrawScreen( DX_SCREEN_BACK ) ;
+
+    // ループ、<a href="#R14N5"><b>GetMovieStateToGraph</b></a> 関数はムービーの再生状態を得る関数です
+    // 戻り値が１の間は再生状態ですのでループを続けます
+    while( ProcessMessage() == 0 &amp;&amp; GetMovieStateToGraph( MovieGraphHandle ) == 1 )
+    {
+        // ムービー映像を画面いっぱいに描画します
+        DrawExtendGraph( 0 , 0 , 640 , 480 , MovieGraphHandle , FALSE ) ;
+
+        // 画面左上に再生時間を描画します
+        DrawFormatString( 0, 0, GetColor( 255,255,255 ), "Time:%d", TellMovieToGraph( MovieGraphHandle ) ) ;
+
+        // 裏画面の内容を表画面に反映します
+        ScreenFlip() ;
+    }
+
+    DxLib_End() ;        // ＤＸライブラリ使用の終了処理
+
+    return 0 ;        // ソフトの終了
+}
+</pre>
+            <hr>
+            <br><br><br>
+        </td></tr>
+
+
+
+        <tr><td><table align="center" width="800"  cellspacing="0" cellpadding="0">
+            <tr><td valign="top" width="100"><b><a name="R14N5">宣言</a></b></td><td><font color="#000088"><b>int GetMovieStateToGraph( int GraphHandle ) ;</b></font><br><br></td></tr>
+            <tr><td valign="top" width="100"><b>概略</b></td><td>ムービーグラフィックの動画の再生状態を得る<br><br></td></tr>
+            <tr><td valign="top" width="100"><b>引数</b></td>
+            <td>int GraphHandle : ムービーグラフィックハンドル</td></tr>
+            <tr><td valign="top" width="100"><b>戻り値</b></td>
+            <td>０　：再生は停止している</td></tr>
+            <tr><td width="100">　</td><td>１　：再生中<br>－１：エラー発生<br><br></td></tr>
+            <tr>
+                <td valign="top" width="100"><b>解説</b></td>
+                <td>　ムービーグラフィックの再生状態を得ます。<br>
+                    　もし０が返ってきたら停止中、１なら再生中となります。<br>
+                    　因みに動画の再生が終了するか <a href="#R14N3"><b>PauseMovieGraph</b></a> 関数で再生に
+                    ポーズを掛けると停止中となります。<br>
+                    　ムービーグラフィックについては <a href="dxfunc_graph1.html#R3N2"><b>LoadGraph</b></a> 関数の説明書きを
+                    参照して下さい。<br><br>
+                </td>
+            </tr>
+        </table></td></tr>
+
+        <tr><td>
+            <b>サンプル</b><br><br>
+
+                　<a href="#R14N2"><b>PlayMovieToGraph</b></a> 関数のサンプルを参照して下さい<br><br>
+            <br><br><br><br><br><br><br>
+        </td></tr>
+
+
+        <tr><td colspan="2">
+            <hr>
+            <font size="3"><b>
+                <a href="../dxfunc.html">戻る</a>
+            </b></font>
+        </td></tr>
+    </table>
+    </body>
+</html>

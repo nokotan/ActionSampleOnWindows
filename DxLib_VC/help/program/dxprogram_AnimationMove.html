@@ -1,0 +1,150 @@
+<TITLE>ＤＸライブラリ置き場　アニメーションによる座標移動</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　アニメーションによる座標移動
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/AnimationMove.png" HSPACE="0" VSPACE="0" ALT="アニメーションによる座標移動">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR><BR>
+			　キャラクターモデルの座標を移動する場合、プログラムで移動速度を決めて移動させる方法もありますが、<BR>
+			アニメーションの動きに合った移動速度で移動させたい場合があります。<BR><BR>
+
+			　そんなときは、まずキャラクターモデルの動きに合わせて移動するアニメーションを作成します。<BR>
+			( 走るアニメーションなら、ビューアーで再生すると走る動きに合わせて実際に座標移動するようなアニメーション )<BR><BR>
+
+			　プログラム側ではアニメーションによるキャラクターモデルの座標移動を <A HREF="../function/dxfunc_3d.html#R6N11">MV1SetFrameUserLocalMatrix</A> を<BR>
+			使用して無効化した上で、<A HREF="../function/dxfunc_3d.html#R4N13">MV1GetAttachAnimFrameLocalPosition</A> を使用して移動値が設定されている<BR>
+			フレーム( ボーン )の座標を取得してキャラクターモデルの座標に移動値を反映させます。<BR><BR>
+
+			　( プログラムの実行に必要なファイルは<A HREF="http://dxlib.o.oo7.jp/file/AnimationMove.zip"><B>こちら</B></A> )<BR><BR><BR>
+
+<PRE>
+// 走るアニメーションのフレーム( ボーン )「BasePoint」の移動値を使用してキャラクターモデルの座標移動を行うプログラム
+
+#include "DxLib.h"
+
+int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+{
+	int    ModelHandle ;
+	float  AnimTotalTime ;
+	float  AnimNowTime ;
+	int    AnimAttachIndex ;
+	int    MoveAnimFrameIndex ;
+	VECTOR Position ;
+	VECTOR PrevPosition ;
+	VECTOR NowPosition ;
+
+	// ウインドウモードで起動
+	ChangeWindowMode( TRUE ) ;
+
+	// ＤＸライブラリの初期化
+	if( DxLib_Init() < 0 ) return -1 ;
+
+	// ３Ｄモデルの読み込み
+	ModelHandle = MV1LoadModel( "DxChara.x" ) ;
+
+	// 走りアニメーションをアタッチ
+	AnimAttachIndex = MV1AttachAnim( ModelHandle, 1 ) ;
+
+	// 走りアニメーションの総時間を取得しておく
+	AnimTotalTime = MV1GetAttachAnimTotalTime( ModelHandle, AnimAttachIndex ) ;
+
+	// アニメーション再生時間を初期化
+	AnimNowTime = 0.0f ;
+	MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+	// アニメーションで移動をしているフレームの番号を検索する
+	MoveAnimFrameIndex = MV1SearchFrame( ModelHandle, "BasePoint" ) ;
+
+	// アニメーションで移動をしているフレームを無効にする
+	MV1SetFrameUserLocalMatrix( ModelHandle, MoveAnimFrameIndex, MGetIdent() ) ;
+
+	// ３Ｄモデルの座標を初期化
+	Position = VGet( 0.0f, 0.0f, 0.0f ) ;
+
+	// 描画先を裏画面にする
+	SetDrawScreen( DX_SCREEN_BACK ) ;
+
+	// カメラの位置と向きを設定
+	SetCameraPositionAndTarget_UpVecY( VGet( 2400.0f, 1000.0f, -1650.0f ), VGet( 0.0f, 280.0f, -1650.0f ) );
+
+	// カメラのクリッピング距離を設定
+	SetCameraNearFar( 16.0f, 3800.0f );
+
+	// 背景の色を灰色にする
+	SetBackgroundColor( 128, 128, 128 ) ;
+
+	// メインループ(何かキーが押されたらループを抜ける)
+	while( ProcessMessage() == 0 )
+	{
+		// 画面のクリア
+		ClearDrawScreen() ;
+
+		// アニメーション時間を進める前の『アニメーションで移動をしているフレームの座標』を取得しておく
+		PrevPosition = MV1GetAttachAnimFrameLocalPosition( ModelHandle, AnimAttachIndex, MoveAnimFrameIndex ) ;
+
+		// アニメーション再生時間を進める
+		AnimNowTime += 100.0f ;
+
+		// アニメーション再生時間がアニメーションの総時間を越えているかどうかで処理を分岐
+		if( AnimNowTime >= AnimTotalTime )
+		{
+			// 超えている場合は、まず『アニメーション再生時間を進める前の「アニメーションで移動しているフレームの座標」』と、
+			// 『アニメーションの終端での「アニメーションで移動しているフレームの座標」』との差分をモデルの座標に加算する
+			MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimTotalTime ) ;
+			NowPosition = MV1GetAttachAnimFrameLocalPosition( ModelHandle, AnimAttachIndex, MoveAnimFrameIndex ) ;
+			Position = VAdd( Position, VSub( NowPosition, PrevPosition ) ) ;
+
+			// 新しいアニメーション再生時間は、アニメーション再生時間からアニメーション総時間を引いたもの
+			AnimNowTime -= AnimTotalTime ;
+
+			// 次に『新しいアニメーション再生時間での「アニメーションで移動をしているフレームの座標」と
+			// 『アニメーション再生時間０での「アニメーションで移動しているフレームの座標」』との差分をモデルの座標に加算する
+			MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, 0.0f ) ;
+			PrevPosition = MV1GetAttachAnimFrameLocalPosition( ModelHandle, AnimAttachIndex, MoveAnimFrameIndex ) ;
+			MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+			NowPosition = MV1GetAttachAnimFrameLocalPosition( ModelHandle, AnimAttachIndex, MoveAnimFrameIndex ) ;
+			Position = VAdd( Position, VSub( NowPosition, PrevPosition ) ) ;
+		}
+		else
+		{
+			// 新しいアニメーション再生時間をセット
+			MV1SetAttachAnimTime( ModelHandle, AnimAttachIndex, AnimNowTime ) ;
+
+			// 『新しいアニメーション再生時間での「アニメーションで移動をしているフレームの座標」』と、
+			// 『アニメーション再生時間を進める前の「アニメーションで移動をしているフレームの座標」』との差分をモデルの座標に加算する
+			NowPosition = MV1GetAttachAnimFrameLocalPosition( ModelHandle, AnimAttachIndex, MoveAnimFrameIndex ) ;
+			Position = VAdd( Position, VSub( NowPosition, PrevPosition ) ) ;
+		}
+
+		// ３Ｄモデルに新しい座標をセット
+		MV1SetPosition( ModelHandle, Position ) ;
+
+		// ３Ｄモデルの描画
+		MV1DrawModel( ModelHandle ) ;
+
+		// 裏画面の内容を表画面に反映
+		ScreenFlip() ;
+	}
+
+	// ＤＸライブラリの後始末
+	DxLib_End() ;
+
+	// ソフトの終了
+	return 0 ;
+}
+
+</PRE>
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>

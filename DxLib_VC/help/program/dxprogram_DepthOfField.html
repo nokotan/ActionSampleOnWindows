@@ -1,0 +1,44 @@
+<TITLE>ＤＸライブラリ置き場　被写界深度基本</TITLE>
+<HTML>
+	<HEAD>
+	<meta http-equiv="Content-type" content="text/html; charset=Shift_JIS">
+	</HEAD>
+	<BODY BGCOLOR="#ffffff" TEXT="#000000" LINK="#003388" VLINK="#800040">
+		<FONT SIZE="6" COLOR="#000000"><B>
+		<CENTER>
+			サンプルプログラム　被写界深度基本　( 要プログラマブルシェーダー２．０ )
+		</CENTER>
+		</FONT>
+		<HR>
+		<IMG SRC="../Image/DepthOfField1.jpg" HSPACE="0" VSPACE="0" ALT="被写界深度">
+		<FONT SIZE="3" COLOR="#000000"><B>
+			<BR>
+			　プログラマブルシェーダーを使用して被写界深度( カメラの焦点を合わせていない部分がぼやける現象を再現したもの )をするサンプルプログラムです。<BR><BR>
+
+			　手順としては、まず３Ｄ画面を普通に描画したテクスチャ、普通に描画したシーンをガウスフィルタで暈したテクスチャ、それを更に暈したテクスチャの３つを用意します。( 下記イメージ )<BR>
+			　これには特別なシェーダーは使いません。( ガウスフィルタで暈すのも GraphFilter でできるため )<BR>
+			<IMG SRC="../Image/DepthOfField2.jpg" HSPACE="0" VSPACE="0" ALT="被写界深度"><BR><BR>
+
+			　あと深度値を色に変換したテクスチャも用意します。<BR>
+			　こちらは深度値を色に変換して描画するシェーダーを使用します。<BR>
+			<IMG SRC="../Image/DepthOfField3.jpg" HSPACE="0" VSPACE="0" ALT="被写界深度"><BR><BR>
+
+			　この４つの画像を使用して、深度値テクスチャから得られる深度値とカメラの焦点のパラメータから暈し率を算出して、<BR>
+			そのパラメータから暈してない画像、暈している画像２枚を合成して「焦点の合っていない部分が暈けている画像」を描画します。( 一番上のイメージ )<BR><BR>
+
+			　プログラムの実行に必要なファイルのセットは<A HREF="http://dxlib.o.oo7.jp/file/DepthOfField.zip"><B>こちら</B></A>にあります。<BR><BR><BR>
+
+
+			<A HREF="DepthOfField/DepthOfField.cpp"><B>Ｃ＋＋のプログラム</B></A><BR><BR>
+
+			<A HREF="DepthOfField/Depth_NormalMeshVS.fx"><B>深度値描画を行う剛体メッシュ用頂点シェーダープログラム</B></A><BR><BR>
+			<A HREF="DepthOfField/Depth_SkinMeshVS.fx"><B>深度値描画を行うスキニングメッシュ用頂点シェーダープログラム</B></A><BR><BR>
+			<A HREF="DepthOfField/DepthPS.fx"><B>深度値記録用ピクセルシェーダーのプログラム</B></A><BR><BR>
+			<A HREF="DepthOfField/DepthOfFieldPS.fx"><B>深度値や暈し画像を使用して被写界深度処理を行うピクセルシェーダープログラム</B></A><BR><BR>
+
+
+			<HR>
+			<A HREF="dxprogram_3D.html">戻る</A><BR><BR>
+		</B></FONT>
+	</BODY>
+</HTML>
